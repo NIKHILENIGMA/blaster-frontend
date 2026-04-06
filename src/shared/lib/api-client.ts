@@ -3,12 +3,40 @@ import axios, { type AxiosInstance, type AxiosRequestConfig, type AxiosResponse 
 import clientEnv from '../config/load-client-env'
 import type { ApiResponse } from '../types/api'
 
+type ClerkSession = {
+    session: {
+        getToken: (options?: { template?: string }) => Promise<string | null>
+    } | null // ✅ session can be null
+}
+
 class ApiClient {
     private client: AxiosInstance
     constructor(baseURL: string) {
         this.client = axios.create({
             baseURL,
             withCredentials: true
+        })
+
+        this.initAuthInterceptor()
+    }
+
+    private initAuthInterceptor() {
+        this.client.interceptors.request.use(async (config) => {
+            try {
+                const clerk = (window as Window & { Clerk?: ClerkSession }).Clerk
+
+                if (clerk?.session) {
+                    const token = await clerk.session.getToken()
+                    if (token) {
+                        config.headers = config.headers || {}
+                        config.headers['Authorization'] = `Bearer ${token}` // Attach the token to the Authorization header
+                    }
+                }
+            } catch (error) {
+                console.warn('Failed to refresh token:', error)
+            }
+
+            return config
         })
     }
 
