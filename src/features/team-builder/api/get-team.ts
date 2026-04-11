@@ -12,10 +12,11 @@ export const getCurrentTeam = async (): Promise<CurrentTeam> => {
     return response.data
 }
 
-export const getCurrentTeamQueryOptions = () => {
+export const getCurrentTeamQueryOptions = (sessionId: string) => {
     return queryOptions({
-        queryKey: teamKeys.currentTeam(),
-        queryFn: () => getCurrentTeam()
+        queryKey: teamKeys.currentTeam(sessionId),
+        queryFn: () => getCurrentTeam(),
+        enabled: Boolean(sessionId)
     })
 }
 
@@ -23,9 +24,9 @@ export type UseGetCurrentTeamOptions = {
     queryConfig?: QueryConfig<typeof getCurrentTeamQueryOptions>
 }
 
-export const useGetCurrentTeam = ({ queryConfig }: UseGetCurrentTeamOptions) => {
+export const useGetCurrentTeam = ({ queryConfig, sessionId }: UseGetCurrentTeamOptions & { sessionId: string }) => {
     return useQuery({
-        ...getCurrentTeamQueryOptions(),
+        ...getCurrentTeamQueryOptions(sessionId),
         ...queryConfig,
         enabled: true
     })

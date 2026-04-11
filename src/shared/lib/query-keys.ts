@@ -6,7 +6,7 @@ export const dashboardKeys = {
 }
 
 export const teamKeys = {
-    currentTeam: () => ['team', 'current'] as const,
+    currentTeam: (sessionId: string) => ['team', 'current', sessionId] as const,
     activeSession: () => ['team', 'active-session'] as const
 }
 
