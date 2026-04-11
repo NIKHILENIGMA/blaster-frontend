@@ -25,9 +25,12 @@ export type UseGetCurrentTeamOptions = {
 }
 
 export const useGetCurrentTeam = ({ queryConfig, sessionId }: UseGetCurrentTeamOptions & { sessionId: string }) => {
+    const resolvedSessionId = sessionId ?? ''
+    const isEnabled = Boolean(sessionId) && (queryConfig?.enabled ?? true)
+
     return useQuery({
-        ...getCurrentTeamQueryOptions(sessionId),
+        ...getCurrentTeamQueryOptions(resolvedSessionId),
         ...queryConfig,
-        enabled: true
+        enabled: isEnabled
     })
 }

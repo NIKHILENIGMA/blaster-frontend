@@ -1,11 +1,17 @@
 import Footer from '@/components/shared/footer'
 import Header from '@/components/shared/header'
+import { useGetActiveSession } from '@/features/team-builder/api/get-active-session'
 import { useGetCurrentTeam } from '@/features/team-builder/api/get-team'
 import CreateTeam from '@/features/team-builder/components/create-team'
 import MyTeam from '@/features/team-builder/components/my-team'
 
 const MySquad = () => {
-    const { data: currentTeam, isPending } = useGetCurrentTeam({})
+    const { data: activeSessionData, isPending: isSessionPending } = useGetActiveSession({})
+    const { data: currentTeam, isPending: isTeamPending } = useGetCurrentTeam({
+        sessionId: activeSessionData?.session?.id ?? ''
+    })
+
+    const isPending = isSessionPending || isTeamPending
 
     return (
         <div className="min-h-screen bg-neutral-background">
