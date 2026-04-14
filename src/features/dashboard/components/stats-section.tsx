@@ -10,7 +10,6 @@ import LeaderboardCard from './leaderboard-card'
 import { StatsCard } from './stats-card'
 import UpcomingCarousel from './upcoming-carousel'
 
-
 interface StatsSectionProps {
     stats?: DashboardStats
     isPending: boolean

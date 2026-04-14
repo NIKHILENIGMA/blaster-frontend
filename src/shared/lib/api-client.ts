@@ -33,7 +33,7 @@ class ApiClient {
                     }
                 }
             } catch (error) {
-                console.warn('Failed to refresh token:', error)
+                throw new Error('Failed to retrieve authentication token', { cause: error })
             }
 
             return config

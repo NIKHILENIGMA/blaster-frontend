@@ -1,7 +1,6 @@
-'use client'
-
-import { useEffect, useState } from 'react'
 import { AlertCircle, Lock, CheckCircle } from 'lucide-react'
+import { useEffect, useState } from 'react'
+
 import type { Fixture } from '../../types/fixture'
 import { formatTimeRemaining, getTimeState } from '../../utils/time'
 

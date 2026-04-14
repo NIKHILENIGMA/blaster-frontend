@@ -1,7 +1,8 @@
-import { Card } from '@/components/ui/card'
-import type { Player } from '../../types/team'
 import { Badge } from '@/components/ui/badge'
+import { Card } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
+
+import type { Player } from '../../types/team'
 // import { Badge } from '@/components/ui/badge';
 
 interface CurrentRolesCardProps {
@@ -27,8 +28,10 @@ export default function CurrentRolesCard({ currentCaptainId, currentViceCaptainI
 
     return (
         <Card className="border border-slate-200 p-4 sm:p-5 bg-secondary/90 text-white font-body">
-            <div className="flex justify-between items-center px-4 py-2"> 
-                <h2 className="text-md font-heading">Your Current <strong>Captain</strong> & <strong>Vice Captain</strong></h2>
+            <div className="flex justify-between items-center px-4 py-2">
+                <h2 className="text-md font-heading">
+                    Your Current <strong>Captain</strong> & <strong>Vice Captain</strong>
+                </h2>
                 <Badge variant={'default'}>{modifyName(fixtureId)}</Badge>
             </div>
             <Separator />

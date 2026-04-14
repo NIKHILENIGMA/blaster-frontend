@@ -34,8 +34,6 @@ export interface CurrentTeam {
     } | null
 }
 
-
-
 export type Player = {
     id: string
     name: string

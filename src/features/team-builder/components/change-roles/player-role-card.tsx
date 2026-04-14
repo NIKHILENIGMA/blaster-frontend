@@ -1,8 +1,8 @@
-'use client'
-
-import { Card } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
 import { Check } from 'lucide-react'
+
+import { Badge } from '@/components/ui/badge'
+import { Card } from '@/components/ui/card'
+
 import type { Player } from '../../types/team'
 
 interface PlayerRoleCardProps {

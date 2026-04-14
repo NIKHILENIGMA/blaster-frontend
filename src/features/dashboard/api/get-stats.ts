@@ -7,7 +7,6 @@ import type { QueryConfig } from '@/shared/lib/react-query'
 
 import type { DashboardStats } from '../types/dashboard'
 
-
 export const getStats = async (): Promise<DashboardStats> => {
     const response = await client.get<DashboardStats>(`${USERS_API_BASE}${DASHBOARD_API_BASE}`)
     return response.data

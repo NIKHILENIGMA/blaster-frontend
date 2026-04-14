@@ -1,10 +1,10 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import z from 'zod'
 
-import client from '@/shared/lib/api-client'
-import type { MutationConfig } from '@/shared/lib/react-query'
 import { TEAMS_API_BASE } from '@/shared/constants'
+import client from '@/shared/lib/api-client'
 import { teamKeys } from '@/shared/lib/query-keys'
+import type { MutationConfig } from '@/shared/lib/react-query'
 // import { teamKeys } from '@/shared/lib/query-keys'
 
 // Schema for updating a role
@@ -28,7 +28,7 @@ type UseUpdateRoleOptions = {
 export const useUpdateRole = ({ mutationConfig }: UseUpdateRoleOptions = {}) => {
     const queryClient = useQueryClient()
 
-    const { onSuccess, ...restConfig } = mutationConfig || {}
+    const { ...restConfig } = mutationConfig || {}
     return useMutation({
         ...restConfig,
         onSuccess: async (_data, variables) => {

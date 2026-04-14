@@ -53,8 +53,7 @@ const MyTeam: FC<MyTeamProps> = ({ team }) => {
                     </Button>
                     <Button
                         variant={'secondary'}
-                        onClick={() => navigate(`${team.team?.id}/roles`)}
-                        >
+                        onClick={() => navigate(`${team.team?.id}/roles`)}>
                         Change C/VC
                     </Button>
                 </header>

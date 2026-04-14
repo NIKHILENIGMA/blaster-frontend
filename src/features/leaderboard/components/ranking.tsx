@@ -55,7 +55,9 @@ const Ranking: FC<RankingProps> = ({ entries = [], isPending }) => {
                 points: entry.totalScore,
                 type: style.type,
                 classes: style.classes,
-                avatar: entry.profileImage ? entry.profileImage : 'https://res.cloudinary.com/dynbvnhcc/image/upload/v1775216051/Default-Men_pzwcaj.avif'
+                avatar: entry.profileImage
+                    ? entry.profileImage
+                    : 'https://res.cloudinary.com/dynbvnhcc/image/upload/v1775216051/Default-Men_pzwcaj.avif'
             }
         })
 

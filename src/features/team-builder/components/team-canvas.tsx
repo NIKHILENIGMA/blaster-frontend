@@ -98,19 +98,17 @@ export function TeamCanvas({
                                     {/* Player Info */}
                                     <div className="flex items-start gap-3 flex-1 min-w-0">
                                         {/* Avatar */}
-                                        {
-                                            player.profileImageUrl !== '' ? (
-                                                <img
-                                                    src={player.profileImageUrl}
-                                                    alt={player.name}
-                                                    className="h-18 w-18 rounded-full object-cover"
-                                                />
-                                            ) : (
-                                                <div className="h-18 w-18 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center flex-shrink-0">
-                                                    <span className="font-bold text-sm text-primary-foreground">{player.name.charAt(0)}</span>
-                                                </div>
-                                            )
-                                        }
+                                        {player.profileImageUrl !== '' ? (
+                                            <img
+                                                src={player.profileImageUrl}
+                                                alt={player.name}
+                                                className="h-18 w-18 rounded-full object-cover"
+                                            />
+                                        ) : (
+                                            <div className="h-18 w-18 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center flex-shrink-0">
+                                                <span className="font-bold text-sm text-primary-foreground">{player.name.charAt(0)}</span>
+                                            </div>
+                                        )}
 
                                         {/* Details */}
                                         <div className="flex-1 min-w-0">

@@ -1,20 +1,19 @@
 // import { ArrowLeft } from 'lucide-react'
 import { useEffect, useState } from 'react'
+import { BiSolidLeftArrowCircle } from 'react-icons/bi'
 import { useNavigate, useParams } from 'react-router'
 import { toast } from 'sonner'
 
+import { Button } from '@/components/ui/button'
 import { useGetFixture } from '@/features/team-builder/api/get-fixture'
 import { useGetTeamById } from '@/features/team-builder/api/get-team-by-id'
+import { useUpdateRole } from '@/features/team-builder/api/update-role'
 import CurrentRolesCard from '@/features/team-builder/components/change-roles/current-roles-card'
 import LockStatusBanner from '@/features/team-builder/components/change-roles/lock-status-banner'
 import PlayerRoleCard from '@/features/team-builder/components/change-roles/player-role-card'
 import RoleActionFooter from '@/features/team-builder/components/change-roles/role-action-footer'
 import type { Player } from '@/features/team-builder/types/team'
 import { getTimeState } from '@/features/team-builder/utils/time'
-import { Button } from '@/components/ui/button'
-import { BiSolidLeftArrowCircle } from 'react-icons/bi'
-
-import { useUpdateRole } from '@/features/team-builder/api/update-role'
 
 export default function ChangeCaptainRoles() {
     const { teamId } = useParams<{ teamId: string }>()
@@ -116,7 +115,6 @@ export default function ChangeCaptainRoles() {
             }, 1500)
             navigate('/my-squad')
         } catch (error) {
-            console.error(error)
             setSubmitError(error instanceof Error ? error.message : 'An unexpected error occurred')
         } finally {
             setIsSubmitting(false)
@@ -144,8 +142,8 @@ export default function ChangeCaptainRoles() {
 
                             {/* Current Roles Card */}
                             <CurrentRolesCard
-                                currentCaptainId={team?.captainId!}
-                                currentViceCaptainId={team?.viceCaptainId!}
+                                currentCaptainId={team!.captainId}
+                                currentViceCaptainId={team!.viceCaptainId}
                                 players={team?.players || []}
                                 fixtureId={selectedFixtureId}
                             />

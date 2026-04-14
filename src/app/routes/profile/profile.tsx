@@ -5,7 +5,6 @@ import { useNavigate } from 'react-router'
 
 import { Button } from '@/components/ui/button'
 
-
 const Profile: FC = () => {
     const { user, isLoaded, isSignedIn } = useUser()
     const navigate = useNavigate()
