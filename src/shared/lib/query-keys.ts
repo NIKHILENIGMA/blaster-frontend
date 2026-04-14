@@ -7,10 +7,16 @@ export const dashboardKeys = {
 
 export const teamKeys = {
     currentTeam: (sessionId: string) => ['team', 'current', sessionId] as const,
-    activeSession: () => ['team', 'active-session'] as const
+    activeSession: () => ['team', 'active-session'] as const,
+    details: (teamId: string) => ['team', 'details', teamId] as const
 }
 
 export const playersKeys = {
     list: () => ['players', 'list'] as const,
     details: (playerId: number) => [...playersKeys.list(), playerId] as const
+}
+
+export const fixturesKeys = {
+    list: () => ['fixtures', 'list'] as const,
+    details: (fixtureId: number) => [...fixturesKeys.list(), fixtureId] as const
 }
