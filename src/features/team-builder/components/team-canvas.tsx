@@ -89,7 +89,7 @@ export function TeamCanvas({
                                 key={player.id}
                                 className={`p-3 rounded-lg border-2 transition-all ${
                                     isPlayerCaptain
-                                        ? 'bg-background/90 border-border text-foreground hover:bg-primary/10'
+                                        ? 'bg-background/90 border-primary text-foreground hover:bg-primary/10'
                                         : isPlayerViceCaptain
                                           ? 'bg-muted border-secondary hover:bg-primary/10'
                                           : 'bg-card border-border hover:bg-primary/10'
@@ -98,9 +98,19 @@ export function TeamCanvas({
                                     {/* Player Info */}
                                     <div className="flex items-start gap-3 flex-1 min-w-0">
                                         {/* Avatar */}
-                                        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center flex-shrink-0">
-                                            <span className="font-bold text-sm text-primary-foreground">{player.name.charAt(0)}</span>
-                                        </div>
+                                        {
+                                            player.profileImageUrl !== '' ? (
+                                                <img
+                                                    src={player.profileImageUrl}
+                                                    alt={player.name}
+                                                    className="h-18 w-18 rounded-full object-cover"
+                                                />
+                                            ) : (
+                                                <div className="h-18 w-18 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center flex-shrink-0">
+                                                    <span className="font-bold text-sm text-primary-foreground">{player.name.charAt(0)}</span>
+                                                </div>
+                                            )
+                                        }
 
                                         {/* Details */}
                                         <div className="flex-1 min-w-0">

@@ -51,6 +51,12 @@ const MyTeam: FC<MyTeamProps> = ({ team }) => {
                         disabled={sessionLocked}>
                         Edit Team
                     </Button>
+                    <Button
+                        variant={'secondary'}
+                        onClick={() => navigate(`${team.team?.id}/roles`)}
+                        >
+                        Change C/VC
+                    </Button>
                 </header>
 
                 {/* Sections */}

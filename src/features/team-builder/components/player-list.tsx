@@ -32,7 +32,7 @@ interface PlayerListProps {
     canAddMore: boolean
 }
 
-const TEAMS = [
+const IPL_TEAMS = [
     {
         id: 'MI',
         icon: 'https://static.vecteezy.com/system/resources/previews/059/494/375/non_2x/mumbai-indians-original-ipl-team-official-logo-premium-design-for-digital-download-free-vector.jpg',
@@ -106,14 +106,14 @@ const ROLES = [
         value: 'Bowler'
     },
     {
-        label: 'All-rounder',
+        label: 'All Rounder',
         icon: <MdOutlineSportsHandball />,
-        value: 'All-rounder'
+        value: 'All-Rounder'
     },
     {
         label: 'Wicketkeeper',
         icon: <FaHandsHoldingCircle />,
-        value: 'Wicketkeeper'
+        value: 'Wicket-Keeper'
     }
 ]
 
@@ -178,7 +178,7 @@ export function PlayerList({
 
                 {/* Filters - Mobile Responsive */}
                 {/* Team Filter */}
-                <div className="space-y-3 flex">
+                <div className="space-y-3 space-x-1.5 flex">
                     <Select
                         value={filterTeam}
                         onValueChange={(value) => onFilterTeamChange(value)}>
@@ -187,7 +187,7 @@ export function PlayerList({
                         </SelectTrigger>
                         <SelectContent>
                             <SelectGroup>
-                                {TEAMS.map((team) => (
+                                {IPL_TEAMS.map((team) => (
                                     <SelectItem
                                         key={team.value}
                                         value={team.value}>

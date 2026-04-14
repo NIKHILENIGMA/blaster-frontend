@@ -16,9 +16,9 @@ export default function SelectPlayers() {
     const { teamId } = useParams<{ teamId: string }>()
     const { data: playersData } = useGetPlayers({})
     const { data: activeSessionData } = useGetActiveSession({})
-    
+
     const { data: currentTeamData } = useGetCurrentTeam({
-        sessionId: activeSessionData && activeSessionData.session ? activeSessionData.session.id : '' 
+        sessionId: activeSessionData && activeSessionData.session ? activeSessionData.session.id : ''
     })
     const isEditMode = Boolean(teamId)
     const activeSessionId = currentTeamData?.session?.id ?? activeSessionData?.session?.id ?? null
