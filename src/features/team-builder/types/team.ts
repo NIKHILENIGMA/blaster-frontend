@@ -33,3 +33,25 @@ export interface CurrentTeam {
         isLocked: boolean
     } | null
 }
+
+
+
+export type Player = {
+    id: string
+    name: string
+    team: 'CSK' | 'MI' | 'RCB' | 'KKR' | 'SRH' | 'DC' | 'PBKS' | 'RR' | 'GT' | 'LSG'
+    isOverseas: boolean
+    profilePicUrl: string
+    role: 'Batsman' | 'Bowler' | 'All-Rounder' | 'Wicket-Keeper'
+}
+
+export interface Team {
+    id: string
+    userId: string
+    matchId: string
+    teamName: string | null
+    players: Player[]
+    captainId: string
+    viceCaptainId: string
+    updatedAt: Date
+}
