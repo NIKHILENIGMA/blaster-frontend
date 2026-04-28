@@ -1,12 +1,9 @@
-import { Plus, Search } from 'lucide-react'
+import { Search } from 'lucide-react'
 import { BiSolidCricketBall } from 'react-icons/bi'
 import { FaHandsHoldingCircle } from 'react-icons/fa6'
 import { MdOutlineSportsHandball } from 'react-icons/md'
 import { MdSportsCricket } from 'react-icons/md'
 
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Input } from '@/components/ui/input'
@@ -14,10 +11,12 @@ import { ScrollArea } from '@/components/ui/scroll-area'
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 
 import type { Player } from '../types/players'
+import DisplayPlayerCard from './players/display-player-card'
 
 interface PlayerListProps {
     players: Player[]
     selectedCount: number
+    selectionLimit?: number
     searchTerm: string
     onSearchChange: (value: string) => void
     filterTeam: string
@@ -129,6 +128,7 @@ const ROLE_COLORS: Record<string, string> = {
 export function PlayerList({
     players,
     selectedCount,
+    selectionLimit = 12,
     searchTerm,
     onSearchChange,
     filterTeam,
@@ -153,12 +153,12 @@ export function PlayerList({
                         </p>
                     </div>
                     <p className="text-sm text-muted-foreground font-body font-bold uppercase">
-                        {selectedCount < 11 ? (
+                        {selectedCount < selectionLimit ? (
                             <span className="text-secondary">{selectedCount}</span>
                         ) : (
                             <span className="text-[#2E7D32]">{selectedCount}</span>
                         )}
-                        /11 selected
+                        /{selectionLimit} selected
                     </p>
                 </div>
 
@@ -255,10 +255,25 @@ export function PlayerList({
                         </div>
                     ) : (
                         players.map((player) => (
-                            <div
+                            <DisplayPlayerCard
+                                key={player.id}
+                                player={player}
+                                onAddPlayer={onAddPlayer}
+                                canAddMore={canAddMore}
+                            />
+                        ))
+                    )}
+                </div>
+            </ScrollArea>
+        </Card>
+    )
+}
+
+{
+    /* <div
                                 key={player.id}
                                 className="flex items-center gap-3 p-3 bg-card rounded-lg hover:bg-muted transition">
-                                {/* Avatar */}
+                
                                 <Avatar className="w-10 h-10 flex-shrink-0">
                                     {player.profileImageUrl || (player as Player & { playerImageUrl?: string }).playerImageUrl ? (
                                         <AvatarImage
@@ -269,7 +284,7 @@ export function PlayerList({
                                     <AvatarFallback className="bg-gradient-to-br from-blue-400 to-purple-500">{player.name.charAt(0)}</AvatarFallback>
                                 </Avatar>
 
-                                {/* Player Info */}
+                             
                                 <div className="flex-1 min-w-0">
                                     <p className=" font-semibold truncate">{player.name}</p>
                                     <div className="flex items-center gap-2 flex-wrap">
@@ -283,7 +298,7 @@ export function PlayerList({
                                     </div>
                                 </div>
 
-                                {/* Credits and Add Button */}
+                              
                                 <div className="flex flex-col items-end gap-2 flex-shrink-0">
                                     <span className=" font-bold text-sm">{(player as Player & { credits?: number }).credits ?? player.cost} Pts</span>
                                     <Button
@@ -294,11 +309,5 @@ export function PlayerList({
                                         <Plus className="w-4 h-4" />
                                     </Button>
                                 </div>
-                            </div>
-                        ))
-                    )}
-                </div>
-            </ScrollArea>
-        </Card>
-    )
+                            </div> */
 }

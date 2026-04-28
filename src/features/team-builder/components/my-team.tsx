@@ -1,82 +1,109 @@
-import { useEffect, useState, type FC } from 'react'
+import { type FC } from 'react'
 import { useNavigate } from 'react-router'
 
 import { Button } from '@/components/ui/button'
 
-import type { CurrentTeam } from '../types/team'
+import type { FranchiseFixture, FranchiseOverview } from '../types/franchise'
 
 import PlayerCard from './player-card'
 import TeamSection from './team-section'
 
 interface MyTeamProps {
-    team: CurrentTeam
+    overview: FranchiseOverview
+    nextFixture: FranchiseFixture | null
 }
 
-interface Player {
-    id: string
-    name: string
-    team: string
-    isOverseas: boolean
-    cost: number
-    profilePicUrl: string
-    role: string
-}
-
-const MyTeam: FC<MyTeamProps> = ({ team }) => {
+const MyTeam: FC<MyTeamProps> = ({ overview, nextFixture }) => {
     const navigate = useNavigate()
-    const sessionLocked = team.session?.isLocked ?? false
-    const [players, setPlayers] = useState<Player[]>([]) // Initialize with players from props
 
-    useEffect(() => {
-        if (team.team) {
-            setPlayers(team.team.players)
-        }
-    }, [team]) // Update players state when team prop changes
+    const franchise = overview.franchise
+    const players = overview.rosterCycle ?? []
+    const sessionLocked = overview.activeCycle?.isLocked ?? false
 
     return (
         <main className="flex flex-col items-center px-4 py-10">
             <section className="max-w-6xl mx-auto">
-                {/* Header */}
-                <header className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
-                    <div>
-                        <h1 className="text-2xl md:text-3xl font-bold">{team.team?.name || 'My Fantasy Team'}</h1>
-                        <p className="text-gray-500 text-sm max-w-md">
-                            Optimized for high-performance fantasy matchups. Your current selection balances aggressive hitting and disciplined death
-                            bowling.
-                        </p>
+                <header className="flex flex-col gap-4 mb-6">
+                    <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                        <div className="flex items-center gap-4">
+                            {franchise?.teamLogo ? (
+                                <img
+                                    src={franchise.teamLogo}
+                                    alt={franchise.teamName}
+                                    className="h-16 w-16 rounded-xl border border-border object-cover"
+                                />
+                            ) : null}
+                            <div>
+                                <h1 className="text-2xl md:text-3xl font-bold">
+                                    {franchise?.teamName || 'My Franchise'}
+                                </h1>
+                                <p className="text-gray-500 text-sm max-w-md">
+                                    Your active cycle squad contains {players.length} players. Build
+                                    the lineup for the next fixture from this roster.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div className="flex flex-wrap gap-2">
+                            <Button
+                                variant="default"
+                                onClick={() => navigate('/my-squad/create')}
+                                disabled={sessionLocked}
+                            >
+                                Edit 25-Player Squad
+                            </Button>
+                            <Button
+                                variant="secondary"
+                                onClick={() =>
+                                    nextFixture &&
+                                    navigate(`/my-squad/${nextFixture.id}/change`)
+                                }
+                                disabled={!nextFixture}
+                            >
+                                Manage Playing 12
+                            </Button>
+                            <Button
+                                variant="outline"
+                                onClick={() =>
+                                    nextFixture &&
+                                    navigate(`/my-squad/${nextFixture.id}/roles`)
+                                }
+                                disabled={!nextFixture}
+                            >
+                                Change Roles
+                            </Button>
+                        </div>
                     </div>
-                    <Button
-                        variant={'default'}
-                        onClick={() => navigate(`${team.team?.id}/change`)}
-                        disabled={sessionLocked}>
-                        Edit Team
-                    </Button>
-                    <Button
-                        variant={'secondary'}
-                        onClick={() => navigate(`${team.team?.id}/roles`)}>
-                        Change C/VC
-                    </Button>
+
+                    {nextFixture ? (
+                        <div className="rounded-xl border border-border bg-card px-4 py-3 text-sm">
+                            Next fixture: <strong>{nextFixture.teamA}</strong> vs{' '}
+                            <strong>{nextFixture.teamB}</strong> at{' '}
+                            {new Date(nextFixture.startTime).toLocaleString()}
+                        </div>
+                    ) : (
+                        <div className="rounded-xl border border-border bg-card px-4 py-3 text-sm text-muted-foreground">
+                            No upcoming fixture is available for the active cycle yet.
+                        </div>
+                    )}
                 </header>
 
-                {/* Sections */}
                 {players.length === 0 ? (
                     <div className="flex items-center justify-center h-64">
-                        <p className="text-gray-500">No players in your team yet. Start building your squad!</p>
+                        <p className="text-gray-500">
+                            No squad saved yet. Build your 25-player roster first.
+                        </p>
                     </div>
                 ) : (
-                    <TeamSection
-                        title="My Players"
-                        count={`${players.length} Players`}>
+                    <TeamSection title="Franchise Squad" count={`${players.length} Players`}>
                         {players.map((player) => (
                             <PlayerCard
                                 key={player.id}
                                 name={player.name}
-                                credits={player.cost}
-                                tag={`${player.role}${player.team ? ` • ${player.team}` : ''}`}
+                                credits={player.purchasePrice ?? player.cost}
+                                tag={`${player.role}${player.iplTeam ? ` • ${player.iplTeam}` : ''}`}
                                 badge={player.isOverseas ? 'Overseas' : undefined}
-                                profilePicUrl={player.profilePicUrl}
-                                isCaptain={team.team?.captainId === player.id}
-                                isViceCaptain={team.team?.viceCaptainId === player.id}
+                                profilePicUrl={player.profileImageUrl}
                             />
                         ))}
                     </TeamSection>

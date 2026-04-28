@@ -46,7 +46,7 @@ const topPlayers: Player[] = [
 ]
 
 export function TopThreePlayers() {
-    const [_, setHoveredRank] = useState<number | null>(null)
+    const [, setHoveredRank] = useState<number | null>(null)
 
     // Reorder for display: rank 1 in middle, 2 and 3 on sides
     const displayOrder = [topPlayers[0], topPlayers[1], topPlayers[2]]

@@ -10,15 +10,15 @@ import { Button } from '@/components/ui/button'
 const REQUIREMENTS = [
     {
         id: 1,
-        title: 'Pick 11 Players',
-        description: 'Select your favorites while staying within the 900-credit budget.',
+        title: 'Pick 25 Players',
+        description: 'Build a full franchise squad while staying within the 2000-credit cycle budget.',
         color: '#2962FF12',
         icon: <FaUserLarge className="fill-primary" />
     },
     {
         id: 2,
-        title: 'Choose Captains',
-        description: 'Choose your Captain (4x points) and Vice-Captain (3x points) wisely to maximize your score.',
+        title: 'Manage Match Roles',
+        description: 'Set Captain (4x), Vice-Captain (3x), and Impact Player (2.5x) for each fixture lineup.',
         color: '#FF6D0012',
         icon: <FaStar className="fill-secondary" />
     },
@@ -31,8 +31,34 @@ const REQUIREMENTS = [
     }
 ]
 
-const CreateTeam: React.FC = () => {
+type CreateTeamProps = {
+    title?: string
+    highlight?: string
+    description?: string
+    buttonLabel?: string
+    actionPath?: string
+    onActionClick?: () => void
+}
+
+const CreateTeam: React.FC<CreateTeamProps> = ({
+    title = 'Ready to Build Your Dream Franchise?',
+    highlight = 'Dream Franchise',
+    description = 'You have not assembled your franchise squad for the active cycle yet. Start picking your 25-player roster to compete for the top spot on the leaderboard.',
+    buttonLabel = 'Build Franchise Squad',
+    actionPath = '/my-squad/create',
+    onActionClick
+}) => {
     const navigate = useNavigate()
+    const hasHighlight = title.includes(highlight)
+
+    const handleButtonClick = () => {
+        if (onActionClick) {
+            onActionClick()
+        } else if (actionPath) {
+            navigate(actionPath)
+        }
+    }
+
     return (
         <main className="flex flex-col items-center px-4 py-10">
             {/* Hero Section */}
@@ -60,12 +86,18 @@ const CreateTeam: React.FC = () => {
                 {/* Heading */}
                 <header className="mt-8">
                     <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold leading-tight font-heading">
-                        Ready to Build Your <span className="text-primary">Dream Team?</span>
+                        {hasHighlight ? (
+                            <>
+                                {title.replace(highlight, '')}
+                                <span className="text-primary">{highlight}</span>
+                            </>
+                        ) : (
+                            <span className="text-primary">{title}</span>
+                        )}
                     </h1>
 
                     <p className="mt-3 text-gray-500 text-sm sm:text-base max-w-xl mx-auto font-body">
-                        You haven’t assembled your squad for the upcoming match yet. Start picking your star players to compete for the top spot on
-                        the leaderboard.
+                        {description}
                     </p>
                 </header>
 
@@ -74,9 +106,9 @@ const CreateTeam: React.FC = () => {
                     <Button
                         size="lg"
                         variant="default"
-                        onClick={() => navigate('/my-squad/create')}>
+                        onClick={handleButtonClick}>
                         <Plus />
-                        Create Team
+                        {buttonLabel}
                     </Button>
                 </div>
             </section>

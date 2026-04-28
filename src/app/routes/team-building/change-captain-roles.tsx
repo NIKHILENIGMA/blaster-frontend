@@ -1,178 +1,150 @@
-import { useState, useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { BiSolidLeftArrowCircle } from 'react-icons/bi'
 import { useNavigate, useParams } from 'react-router'
 import { toast } from 'sonner'
 
 import { Button } from '@/components/ui/button'
-import { useGetFixture } from '@/features/team-builder/api/get-fixture'
-import { useGetTeamById } from '@/features/team-builder/api/get-team-by-id'
-import { useUpdateRole } from '@/features/team-builder/api/update-role'
-
-import CurrentRolesCard from '@/features/team-builder/components/change-roles/current-roles-card'
-import LockStatusBanner from '@/features/team-builder/components/change-roles/lock-status-banner'
-import PlayerRoleCard from '@/features/team-builder/components/change-roles/player-role-card'
-import RoleActionFooter from '@/features/team-builder/components/change-roles/role-action-footer'
-
-import type { Player } from '@/features/team-builder/types/team'
+import { useGetFixtureLineup, useSaveLineup } from '@/features/team-builder/api/franchise'
 import { getTimeState } from '@/features/team-builder/utils/time'
 
-type RoleState = {
-    captainId: string | null
-    viceCaptainId: string | null
-}
-
 export default function ChangeCaptainRoles() {
-    const { teamId } = useParams<{ teamId: string }>()
+    const { fixtureId } = useParams<{ fixtureId: string }>()
     const navigate = useNavigate()
+    const { data, isPending } = useGetFixtureLineup({ fixtureId: fixtureId ?? '' })
+    const { mutateAsync: saveLineup, isPending: isSaving } = useSaveLineup()
 
-    const { data: team } = useGetTeamById({ teamId: teamId! })
-    const { data: fixture } = useGetFixture({})
-    const { mutateAsync: updateRole } = useUpdateRole()
+    const playingPlayers = useMemo(
+        () => data?.lineupPlayers.filter((player) => player.selectionType === 'PLAYING') ?? [],
+        [data?.lineupPlayers]
+    )
 
-    // 🔑 Single controlled state
-    const [roles, setRoles] = useState<RoleState>({
-        captainId: null,
-        viceCaptainId: null
-    })
+    const [captainId, setCaptainId] = useState<string | null>(null)
+    const [viceCaptainId, setViceCaptainId] = useState<string | null>(null)
+    const [impactPlayerId, setImpactPlayerId] = useState<string | null>(null)
 
-    const [isSubmitting, setIsSubmitting] = useState(false)
-    const [submitError, setSubmitError] = useState<string | null>(null)
+    useEffect(() => {
+        if (!data) return
 
-    // ✅ Initialize roles lazily (no useEffect)
-    useMemo(() => {
-        if (team && !roles.captainId && !roles.viceCaptainId) {
-            setRoles({
-                captainId: team.captainId,
-                viceCaptainId: team.viceCaptainId
-            })
-        }
-    }, [team])
+        setCaptainId(data.lineup?.captainId ?? playingPlayers[0]?.id ?? null)
+        setViceCaptainId(data.lineup?.viceCaptainId ?? playingPlayers[1]?.id ?? null)
+        setImpactPlayerId(data.lineup?.impactPlayerId ?? playingPlayers[2]?.id ?? null)
+    }, [data, playingPlayers])
 
-    const isLocked = fixture ? getTimeState(fixture.startTime).isLocked : true
+    const isLocked = data?.fixture ? getTimeState(data.fixture.startTime).isLocked : true
 
-    // ✅ Derived validation
-    const isFormValid = useMemo(() => {
-        if (!team || !fixture) return false
+    const isFormValid =
+        Boolean(captainId) &&
+        Boolean(viceCaptainId) &&
+        Boolean(impactPlayerId) &&
+        new Set([captainId, viceCaptainId, impactPlayerId]).size === 3
 
-        const { captainId, viceCaptainId } = roles
+    const handleSubmit = async () => {
+        if (!data || !fixtureId || !isFormValid || isLocked) return
 
-        return (
-            !!captainId &&
-            !!viceCaptainId &&
-            captainId !== viceCaptainId &&
-            (captainId !== team.captainId || viceCaptainId !== team.viceCaptainId)
-        ) as boolean
-    }, [roles, team, fixture])
-
-    // ✅ Generic role updater
-    const updateRoleSelection = (playerId: string, type: 'captain' | 'vice') => {
-        if (isLocked) return
-
-        setRoles(prev => {
-            const current = type === 'captain' ? prev.captainId : prev.viceCaptainId
-            const updatedValue = current === playerId ? null : playerId
-
-            return {
-                ...prev,
-                [type === 'captain' ? 'captainId' : 'viceCaptainId']: updatedValue
+        await saveLineup({
+            fixtureId,
+            payload: {
+                playingPlayerIds: playingPlayers.map((player) => player.id),
+                substitutePlayerIds: data.squadPlayers
+                    .filter((player) => !playingPlayers.some((playingPlayer) => playingPlayer.id === player.id))
+                    .map((player) => player.id),
+                captainId: captainId ?? '',
+                viceCaptainId: viceCaptainId ?? '',
+                impactPlayerId: impactPlayerId ?? ''
             }
         })
 
-        setSubmitError(null)
+        toast.success('Roles updated successfully!')
+        navigate('/my-squad')
     }
 
-    const handleReset = () => {
-        if (!team) return
-
-        setRoles({
-            captainId: team.captainId,
-            viceCaptainId: team.viceCaptainId
-        })
-
-        setSubmitError(null)
-    }
-
-    const handleSubmit = async () => {
-        if (!isFormValid || isLocked || !team || !fixture) return
-
-        setIsSubmitting(true)
-        setSubmitError(null)
-
-        try {
-            await updateRole({
-                teamId: team.id,
-                data: {
-                    fixtureId: fixture.id,
-                    newCaptainId: roles.captainId!,
-                    newViceCaptainId: roles.viceCaptainId!
-                }
-            })
-
-            toast('Roles updated successfully!')
-            navigate('/my-squad')
-        } catch (err) {
-            setSubmitError(err instanceof Error ? err.message : 'Something went wrong')
-        } finally {
-            setIsSubmitting(false)
-        }
-    }
-
-    if (!team || !fixture) {
-        return (
-            <div className="min-h-screen bg-neutral-background">
-                <main className="max-w-2xl mx-auto px-4 py-6">
-                    <Button onClick={() => navigate('/my-squad')}>
-                        <BiSolidLeftArrowCircle />
-                        Go back
-                    </Button>
-                </main>
-            </div>
-        )
-    }
+    const renderSelector = (
+        label: string,
+        value: string | null,
+        onChange: (value: string) => void
+    ) => (
+        <div className="rounded-xl border border-border bg-card p-4">
+            <label className="mb-2 block text-sm font-medium">{label}</label>
+            <select
+                value={value ?? ''}
+                onChange={(event) => onChange(event.target.value)}
+                disabled={isLocked}
+                className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm"
+            >
+                <option value="">Select {label}</option>
+                {playingPlayers.map((player) => (
+                    <option key={player.id} value={player.id}>
+                        {player.name} • {player.role}
+                    </option>
+                ))}
+            </select>
+        </div>
+    )
 
     return (
         <div className="min-h-screen bg-neutral-background">
-            <main className="max-w-2xl mx-auto px-4 py-6 pb-32 space-y-6">
+            <main className="max-w-3xl mx-auto px-4 py-6 pb-20 space-y-6">
                 <Button onClick={() => navigate('/my-squad')}>
                     <BiSolidLeftArrowCircle />
                     Go back
                 </Button>
 
-                <LockStatusBanner fixture={fixture} />
-
-                <CurrentRolesCard
-                    currentCaptainId={team.captainId}
-                    currentViceCaptainId={team.viceCaptainId}
-                    players={team.players || []}
-                    fixtureId={fixture.id}
-                />
-
-                <div className="space-y-3">
-                    <h2 className="text-sm font-semibold">Select New Roles</h2>
-
-                    <div className="grid gap-3 sm:grid-cols-2">
-                        {team.players.map((player: Player) => (
-                            <PlayerRoleCard
-                                key={player.id}
-                                player={player}
-                                selectedCaptainId={roles.captainId}
-                                selectedViceCaptainId={roles.viceCaptainId}
-                                isLocked={isLocked}
-                                onRoleChange={updateRoleSelection}
-                            />
-                        ))}
+                {isPending || !data ? (
+                    <div className="flex items-center justify-center h-64">
+                        <p className="text-gray-500">Loading fixture roles...</p>
                     </div>
-                </div>
-            </main>
+                ) : (
+                    <>
+                        <section className="rounded-xl border border-border bg-card p-4 md:p-6">
+                            <h1 className="text-2xl font-bold">
+                                Update Roles for {data.fixture.teamA} vs {data.fixture.teamB}
+                            </h1>
+                            <p className="text-sm text-muted-foreground mt-1">
+                                Choose captain, vice-captain, and impact player from the current
+                                playing 12.
+                            </p>
+                        </section>
 
-            <RoleActionFooter
-                isLocked={isLocked}
-                isSubmitting={isSubmitting}
-                isFormValid={isFormValid}
-                submitError={submitError}
-                onUpdate={handleSubmit}
-                onReset={handleReset}
-            />
+                        <section className="grid gap-4 md:grid-cols-3">
+                            {renderSelector('Captain', captainId, setCaptainId)}
+                            {renderSelector('Vice-Captain', viceCaptainId, setViceCaptainId)}
+                            {renderSelector('Impact Player', impactPlayerId, setImpactPlayerId)}
+                        </section>
+
+                        <section className="rounded-xl border border-border bg-card p-4 md:p-6">
+                            <h2 className="mb-4 text-lg font-semibold">Current Playing 12</h2>
+                            <div className="grid gap-3 sm:grid-cols-2">
+                                {playingPlayers.map((player) => (
+                                    <div
+                                        key={player.id}
+                                        className="rounded-lg border border-border px-3 py-2"
+                                    >
+                                        <p className="font-medium">{player.name}</p>
+                                        <p className="text-sm text-muted-foreground">
+                                            {player.iplTeam} • {player.role}
+                                        </p>
+                                    </div>
+                                ))}
+                            </div>
+                        </section>
+
+                        {!isFormValid && (
+                            <p className="text-sm text-destructive">
+                                Select three different players for captain, vice-captain, and impact
+                                player.
+                            </p>
+                        )}
+
+                        <Button
+                            onClick={handleSubmit}
+                            disabled={!isFormValid || isLocked || isSaving}
+                            className="w-full"
+                        >
+                            {isSaving ? 'Updating...' : 'Update Roles'}
+                        </Button>
+                    </>
+                )}
+            </main>
         </div>
     )
 }
