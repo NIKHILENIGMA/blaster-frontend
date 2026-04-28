@@ -39,11 +39,11 @@ const mainRouter = [
                 lazy: () => import('./routes/team-building/select-players').then((module) => ({ Component: module.default }))
             },
             {
-                path: 'my-squad/:teamId/change',
+                path: 'my-squad/:fixtureId/change',
                 lazy: () => import('./routes/team-building/change-players').then((module) => ({ Component: module.default }))
             },
             {
-                path: 'my-squad/:teamId/roles',
+                path: 'my-squad/:fixtureId/roles',
                 lazy: () => import('./routes/team-building/change-captain-roles').then((module) => ({ Component: module.default }))
             },
             {
