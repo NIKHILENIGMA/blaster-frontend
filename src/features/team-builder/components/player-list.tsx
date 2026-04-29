@@ -116,14 +116,14 @@ const ROLES = [
     }
 ]
 
-const ROLE_COLORS: Record<string, string> = {
-    Batsman: 'bg-blue-600',
-    Bowler: 'bg-red-600',
-    'All-Rounder': 'bg-purple-600',
-    'All-rounder': 'bg-purple-600',
-    'Wicket-Keeper': 'bg-yellow-600',
-    Wicketkeeper: 'bg-yellow-600'
-}
+// const ROLE_COLORS: Record<string, string> = {
+//     Batsman: 'bg-blue-600',
+//     Bowler: 'bg-red-600',
+//     'All-Rounder': 'bg-purple-600',
+//     'All-rounder': 'bg-purple-600',
+//     'Wicket-Keeper': 'bg-yellow-600',
+//     Wicketkeeper: 'bg-yellow-600'
+// }
 
 export function PlayerList({
     players,

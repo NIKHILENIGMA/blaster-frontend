@@ -87,7 +87,7 @@ const SelectFranchiseTeam: FC<SelectFranchiseTeamProps> = ({
 
             <button
                 onClick={() => onSavePlayers(selectedPlayers)}
-                disabled={!isSaving || isSaving}
+                disabled={!canSave || isSaving}
                 className={`w-full py-3 px-4 rounded-lg font-semibold transition-all ${
                     canSave && !isSaving ? 'bg-primary/90 hover:bg-primary text-white shadow-lg' : 'bg-gray-600 text-gray-400 cursor-not-allowed'
                 }`}>
