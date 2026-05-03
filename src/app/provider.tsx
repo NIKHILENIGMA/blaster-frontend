@@ -4,6 +4,7 @@ import { Suspense, useState } from 'react'
 import { ErrorBoundary } from 'react-error-boundary'
 
 import { queryConfig } from '@/shared/lib/react-query'
+import { Toaster } from '@/components/ui/sonner'
 
 type AppProviderProps = {
     children: React.ReactNode
@@ -35,6 +36,7 @@ const AppProvider = ({ children }: AppProviderProps) => {
                     signInUrl="/auth/login"
                     signUpUrl="/auth/signup">
                     <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+                    <Toaster />
                 </ClerkProvider>
             </ErrorBoundary>
         </Suspense>
