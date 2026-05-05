@@ -3,8 +3,8 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { Suspense, useState } from 'react'
 import { ErrorBoundary } from 'react-error-boundary'
 
-import { queryConfig } from '@/shared/lib/react-query'
 import { Toaster } from '@/components/ui/sonner'
+import { queryConfig } from '@/shared/lib/react-query'
 
 type AppProviderProps = {
     children: React.ReactNode
