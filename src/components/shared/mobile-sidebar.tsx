@@ -1,7 +1,6 @@
 import { ChartNoAxesColumn, LayoutDashboard, Users } from 'lucide-react'
 import type { ComponentType, FC, ReactNode } from 'react'
 import { IoAnalyticsOutline } from 'react-icons/io5'
-import { MdSportsCricket } from 'react-icons/md'
 import { Link } from 'react-router'
 
 import { Drawer, DrawerContent, DrawerDescription, DrawerHeader, DrawerTitle, DrawerTrigger } from '@/components/ui/drawer'
@@ -24,14 +23,14 @@ const NAV_LINKS: NavItem[] = [
         label: 'Leaderboard'
     },
     {
-        to: '/my-squad',
+        to: '/franchise',
         icon: Users,
-        label: 'My Squad'
+        label: 'Franchise'
     },
     {
         to: '/matches',
-        icon: MdSportsCricket,
-        label: 'Matches'
+        icon: Users,
+        label: 'Match Hub'
     },
     {
         to: '/analytics',
