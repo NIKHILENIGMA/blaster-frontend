@@ -20,7 +20,7 @@ const Header = () => {
         navigate('/')
     }
     return (
-        <header className="sticky top-0 bg-white w-full h-20 shadow-sm flex items-center justify-between px-9 z-50">
+        <header className="fixed top-0 bg-white w-full h-20 shadow-sm flex items-center justify-between px-9 z-50">
             <div className="flex items-center gap-4">
                 <MobileSidebar>
                     <List className="lg:hidden" />
