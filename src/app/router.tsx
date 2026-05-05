@@ -7,7 +7,7 @@ import AdminProtectedRoute from '@/components/shared/admin-protected-route'
 import ProtectedRoute from '@/components/shared/protected-route'
 import PublicRoute from '@/components/shared/public-route'
 
-const mainRouter = [
+const router = createBrowserRouter([
     // Protected Routes (Authenticated users only)
     {
         path: '/',
@@ -27,12 +27,28 @@ const mainRouter = [
                 lazy: () => import('./routes/leaderboard/leaderboard').then((module) => ({ Component: module.default }))
             },
             {
-                path: 'matches',
-                lazy: () => import('./routes/matches/matches').then((module) => ({ Component: module.default }))
-            },
-            {
                 path: 'my-squad',
                 lazy: () => import('./routes/team-building/my-squad').then((module) => ({ Component: module.default }))
+            },
+            {
+                path: 'franchise',
+                lazy: () => import('./routes/franchise/franchise-page').then((module) => ({ Component: module.default }))
+            },
+            {
+                path: 'franchise/build',
+                lazy: () => import('./routes/franchise/build-franchise-page').then((module) => ({ Component: module.default }))
+            },
+            {
+                path: 'matches',
+                lazy: () => import('./routes/franchise/match-management').then((module) => ({ Component: module.default }))
+            },
+            {
+                path: 'matches/team',
+                lazy: () => import('./routes/franchise/match-team').then((module) => ({ Component: module.default }))
+            },
+            {
+                path: 'matches/team/build',
+                lazy: () => import('./routes/franchise/build-team-page').then((module) => ({ Component: module.default }))
             },
             {
                 path: 'my-squad/create',
@@ -53,6 +69,32 @@ const mainRouter = [
             {
                 path: 'profile',
                 lazy: () => import('./routes/profile/profile').then((module) => ({ Component: module.default }))
+            },
+            {
+                path: '/admin',
+                element: (
+                    <AdminProtectedRoute>
+                        <AdminLayout />
+                    </AdminProtectedRoute>
+                ),
+                children: [
+                    {
+                        index: true,
+                        path: 'dashboard'
+                    },
+                    {
+                        path: 'matches',
+                        lazy: () => import('./routes/admin/matches').then((module) => ({ Component: module.default }))
+                    },
+                    {
+                        path: 'fixtures',
+                        lazy: () => import('./routes/admin/fixtures').then((module) => ({ Component: module.default }))
+                    },
+                    {
+                        path: 'player-stats',
+                        lazy: () => import('./routes/admin/player-stats').then((module) => ({ Component: module.default }))
+                    }
+                ]
             }
         ]
     },
@@ -98,63 +140,9 @@ const mainRouter = [
         path: '*',
         lazy: () => import('./routes/not-found').then((module) => ({ Component: module.default }))
     }
-]
-
-const adminRouter = [
-    {
-        path: '/admin',
-        element: (
-            <AdminProtectedRoute>
-                <AdminLayout />
-            </AdminProtectedRoute>
-        ),
-        children: [
-            {
-                index: true,
-                path: 'dashboard'
-            },
-            {
-                path: 'matches',
-                lazy: () => import('./routes/admin/matches').then((module) => ({ Component: module.default }))
-            },
-            {
-                path: 'fixtures',
-                lazy: () => import('./routes/admin/fixtures').then((module) => ({ Component: module.default }))
-            },
-            {
-                path: 'player-stats',
-                lazy: () => import('./routes/admin/player-stats').then((module) => ({ Component: module.default }))
-            }
-        ]
-    },
-    {
-        path: '/auth',
-        children: [
-            {
-                path: 'login',
-                lazy: () => import('./routes/auth/login').then((module) => ({ Component: module.default }))
-            },
-            {
-                path: 'signup',
-                lazy: () => import('./routes/auth/signup').then((module) => ({ Component: module.default }))
-            },
-            {
-                path: 'sso-callback',
-                lazy: () => import('./routes/auth/sso-callback').then((module) => ({ Component: module.default }))
-            }
-        ]
-    },
-    {
-        path: '*',
-        lazy: () => import('./routes/not-found').then((module) => ({ Component: module.default }))
-    }
-]
+])
 
 const AppRouter: FC = () => {
-    const hostname = window.location.hostname
-    const isAdmin = hostname.startsWith('admin.') // Simple check for admin subdomain
-    const router = createBrowserRouter(isAdmin ? adminRouter : mainRouter)
-
     return <RouterProvider router={router} />
 }
 
