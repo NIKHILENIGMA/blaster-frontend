@@ -5,12 +5,7 @@ import client from '@/shared/lib/api-client'
 import { franchiseKeys } from '@/shared/lib/query-keys'
 import type { MutationConfig, QueryConfig } from '@/shared/lib/react-query'
 
-import type {
-    CurrentRosterCycleResponse,
-    FixtureLineupResponse,
-    FranchiseOverview,
-    UpcomingFixturesResponse
-} from '../types/franchise'
+import type { CurrentRosterCycleResponse, FixtureLineupResponse, FranchiseOverview, UpcomingFixturesResponse } from '../types/franchise'
 
 export type CreateFranchisePayload = {
     teamName: string
@@ -35,23 +30,17 @@ export const getFranchiseOverview = async (): Promise<FranchiseOverview> => {
 }
 
 export const getCurrentRosterCycle = async (): Promise<CurrentRosterCycleResponse> => {
-    const response = await client.get<CurrentRosterCycleResponse>(
-        `${FRANCHISE_API_BASE}/roster-cycles/current`
-    )
+    const response = await client.get<CurrentRosterCycleResponse>(`${FRANCHISE_API_BASE}/roster-cycles/current`)
     return response.data
 }
 
 export const getUpcomingFixtures = async (): Promise<UpcomingFixturesResponse> => {
-    const response = await client.get<UpcomingFixturesResponse>(
-        `${FRANCHISE_API_BASE}/fixtures/upcoming`
-    )
+    const response = await client.get<UpcomingFixturesResponse>(`${FRANCHISE_API_BASE}/fixtures/upcoming`)
     return response.data
 }
 
 export const getFixtureLineup = async (fixtureId: string): Promise<FixtureLineupResponse> => {
-    const response = await client.get<FixtureLineupResponse>(
-        `${FRANCHISE_API_BASE}/lineups/${fixtureId}`
-    )
+    const response = await client.get<FixtureLineupResponse>(`${FRANCHISE_API_BASE}/lineups/${fixtureId}`)
     return response.data
 }
 
@@ -59,30 +48,12 @@ export const createFranchise = async (payload: CreateFranchisePayload) => {
     return client.post<null, CreateFranchisePayload>(`${FRANCHISE_API_BASE}`, payload)
 }
 
-export const saveSquad = async ({
-    matchId,
-    payload
-}: {
-    matchId: string
-    payload: SaveSquadPayload
-}) => {
-    return client.put<null, SaveSquadPayload>(
-        `${FRANCHISE_API_BASE}/roster-cycles/${matchId}/squad`,
-        payload
-    )
+export const saveSquad = async ({ matchId, payload }: { matchId: string; payload: SaveSquadPayload }) => {
+    return client.put<null, SaveSquadPayload>(`${FRANCHISE_API_BASE}/roster-cycles/${matchId}/squad`, payload)
 }
 
-export const saveLineup = async ({
-    fixtureId,
-    payload
-}: {
-    fixtureId: string
-    payload: SaveLineupPayload
-}) => {
-    return client.put<null, SaveLineupPayload>(
-        `${FRANCHISE_API_BASE}/lineups/${fixtureId}`,
-        payload
-    )
+export const saveLineup = async ({ fixtureId, payload }: { fixtureId: string; payload: SaveLineupPayload }) => {
+    return client.put<null, SaveLineupPayload>(`${FRANCHISE_API_BASE}/lineups/${fixtureId}`, payload)
 }
 
 export const getFranchiseOverviewQueryOptions = () =>
