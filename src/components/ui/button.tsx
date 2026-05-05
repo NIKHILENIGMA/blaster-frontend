@@ -17,7 +17,9 @@ const buttonVariants = cva(
                 secondary: 'bg-secondary text-secondary-foreground shadow-xs hover:bg-secondary/80',
                 ghost: 'hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50',
                 link: 'text-primary underline-offset-4 hover:underline',
-                profile: 'bg-blue-600 text-white hover:bg-blue-500 p-2 mt-1'
+                profile: 'bg-blue-600 text-white hover:bg-blue-500 p-2 mt-1',
+                fantasyBtn:
+                    'inline-flex items-center justify-center gap-2 px-6 py-3 rounded-sm text-white font-semibold text-sm md:text-base bg-gradient-to-r from-purple-700 via-purple-600 to-purple-900 shadow-md shadow-indigo-200 transition-all duration-300 ease-out hover:shadow-lg hover:shadow-indigo-300 hover:scale-[1.02]active:scale-[0.98]'
             },
             size: {
                 default: 'h-9 px-4 py-2 has-[>svg]:px-3',
