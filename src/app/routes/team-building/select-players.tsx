@@ -6,11 +6,7 @@ import { Toaster, toast } from 'sonner'
 import Footer from '@/components/shared/footer'
 import Header from '@/components/shared/header'
 import { Button } from '@/components/ui/button'
-import {
-    useGetCurrentRosterCycle,
-    useGetFranchiseOverview,
-    useSaveSquad
-} from '@/features/team-builder/api/franchise'
+import { useGetCurrentRosterCycle, useGetFranchiseOverview, useSaveSquad } from '@/features/team-builder/api/franchise'
 import { useGetPlayers } from '@/features/team-builder/api/get-players'
 import { TeamBuilder } from '@/features/team-builder/components/team-builder'
 
@@ -22,12 +18,8 @@ export default function SelectPlayers() {
     const { mutateAsync: saveSquad, isPending: isSavingSquad } = useSaveSquad()
 
     const isPending = isOverviewPending || isCyclePending
-    const activeMatchId =
-        currentCycleData?.match?.id ?? franchiseOverview?.activeCycle?.id ?? null
-    const initialPlayers = useMemo(
-        () => currentCycleData?.players ?? [],
-        [currentCycleData?.players]
-    )
+    const activeMatchId = currentCycleData?.match?.id ?? franchiseOverview?.activeCycle?.id ?? null
+    const initialPlayers = useMemo(() => currentCycleData?.players ?? [], [currentCycleData?.players])
 
     const handleSaveSquad = async (selectedPlayers: typeof playersData) => {
         if (!activeMatchId) {
@@ -57,8 +49,7 @@ export default function SelectPlayers() {
                 <Button
                     onClick={() => navigate(-1)}
                     variant="outline"
-                    className="hidden md:flex absolute left-4 top-5 md:top-2 shadow-none"
-                >
+                    className="hidden md:flex absolute left-4 top-5 md:top-2 shadow-none">
                     <FaArrowLeftLong />
                 </Button>
 

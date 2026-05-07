@@ -96,9 +96,7 @@ const CreateTeam: React.FC<CreateTeamProps> = ({
                         )}
                     </h1>
 
-                    <p className="mt-3 text-gray-500 text-sm sm:text-base max-w-xl mx-auto font-body">
-                        {description}
-                    </p>
+                    <p className="mt-3 text-gray-500 text-sm sm:text-base max-w-xl mx-auto font-body">{description}</p>
                 </header>
 
                 {/* CTA */}

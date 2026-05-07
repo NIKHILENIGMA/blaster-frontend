@@ -33,9 +33,7 @@ export default function ChangePlayers() {
 
         const initialPlaying =
             data.lineupPlayers.length > 0
-                ? data.lineupPlayers
-                      .filter((player) => player.selectionType === 'PLAYING')
-                      .map((player) => player.id)
+                ? data.lineupPlayers.filter((player) => player.selectionType === 'PLAYING').map((player) => player.id)
                 : data.squadPlayers.slice(0, 12).map((player) => player.id)
 
         setPlayingIds(initialPlaying)
@@ -47,14 +45,8 @@ export default function ChangePlayers() {
     const squadPlayers = useMemo(() => data?.squadPlayers ?? [], [data?.squadPlayers])
     const isLocked = data?.fixture ? getTimeState(data.fixture.startTime).isLocked : true
 
-    const playingPlayers = useMemo(
-        () => squadPlayers.filter((player) => playingIds.includes(player.id)),
-        [playingIds, squadPlayers]
-    )
-    const substitutePlayers = useMemo(
-        () => squadPlayers.filter((player) => !playingIds.includes(player.id)),
-        [playingIds, squadPlayers]
-    )
+    const playingPlayers = useMemo(() => squadPlayers.filter((player) => playingIds.includes(player.id)), [playingIds, squadPlayers])
+    const substitutePlayers = useMemo(() => squadPlayers.filter((player) => !playingIds.includes(player.id)), [playingIds, squadPlayers])
 
     const validationErrors = useMemo(() => {
         const errors: string[] = []
@@ -91,9 +83,7 @@ export default function ChangePlayers() {
             captainId &&
             viceCaptainId &&
             impactPlayerId &&
-            (!playingIds.includes(captainId) ||
-                !playingIds.includes(viceCaptainId) ||
-                !playingIds.includes(impactPlayerId))
+            (!playingIds.includes(captainId) || !playingIds.includes(viceCaptainId) || !playingIds.includes(impactPlayerId))
         ) {
             errors.push('All role assignments must come from the playing 12')
         }
@@ -136,22 +126,19 @@ export default function ChangePlayers() {
         navigate('/my-squad')
     }
 
-    const renderRoleSelector = (
-        label: string,
-        value: string | null,
-        onChange: (value: string) => void
-    ) => (
+    const renderRoleSelector = (label: string, value: string | null, onChange: (value: string) => void) => (
         <div className="rounded-xl border border-border bg-card p-4">
             <label className="mb-2 block text-sm font-medium">{label}</label>
             <select
                 value={value ?? ''}
                 onChange={(event) => onChange(event.target.value)}
                 className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm"
-                disabled={isLocked}
-            >
+                disabled={isLocked}>
                 <option value="">Select {label}</option>
                 {playingPlayers.map((player) => (
-                    <option key={player.id} value={player.id}>
+                    <option
+                        key={player.id}
+                        value={player.id}>
                         {player.name} • {player.role}
                     </option>
                 ))}
@@ -163,7 +150,9 @@ export default function ChangePlayers() {
         <div className="min-h-screen bg-neutral-background">
             <Header />
             <main className="mx-auto max-w-7xl px-4 py-6 space-y-6">
-                <Button onClick={() => navigate('/my-squad')} variant="outline">
+                <Button
+                    onClick={() => navigate('/my-squad')}
+                    variant="outline">
                     <FaArrowLeftLong />
                     Go back
                 </Button>
@@ -178,12 +167,8 @@ export default function ChangePlayers() {
                             <h1 className="text-2xl font-bold">
                                 {data.fixture.teamA} vs {data.fixture.teamB}
                             </h1>
-                            <p className="text-sm text-muted-foreground mt-1">
-                                Pick your playing 12 from the saved 25-player squad.
-                            </p>
-                            <p className="text-sm text-muted-foreground mt-2">
-                                Start time: {new Date(data.fixture.startTime).toLocaleString()}
-                            </p>
+                            <p className="text-sm text-muted-foreground mt-1">Pick your playing 12 from the saved 25-player squad.</p>
+                            <p className="text-sm text-muted-foreground mt-2">Start time: {new Date(data.fixture.startTime).toLocaleString()}</p>
                         </section>
 
                         <section className="grid gap-4 md:grid-cols-3">
@@ -197,9 +182,7 @@ export default function ChangePlayers() {
                             </div>
                             <div className="rounded-xl border border-border bg-card p-4">
                                 <p className="text-sm text-muted-foreground">Status</p>
-                                <p className="text-2xl font-bold">
-                                    {isLocked ? 'Locked' : 'Editable'}
-                                </p>
+                                <p className="text-2xl font-bold">{isLocked ? 'Locked' : 'Editable'}</p>
                             </div>
                         </section>
 
@@ -216,11 +199,8 @@ export default function ChangePlayers() {
                                                 onClick={() => togglePlayingStatus(player.id)}
                                                 disabled={isLocked}
                                                 className={`rounded-xl border p-4 text-left transition ${
-                                                    isPlayingPlayer
-                                                        ? 'border-primary bg-primary/5'
-                                                        : 'border-border bg-background'
-                                                } ${isLocked ? 'cursor-not-allowed opacity-75' : 'hover:border-primary/50'}`}
-                                            >
+                                                    isPlayingPlayer ? 'border-primary bg-primary/5' : 'border-border bg-background'
+                                                } ${isLocked ? 'cursor-not-allowed opacity-75' : 'hover:border-primary/50'}`}>
                                                 <div className="flex items-center justify-between gap-2">
                                                     <div>
                                                         <p className="font-semibold">{player.name}</p>
@@ -228,9 +208,7 @@ export default function ChangePlayers() {
                                                             {player.iplTeam} • {player.role}
                                                         </p>
                                                     </div>
-                                                    <span className="text-xs font-medium">
-                                                        {isPlayingPlayer ? 'PLAYING' : 'SUB'}
-                                                    </span>
+                                                    <span className="text-xs font-medium">{isPlayingPlayer ? 'PLAYING' : 'SUB'}</span>
                                                 </div>
                                             </button>
                                         )
@@ -245,9 +223,7 @@ export default function ChangePlayers() {
 
                                 {validationErrors.length > 0 && (
                                     <div className="rounded-xl border border-destructive/30 bg-destructive/5 p-4">
-                                        <h3 className="mb-2 font-semibold text-destructive">
-                                            Validation
-                                        </h3>
+                                        <h3 className="mb-2 font-semibold text-destructive">Validation</h3>
                                         <ul className="list-disc space-y-1 pl-5 text-sm text-destructive">
                                             {validationErrors.map((error) => (
                                                 <li key={error}>{error}</li>
@@ -259,8 +235,7 @@ export default function ChangePlayers() {
                                 <Button
                                     onClick={handleSave}
                                     disabled={isLocked || validationErrors.length > 0 || isSaving}
-                                    className="w-full"
-                                >
+                                    className="w-full">
                                     {isSaving ? 'Saving...' : 'Save Fixture Lineup'}
                                 </Button>
                             </div>

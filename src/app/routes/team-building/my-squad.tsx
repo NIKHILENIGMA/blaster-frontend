@@ -31,15 +31,14 @@ const MySquad = () => {
                     <p className="text-gray-500">Loading franchise squad...</p>
                 </div>
             ) : hasFranchise && hasSquad && franchiseOverview ? (
-                <MyTeam overview={franchiseOverview} nextFixture={nextFixture} />
+                <MyTeam
+                    overview={franchiseOverview}
+                    nextFixture={nextFixture}
+                />
             ) : (
                 <>
                     <CreateTeam
-                        title={
-                            hasFranchise
-                                ? 'Build Your Active Cycle Squad'
-                                : 'Create Your Dream Franchise'
-                        }
+                        title={hasFranchise ? 'Build Your Active Cycle Squad' : 'Create Your Dream Franchise'}
                         description={
                             hasFranchise
                                 ? 'Your franchise identity is ready, but the active cycle still needs a 25-player squad before you can manage daily lineups.'

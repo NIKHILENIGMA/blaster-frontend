@@ -3,35 +3,20 @@ import { useNavigate } from 'react-router'
 import { toast } from 'sonner'
 
 import { Button } from '@/components/ui/button'
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle
-} from '@/components/ui/dialog'
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 
 import { useCreateFranchise } from '../api/franchise'
 
-const LOGO_OPTIONS = [
-    '/fortune-logo.png',
-    '/fortune-logo-2.png',
-    '/brand-logo.png',
-    '/dummylogo.jpg'
-]
+const LOGO_OPTIONS = ['/fortune-logo.png', '/fortune-logo-2.png', '/brand-logo.png', '/dummylogo.jpg']
 
 interface CreateFranchiseDialogProps {
     open: boolean
     onOpenChange: (open: boolean) => void
 }
 
-export const CreateFranchiseDialog: React.FC<CreateFranchiseDialogProps> = ({
-    open,
-    onOpenChange
-}) => {
+export const CreateFranchiseDialog: React.FC<CreateFranchiseDialogProps> = ({ open, onOpenChange }) => {
     const navigate = useNavigate()
     const { mutateAsync: createFranchise, isPending } = useCreateFranchise()
 
@@ -63,13 +48,13 @@ export const CreateFranchiseDialog: React.FC<CreateFranchiseDialogProps> = ({
     }
 
     return (
-        <Dialog open={open} onOpenChange={onOpenChange}>
+        <Dialog
+            open={open}
+            onOpenChange={onOpenChange}>
             <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
                     <DialogTitle>Create Your Franchise</DialogTitle>
-                    <DialogDescription>
-                        Give your franchise a unique identity. You can change this later.
-                    </DialogDescription>
+                    <DialogDescription>Give your franchise a unique identity. You can change this later.</DialogDescription>
                 </DialogHeader>
                 <div className="grid gap-4 py-4">
                     <div className="grid gap-2">
@@ -91,12 +76,9 @@ export const CreateFranchiseDialog: React.FC<CreateFranchiseDialogProps> = ({
                                     type="button"
                                     onClick={() => setTeamLogo(logo)}
                                     className={`rounded-xl border p-1 transition-all ${
-                                        teamLogo === logo
-                                            ? 'border-primary ring-2 ring-primary/20'
-                                            : 'border-border grayscale hover:grayscale-0'
+                                        teamLogo === logo ? 'border-primary ring-2 ring-primary/20' : 'border-border grayscale hover:grayscale-0'
                                     }`}
-                                    disabled={isPending}
-                                >
+                                    disabled={isPending}>
                                     <img
                                         src={logo}
                                         alt="Team logo option"
@@ -108,7 +90,10 @@ export const CreateFranchiseDialog: React.FC<CreateFranchiseDialogProps> = ({
                     </div>
                 </div>
                 <DialogFooter>
-                    <Button onClick={handleCreate} disabled={isPending} className="w-full">
+                    <Button
+                        onClick={handleCreate}
+                        disabled={isPending}
+                        className="w-full">
                         {isPending ? 'Creating...' : 'Create & Build Squad'}
                     </Button>
                 </DialogFooter>

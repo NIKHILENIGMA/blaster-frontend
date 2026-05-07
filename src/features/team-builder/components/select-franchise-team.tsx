@@ -1,8 +1,10 @@
-import { type FC } from 'react'
-import type { Player } from '../types/players'
-import { ValidationErrors } from './validation-error'
 import { Users } from 'lucide-react'
+import { type FC } from 'react'
+
+import type { Player } from '../types/players'
+
 import PlayerCard from './players/player-card'
+import { ValidationErrors } from './validation-error'
 
 interface SelectFranchiseTeamProps {
     selectedPlayers: Player[]
@@ -25,49 +27,67 @@ const SelectFranchiseTeam: FC<SelectFranchiseTeamProps> = ({
     saveLabel,
     canSave
 }) => {
+    // Define the roles in a fixed order for the UI
+    const ROLE_ORDER = ['Wicket-Keeper', 'Batsman', 'All-Rounder', 'Bowler'] as const
 
     // Group players by role
     const playersByRole = selectedPlayers.reduce<Record<string, Player[]>>((acc, player) => {
         if (!acc[player.role]) {
-            acc[player.role] = [];
+            acc[player.role] = []
         }
-        acc[player.role].push(player);
-        return acc;
-    }, {});
+        acc[player.role].push(player)
+        return acc
+    }, {})
 
     return (
-        <div className="w-full lg:w-[80%] flex flex-col gap-4">
-            <div className="min-h-[65vh] rounded-xl border border-border bg-card p-4">
-                <div className="mb-4 flex items-center justify-between">
+        <div className="w-full flex flex-col gap-4">
+            <div className="min-h-[65vh] bg-white p-4">
+                <div className="mb-6 flex items-center justify-between border-b border-border pb-4">
                     <div className="flex items-center gap-2">
-                        <span>
-                            <Users className="h-5 w-5 text-muted-foreground" />
-                        </span>
-
-                        <h2 className="text-lg font-semibold">Selected Franchise</h2>
+                        <div className="bg-primary/10 p-2 rounded-lg">
+                            <Users className="h-5 w-5 text-primary" />
+                        </div>
+                        <div>
+                            <h2 className="text-xl font-bold">Build Your Squad</h2>
+                            <p className="text-xs text-muted-foreground uppercase tracking-wider">IPL 2026 Season</p>
+                        </div>
                     </div>
-                    <span className="text-sm text-muted-foreground">
-                        {selectedPlayers.length}/{selectionLimit}
-                    </span>
+                    <div className="flex flex-col items-end">
+                        <span className="text-2xl font-black text-primary">
+                            {selectedPlayers.length}
+                            <span className="text-sm text-muted-foreground font-medium">/{selectionLimit}</span>
+                        </span>
+                        <p className="text-[10px] text-muted-foreground font-bold uppercase">Players Selected</p>
+                    </div>
                 </div>
 
                 {selectedPlayers.length === 0 ? (
-                    <p className="text-sm text-muted-foreground">Please select players from the left panel to assemble your franchise team.</p>
+                    <div className="h-[50vh] flex flex-col items-center justify-center text-center p-8 border-2 border-dashed border-border rounded-xl">
+                        <Users className="h-12 w-12 text-muted-foreground/30 mb-4" />
+                        <h3 className="text-lg font-semibold text-muted-foreground">No Players Selected</h3>
+                        <p className="text-sm text-muted-foreground max-w-xs">
+                            Select players from the catalog to build your championship winning team.
+                        </p>
+                    </div>
                 ) : (
-                    <div className="space-y-2 h-[80vh] pr-1 overflow-y-auto">
-                        {Object.entries(playersByRole).map(([role, players]) => {
-                            // Only apply grid for batsman, bowler, allrounder
-                            const isGridRole = ['batsman', 'bowler', 'all-rounder', 'wicket-keeper'].includes(role.toLowerCase());
+                    <div className="space-y-8 h-[75vh] pr-2 overflow-y-auto custom-scrollbar">
+                        {ROLE_ORDER.map((role) => {
+                            const players = playersByRole[role] || []
+                            if (players.length === 0) return null
+
                             return (
-                                <div key={role} className="mb-4">
-                                    <h3 className="font-bold text-2xl mb-2 uppercase">{role}</h3>
-                                    <div
-                                        className={
-                                            isGridRole
-                                                ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3'
-                                                : 'space-y-2'
-                                        }
-                                    >
+                                <div
+                                    key={role}
+                                    className="flex flex-col gap-4">
+                                    <div className="flex items-center gap-3">
+                                        <div className="h-[2px] flex-1 bg-gradient-to-r from-transparent via-border to-transparent" />
+                                        <h3 className="font-black text-sm uppercase tracking-[0.2em] text-muted-foreground px-4 py-1 bg-muted rounded-full border border-border">
+                                            {role}s ({players.length})
+                                        </h3>
+                                        <div className="h-[2px] flex-1 bg-gradient-to-r from-transparent via-border to-transparent" />
+                                    </div>
+
+                                    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
                                         {players.map((player) => (
                                             <PlayerCard
                                                 key={player.id}
@@ -77,7 +97,7 @@ const SelectFranchiseTeam: FC<SelectFranchiseTeamProps> = ({
                                         ))}
                                     </div>
                                 </div>
-                            );
+                            )
                         })}
                     </div>
                 )}
@@ -88,10 +108,19 @@ const SelectFranchiseTeam: FC<SelectFranchiseTeamProps> = ({
             <button
                 onClick={() => onSavePlayers(selectedPlayers)}
                 disabled={!canSave || isSaving}
-                className={`w-full py-3 px-4 rounded-lg font-semibold transition-all ${
-                    canSave && !isSaving ? 'bg-primary/90 hover:bg-primary text-white shadow-lg' : 'bg-gray-600 text-gray-400 cursor-not-allowed'
+                className={`w-full py-4 px-6 rounded-xl font-bold text-lg transition-all duration-300 transform active:scale-[0.98] ${
+                    canSave && !isSaving
+                        ? 'bg-primary text-primary-foreground shadow-[0_10px_20px_-10px_rgba(0,0,0,0.3)] hover:shadow-[0_15px_25px_-10px_rgba(0,0,0,0.4)] hover:-translate-y-1'
+                        : 'bg-muted text-muted-foreground cursor-not-allowed opacity-70'
                 }`}>
-                {isSaving ? 'Saving...' : saveLabel}
+                {isSaving ? (
+                    <span className="flex items-center justify-center gap-2">
+                        <div className="h-5 w-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                        Processing...
+                    </span>
+                ) : (
+                    saveLabel
+                )}
             </button>
         </div>
     )

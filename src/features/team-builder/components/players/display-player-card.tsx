@@ -1,6 +1,8 @@
 import type { FC } from 'react'
-import type { Player } from '../../types/players'
+
 import { cn } from '@/shared/lib/utils'
+
+import type { Player } from '../../types/players'
 
 interface DisplayPlayerCardProps {
     player: Player
@@ -77,7 +79,7 @@ const teams: Record<TeamName, TeamInfo> = {
     }
 }
 
-const DisplayPlayerCard: FC<DisplayPlayerCardProps> = ({ player, onAddPlayer, canAddMore }) => {
+const PlayerSidebarCard: FC<DisplayPlayerCardProps> = ({ player, onAddPlayer, canAddMore }) => {
     return (
         <div
             className={cn(
@@ -161,4 +163,4 @@ const DisplayPlayerCard: FC<DisplayPlayerCardProps> = ({ player, onAddPlayer, ca
     )
 }
 
-export default DisplayPlayerCard
+export default PlayerSidebarCard

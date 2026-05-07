@@ -15,13 +15,7 @@ interface TeamBuilderProps {
     onSave: (selectedPlayers: Player[]) => Promise<void>
 }
 
-export function TeamBuilder({
-    players,
-    initialSelectedPlayers = [],
-    selectionLimit = 25,
-    budgetTotal = 2000,
-    onSave
-}: TeamBuilderProps) {
+export function TeamBuilder({ players, initialSelectedPlayers = [], selectionLimit = 25, budgetTotal = 2000, onSave }: TeamBuilderProps) {
     const [selectedPlayers, setSelectedPlayers] = useState<Player[]>(initialSelectedPlayers)
     const [searchTerm, setSearchTerm] = useState('')
     const [filterTeam, setFilterTeam] = useState<string>('')
@@ -52,23 +46,23 @@ export function TeamBuilder({
         })
     }, [players, selectedPlayers, searchTerm, filterTeam, filterRole, filterOverseas, filterIndiansOnly])
 
-    const roleCounts = useMemo(() => {
-        return selectedPlayers.reduce(
-            (acc, player) => {
-                if (player.role === 'Batsman') acc.batsman += 1
-                if (player.role === 'Bowler') acc.bowler += 1
-                if (player.role === 'All-Rounder') acc.allRounder += 1
-                if (player.role === 'Wicket-Keeper') acc.wicketKeeper += 1
-                return acc
-            },
-            {
-                batsman: 0,
-                bowler: 0,
-                allRounder: 0,
-                wicketKeeper: 0
-            }
-        )
-    }, [selectedPlayers])
+    // const roleCounts = useMemo(() => {
+    //     return selectedPlayers.reduce(
+    //         (acc, player) => {
+    //             if (player.role === 'Batsman') acc.batsman += 1
+    //             if (player.role === 'Bowler') acc.bowler += 1
+    //             if (player.role === 'All-Rounder') acc.allRounder += 1
+    //             if (player.role === 'Wicket-Keeper') acc.wicketKeeper += 1
+    //             return acc
+    //         },
+    //         {
+    //             batsman: 0,
+    //             bowler: 0,
+    //             allRounder: 0,
+    //             wicketKeeper: 0
+    //         }
+    //     )
+    // }, [selectedPlayers])
 
     const errors = useMemo(() => {
         const validationErrors: string[] = []
@@ -112,7 +106,7 @@ export function TeamBuilder({
         }
     }
 
-    const creditUsagePercent = Math.min(100, ((budgetTotal - remainingCredits) / budgetTotal) * 100)
+    // const creditUsagePercent = Math.min(100, ((budgetTotal - remainingCredits) / budgetTotal) * 100)
 
     return (
         <div className="w-full flex flex-col gap-4 p-4 md:p-6 lg:px-2">

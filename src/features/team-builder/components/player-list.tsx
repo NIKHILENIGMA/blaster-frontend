@@ -11,6 +11,7 @@ import { ScrollArea } from '@/components/ui/scroll-area'
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 
 import type { Player } from '../types/players'
+
 import DisplayPlayerCard from './players/display-player-card'
 
 interface PlayerListProps {
