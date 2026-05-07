@@ -11,6 +11,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { useCreateFixture } from '../api/fixtures'
 import { useMatches } from '../api/matches'
 
+const IPL_TEAMS = ['CSK', 'MI', 'RCB', 'KKR', 'SRH', 'DC', 'PBKS', 'RR', 'GT', 'LSG'] as const
+
 interface CreateFixtureModalProps {
     open: boolean
     onOpenChange: (open: boolean) => void
@@ -21,11 +23,15 @@ export function CreateFixtureModal({ open, onOpenChange }: CreateFixtureModalPro
     const { data: matches } = useMatches()
 
     const [formData, setFormData] = useState({
+        id: '',
         matchId: '',
         teamA: '',
         teamB: '',
         startTime: '',
-        cricbuzzMatchId: ''
+        lineupLockAt: '',
+        matchNumber: '',
+        venueId: '',
+        matchStatus: 'scheduled' as 'scheduled' | 'live' | 'completed'
     })
 
     const handleSubmit = (e: React.FormEvent) => {
@@ -33,17 +39,31 @@ export function CreateFixtureModal({ open, onOpenChange }: CreateFixtureModalPro
 
         createFixtureMutation.mutate(
             {
+                id: formData.id.trim(),
                 matchId: formData.matchId,
                 teamA: formData.teamA,
                 teamB: formData.teamB,
                 startTime: new Date(formData.startTime).toISOString(),
-                cricbuzzMatchId: formData.cricbuzzMatchId
+                lineupLockAt: formData.lineupLockAt ? new Date(formData.lineupLockAt).toISOString() : undefined,
+                matchNumber: formData.matchNumber.trim() || undefined,
+                venueId: formData.venueId.trim() || undefined,
+                matchStatus: formData.matchStatus
             },
             {
                 onSuccess: () => {
                     toast.success('Fixture created successfully')
                     onOpenChange(false)
-                    setFormData({ matchId: '', teamA: '', teamB: '', startTime: '', cricbuzzMatchId: '' })
+                    setFormData({
+                        id: '',
+                        matchId: '',
+                        teamA: '',
+                        teamB: '',
+                        startTime: '',
+                        lineupLockAt: '',
+                        matchNumber: '',
+                        venueId: '',
+                        matchStatus: 'scheduled'
+                    })
                 },
                 onError: (err) => {
                     toast.error(err.message || 'Failed to create fixture')
@@ -65,6 +85,17 @@ export function CreateFixtureModal({ open, onOpenChange }: CreateFixtureModalPro
                 <form
                     onSubmit={handleSubmit}
                     className="space-y-4">
+                    <Field>
+                        <FieldLabel htmlFor="fixtureId">Fixture ID</FieldLabel>
+                        <Input
+                            id="fixtureId"
+                            placeholder="e.g., MI_vs_DD_2026_05_10"
+                            value={formData.id}
+                            onChange={(e) => setFormData({ ...formData, id: e.target.value })}
+                            required
+                        />
+                    </Field>
+
                     <Field>
                         <FieldLabel>Game Cycle (Match)</FieldLabel>
                         <Select
@@ -88,23 +119,41 @@ export function CreateFixtureModal({ open, onOpenChange }: CreateFixtureModalPro
                     <div className="grid grid-cols-2 gap-4">
                         <Field>
                             <FieldLabel htmlFor="teamA">Team A</FieldLabel>
-                            <Input
-                                id="teamA"
-                                placeholder="e.g., MI"
+                            <Select
                                 value={formData.teamA}
-                                onChange={(e) => setFormData({ ...formData, teamA: e.target.value })}
-                                required
-                            />
+                                onValueChange={(val) => setFormData({ ...formData, teamA: val })}>
+                                <SelectTrigger>
+                                    <SelectValue placeholder="Select team A" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {IPL_TEAMS.map((team) => (
+                                        <SelectItem
+                                            key={team}
+                                            value={team}>
+                                            {team}
+                                        </SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
                         </Field>
                         <Field>
                             <FieldLabel htmlFor="teamB">Team B</FieldLabel>
-                            <Input
-                                id="teamB"
-                                placeholder="e.g., DC"
+                            <Select
                                 value={formData.teamB}
-                                onChange={(e) => setFormData({ ...formData, teamB: e.target.value })}
-                                required
-                            />
+                                onValueChange={(val) => setFormData({ ...formData, teamB: val })}>
+                                <SelectTrigger>
+                                    <SelectValue placeholder="Select team B" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {IPL_TEAMS.filter((team) => team !== formData.teamA).map((team) => (
+                                        <SelectItem
+                                            key={team}
+                                            value={team}>
+                                            {team}
+                                        </SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
                         </Field>
                     </div>
 
@@ -120,12 +169,49 @@ export function CreateFixtureModal({ open, onOpenChange }: CreateFixtureModalPro
                     </Field>
 
                     <Field>
-                        <FieldLabel htmlFor="cricbuzzId">Cricbuzz Match ID</FieldLabel>
+                        <FieldLabel htmlFor="lineupLockAt">Lineup Lock Time</FieldLabel>
                         <Input
-                            id="cricbuzzId"
-                            placeholder="e.g., 89654"
-                            value={formData.cricbuzzMatchId}
-                            onChange={(e) => setFormData({ ...formData, cricbuzzMatchId: e.target.value })}
+                            id="lineupLockAt"
+                            type="datetime-local"
+                            value={formData.lineupLockAt}
+                            onChange={(e) => setFormData({ ...formData, lineupLockAt: e.target.value })}
+                        />
+                    </Field>
+
+                    <div className="grid grid-cols-2 gap-4">
+                        <Field>
+                            <FieldLabel htmlFor="matchNumber">Match Number</FieldLabel>
+                            <Input
+                                id="matchNumber"
+                                placeholder="e.g., 21"
+                                value={formData.matchNumber}
+                                onChange={(e) => setFormData({ ...formData, matchNumber: e.target.value })}
+                            />
+                        </Field>
+                        <Field>
+                            <FieldLabel>Status</FieldLabel>
+                            <Select
+                                value={formData.matchStatus}
+                                onValueChange={(val: 'scheduled' | 'live' | 'completed') => setFormData({ ...formData, matchStatus: val })}>
+                                <SelectTrigger>
+                                    <SelectValue placeholder="Select status" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="scheduled">Scheduled</SelectItem>
+                                    <SelectItem value="live">Live</SelectItem>
+                                    <SelectItem value="completed">Completed</SelectItem>
+                                </SelectContent>
+                            </Select>
+                        </Field>
+                    </div>
+
+                    <Field>
+                        <FieldLabel htmlFor="venueId">Venue</FieldLabel>
+                        <Input
+                            id="venueId"
+                            placeholder="e.g., Wankhede Stadium"
+                            value={formData.venueId}
+                            onChange={(e) => setFormData({ ...formData, venueId: e.target.value })}
                         />
                     </Field>
 

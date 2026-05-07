@@ -1,5 +1,6 @@
 import { Calculator, Eye, Loader2, Info } from 'lucide-react'
 import { useState } from 'react'
+import { useNavigate } from 'react-router'
 import { toast } from 'sonner'
 
 import { Button } from '@/components/ui/button'
@@ -9,12 +10,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 
 import { useFixtures, useCalculatePoints } from '../api/fixtures'
 
-import { PointsPreviewModal } from './points-preview-modal'
-
 export function ScoreProcessingCard() {
     const [selectedFixtureId, setSelectedFixtureId] = useState<string>('')
     const [cricbuzzId, setCricbuzzId] = useState<string>('')
-    const [previewOpen, setPreviewOpen] = useState(false)
+    const navigate = useNavigate()
 
     const { data: fixtures, isLoading: isLoadingFixtures } = useFixtures()
     const calculateMutation = useCalculatePoints()
@@ -109,7 +108,7 @@ export function ScoreProcessingCard() {
                     </Button>
                     <Button 
                         variant="outline" 
-                        onClick={() => setPreviewOpen(true)}
+                        onClick={() => navigate(`/admin/points-preview?fixtureId=${selectedFixtureId}`)}
                         disabled={!selectedFixtureId}
                         className="w-full"
                     >
@@ -117,15 +116,6 @@ export function ScoreProcessingCard() {
                         Preview
                     </Button>
                 </div>
-
-                {selectedFixture && (
-                    <PointsPreviewModal 
-                        open={previewOpen}
-                        onOpenChange={setPreviewOpen}
-                        fixtureId={selectedFixtureId}
-                        fixtureName={`${selectedFixture.teamA} vs ${selectedFixture.teamB}`}
-                    />
-                )}
             </CardContent>
         </Card>
     )

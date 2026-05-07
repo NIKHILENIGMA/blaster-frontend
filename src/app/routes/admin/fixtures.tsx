@@ -16,8 +16,10 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-import { useFixtures, useUpdateFixtureStatus } from '@/features/admin/api/fixtures'
+import { useFixtures, useUpdateFixture } from '@/features/admin/api/fixtures'
 import { CreateFixtureModal } from '@/features/admin/components/create-fixture-modal'
+import { EditFixtureModal } from '@/features/admin/components/edit-fixture-modal'
+import type { Fixture } from '@/features/admin/types/fixtures'
 
 const getStatusColor = (status: string) => {
     switch (status.toUpperCase()) {
@@ -33,16 +35,30 @@ const getStatusColor = (status: string) => {
     }
 }
 
+const formatDateTime = (date: string | Date | null | undefined) => {
+    if (!date) return '-'
+
+    const parsed = new Date(date)
+    if (Number.isNaN(parsed.getTime())) return '-'
+
+    return parsed.toLocaleString()
+}
+
 export default function FixturesPage() {
     const [statusFilter, setStatusFilter] = useState<string>('all')
     const [createModalOpen, setCreateModalOpen] = useState(false)
-    
+    const [selectedFixture, setSelectedFixture] = useState<Fixture | null>(null)
+    const [editModalOpen, setEditModalOpen] = useState(false)
+
     const { data: fixtures, isLoading, error } = useFixtures()
-    const updateStatusMutation = useUpdateFixtureStatus()
+    const updateFixtureMutation = useUpdateFixture()
 
     const updateStatus = (id: string, newStatus: string) => {
-        updateStatusMutation.mutate(
-            { fixtureId: id, status: newStatus.toLowerCase() },
+        updateFixtureMutation.mutate(
+            {
+                fixtureId: id,
+                data: { matchStatus: newStatus.toLowerCase() as 'scheduled' | 'live' | 'completed' }
+            },
             {
                 onSuccess: () => {
                     toast.success('Fixture status updated successfully')
@@ -52,6 +68,11 @@ export default function FixturesPage() {
                 }
             }
         )
+    }
+
+    const openEditModal = (fixture: Fixture) => {
+        setSelectedFixture(fixture)
+        setEditModalOpen(true)
     }
 
     const filteredFixtures =
@@ -96,6 +117,11 @@ export default function FixturesPage() {
                 open={createModalOpen}
                 onOpenChange={setCreateModalOpen}
             />
+            <EditFixtureModal
+                fixture={selectedFixture}
+                open={editModalOpen}
+                onOpenChange={setEditModalOpen}
+            />
 
             {/* Filters */}
             <div className="flex flex-col sm:flex-row gap-3">
@@ -125,10 +151,10 @@ export default function FixturesPage() {
                         <Table>
                             <TableHeader>
                                 <TableRow className="hover:bg-transparent border-b bg-accent/30">
-                                    <TableHead className="font-semibold">Match ID</TableHead>
-                                    <TableHead className="font-semibold">Teams</TableHead>
-                                    <TableHead className="font-semibold">Date</TableHead>
-                                    <TableHead className="font-semibold">Status</TableHead>
+                                    <TableHead className="font-semibold min-w-[340px]">Fixture</TableHead>
+                                    <TableHead className="font-semibold min-w-[220px]">Schedule</TableHead>
+                                    <TableHead className="font-semibold min-w-[180px]">Venue</TableHead>
+                                    <TableHead className="font-semibold min-w-[170px]">Status & Result</TableHead>
                                     <TableHead className="font-semibold text-center">Processed</TableHead>
                                     <TableHead className="text-right font-semibold">Actions</TableHead>
                                 </TableRow>
@@ -138,41 +164,82 @@ export default function FixturesPage() {
                                     <TableRow
                                         key={fixture.id}
                                         className="hover:bg-accent/50 border-b">
-                                        <TableCell className="font-mono text-sm">{fixture.matchId}</TableCell>
-                                        <TableCell className="text-sm">
-                                            <div className="space-y-0.5">
-                                                <p className="font-medium">{fixture.teamA}</p>
-                                                <p className="text-muted-foreground">vs {fixture.teamB}</p>
+                                        <TableCell className="text-sm align-top">
+                                            <div className="space-y-2">
+                                                <div className="flex items-center gap-2">
+                                                    <p className="font-semibold">{fixture.teamA}</p>
+                                                    <span className="text-muted-foreground text-xs">vs</span>
+                                                    <p className="font-semibold">{fixture.teamB}</p>
+                                                    <Badge
+                                                        variant="outline"
+                                                        className="text-[10px] h-5 px-1.5">
+                                                        Match #{fixture.matchNumber || '-'}
+                                                    </Badge>
+                                                </div>
+                                                <div className="space-y-1">
+                                                    <p className="text-[11px] text-muted-foreground font-medium">Fixture ID</p>
+                                                    <p className="font-mono text-xs break-all">{fixture.id}</p>
+                                                </div>
+                                                <div className="space-y-1">
+                                                    <p className="text-[11px] text-muted-foreground font-medium">Match ID</p>
+                                                    <p className="font-mono text-xs break-all">{fixture.matchId}</p>
+                                                </div>
                                             </div>
                                         </TableCell>
-                                        <TableCell className="text-sm">{new Date(fixture.startTime).toLocaleString()}</TableCell>
-                                        <TableCell>
-                                            <Badge className={getStatusColor(fixture.matchStatus || 'upcoming')}>
-                                                {fixture.matchStatus || 'upcoming'}
-                                            </Badge>
+                                        <TableCell className="text-sm align-top">
+                                            <div className="space-y-2">
+                                                <div>
+                                                    <p className="text-[11px] text-muted-foreground font-medium">Start Time</p>
+                                                    <p>{formatDateTime(fixture.startTime)}</p>
+                                                </div>
+                                                <div>
+                                                    <p className="text-[11px] text-muted-foreground font-medium">Lineup Lock</p>
+                                                    <p>{formatDateTime(fixture.lineupLockAt)}</p>
+                                                </div>
+                                            </div>
+                                        </TableCell>
+                                        <TableCell className="text-sm align-top break-words">{fixture.venueId || '-'}</TableCell>
+                                        <TableCell className="align-top">
+                                            <div className="space-y-2">
+                                                <Badge className={getStatusColor(fixture.matchStatus || 'upcoming')}>
+                                                    {fixture.matchStatus || 'upcoming'}
+                                                </Badge>
+                                                <p className="text-sm">
+                                                    <span className="text-muted-foreground">Result: </span>
+                                                    {fixture.matchResult || '-'}
+                                                </p>
+                                            </div>
                                         </TableCell>
                                         <TableCell className="text-center">
-                                            <Checkbox
-                                                checked={fixture.isProcessed}
-                                                disabled
-                                            />
+                                            <div className="flex items-center justify-center gap-2">
+                                                <Checkbox
+                                                    checked={fixture.isProcessed}
+                                                    disabled
+                                                />
+                                                <span className="text-xs text-muted-foreground">
+                                                    {fixture.isProcessed ? 'Done' : 'Pending'}
+                                                </span>
+                                            </div>
                                         </TableCell>
                                         <TableCell className="text-right">
                                             <DropdownMenu>
-                                                <DropdownMenuTrigger asChild>
+                                                    <DropdownMenuTrigger asChild>
                                                     <Button
                                                         variant="ghost"
                                                         size="sm"
                                                         className="h-8 w-8 p-0"
-                                                        disabled={updateStatusMutation.isPending}>
+                                                        disabled={updateFixtureMutation.isPending}>
                                                         <MoreVertical className="h-4 w-4" />
                                                     </Button>
                                                 </DropdownMenuTrigger>
                                                 <DropdownMenuContent align="end">
-                                                    <DropdownMenuLabel className="text-xs">Update Status</DropdownMenuLabel>
+                                                    <DropdownMenuItem onClick={() => openEditModal(fixture)}>
+                                                        Edit Lock Time
+                                                    </DropdownMenuItem>
                                                     <DropdownMenuSeparator />
-                                                    <DropdownMenuItem onClick={() => updateStatus(fixture.id, 'upcoming')}>
-                                                        Mark Upcoming
+                                                    <DropdownMenuLabel className="text-xs">Update Status</DropdownMenuLabel>
+                                                    <DropdownMenuItem onClick={() => updateStatus(fixture.id, 'scheduled')}>
+                                                        Mark Scheduled
                                                     </DropdownMenuItem>
                                                     <DropdownMenuItem onClick={() => updateStatus(fixture.id, 'live')}>Mark Live</DropdownMenuItem>
                                                     <DropdownMenuItem onClick={() => updateStatus(fixture.id, 'completed')}>
@@ -192,22 +259,52 @@ export default function FixturesPage() {
                         {filteredFixtures?.map((fixture) => (
                             <Card
                                 key={fixture.id}
-                                className="border">
-                                <CardContent className="p-4 space-y-3">
-                                    <div className="flex items-start justify-between">
-                                        <div className="flex-1">
-                                            <p className="text-xs font-mono text-muted-foreground mb-1">{fixture.matchId}</p>
-                                            <h3 className="font-semibold text-sm">
+                                className="border shadow-sm">
+                                <CardContent className="p-4 space-y-4">
+                                    <div className="flex items-start justify-between gap-2">
+                                        <div className="flex-1 min-w-0">
+                                            <h3 className="font-semibold text-sm leading-tight">
                                                 {fixture.teamA} vs {fixture.teamB}
                                             </h3>
+                                            <p className="text-xs text-muted-foreground mt-1">
+                                                Match #{fixture.matchNumber || '-'}
+                                            </p>
                                         </div>
                                         <Badge className={getStatusColor(fixture.matchStatus || 'upcoming')}>
                                             {fixture.matchStatus || 'upcoming'}
                                         </Badge>
                                     </div>
-                                    <div className="flex gap-3 text-xs text-muted-foreground">
-                                        <span>📅 {new Date(fixture.startTime).toLocaleString()}</span>
+
+                                    <div className="rounded-md border bg-muted/30 p-3 space-y-2 text-xs">
+                                        <div className="flex justify-between gap-3 items-start">
+                                            <span className="text-muted-foreground">Match #</span>
+                                            <span className="font-medium text-right">{fixture.matchNumber || '-'}</span>
+                                        </div>
+                                        <div className="flex justify-between gap-3 items-start">
+                                            <span className="text-muted-foreground">Start</span>
+                                            <span className="font-medium text-right">{formatDateTime(fixture.startTime)}</span>
+                                        </div>
+                                        <div className="flex justify-between gap-3 items-start">
+                                            <span className="text-muted-foreground">Lineup Lock</span>
+                                            <span className="font-medium text-right">{formatDateTime(fixture.lineupLockAt)}</span>
+                                        </div>
+                                        <div className="flex justify-between gap-3 items-start">
+                                            <span className="text-muted-foreground">Venue</span>
+                                            <span className="font-medium text-right">{fixture.venueId || '-'}</span>
+                                        </div>
+                                        <div className="flex justify-between gap-3 items-start">
+                                            <span className="text-muted-foreground">Result</span>
+                                            <span className="font-medium text-right">{fixture.matchResult || '-'}</span>
+                                        </div>
                                     </div>
+
+                                    <div className="rounded-md border p-3 space-y-1">
+                                        <p className="text-[11px] text-muted-foreground font-medium">Fixture ID</p>
+                                        <p className="font-mono text-[11px] break-all">{fixture.id}</p>
+                                        <p className="text-[11px] text-muted-foreground font-medium mt-2">Match ID</p>
+                                        <p className="font-mono text-[11px] break-all">{fixture.matchId}</p>
+                                    </div>
+
                                     <div className="flex items-center justify-between pt-2 border-t">
                                         <div className="flex items-center gap-2">
                                             <Checkbox
@@ -222,12 +319,22 @@ export default function FixturesPage() {
                                                     variant="ghost"
                                                     size="sm"
                                                     className="h-8 w-8 p-0"
-                                                    disabled={updateStatusMutation.isPending}>
+                                                    disabled={updateFixtureMutation.isPending}>
                                                     <MoreVertical className="h-4 w-4" />
                                                 </Button>
                                             </DropdownMenuTrigger>
                                             <DropdownMenuContent align="end">
                                                 <DropdownMenuLabel className="text-xs">Actions</DropdownMenuLabel>
+                                                <DropdownMenuItem onClick={() => openEditModal(fixture)}>
+                                                    Edit Lock Time
+                                                </DropdownMenuItem>
+                                                <DropdownMenuSeparator />
+                                                <DropdownMenuItem onClick={() => updateStatus(fixture.id, 'scheduled')}>
+                                                    Mark Scheduled
+                                                </DropdownMenuItem>
+                                                <DropdownMenuItem onClick={() => updateStatus(fixture.id, 'live')}>
+                                                    Mark Live
+                                                </DropdownMenuItem>
                                                 <DropdownMenuItem onClick={() => updateStatus(fixture.id, 'completed')}>
                                                     Mark Completed
                                                 </DropdownMenuItem>

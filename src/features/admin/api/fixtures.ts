@@ -3,13 +3,18 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import api from '@/shared/lib/api-client'
 
 import type { Fixture, PointsPreview } from '../types/fixtures'
+import type { AdminFixtureTeamsResponse } from '../types/teams'
 
 export interface CreateFixtureDTO {
+    id: string
     matchId: string
     teamA: string
     teamB: string
     startTime: string
-    cricbuzzMatchId: string
+    lineupLockAt?: string
+    matchNumber?: string
+    venueId?: string
+    matchStatus?: 'scheduled' | 'live' | 'completed'
 }
 
 export const getFixtures = async (): Promise<Fixture[]> => {
@@ -34,11 +39,19 @@ export const useCreateFixture = () => {
     })
 }
 
-export const useUpdateFixtureStatus = () => {
+export const useUpdateFixture = () => {
     const queryClient = useQueryClient()
     return useMutation({
-        mutationFn: ({ fixtureId, status }: { fixtureId: string; status: string }) =>
-            api.patch(`/admin/fixtures/${fixtureId}`, { matchStatus: status }),
+        mutationFn: ({
+            fixtureId,
+            data
+        }: {
+            fixtureId: string
+            data: {
+                matchStatus?: 'scheduled' | 'live' | 'completed'
+                lineupLockAt?: string | null
+            }
+        }) => api.patch(`/admin/fixtures/${fixtureId}`, data),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['admin-fixtures'] })
         }
@@ -53,6 +66,7 @@ export const useCalculatePoints = () => {
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['admin-fixtures'] })
             queryClient.invalidateQueries({ queryKey: ['points-preview'] })
+            queryClient.invalidateQueries({ queryKey: ['admin-fixture-teams'] })
         }
     })
 }
@@ -75,6 +89,21 @@ export const usePublishPoints = () => {
         mutationFn: (fixtureId: string) => api.post(`/admin/fixtures/${fixtureId}/publish`, {}),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['admin-fixtures'] })
+            queryClient.invalidateQueries({ queryKey: ['points-preview'] })
+            queryClient.invalidateQueries({ queryKey: ['admin-fixture-teams'] })
         }
+    })
+}
+
+export const getFixtureTeams = async (fixtureId: string): Promise<AdminFixtureTeamsResponse> => {
+    const response = await api.get<AdminFixtureTeamsResponse>(`/admin/fixtures/${fixtureId}/teams`)
+    return response.data
+}
+
+export const useFixtureTeams = (fixtureId: string) => {
+    return useQuery({
+        queryKey: ['admin-fixture-teams', fixtureId],
+        queryFn: () => getFixtureTeams(fixtureId),
+        enabled: Boolean(fixtureId)
     })
 }
