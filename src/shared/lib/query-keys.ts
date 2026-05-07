@@ -25,5 +25,5 @@ export const playersKeys = {
 
 export const fixturesKeys = {
     list: () => ['fixtures', 'list'] as const,
-    details: (fixtureId: number) => [...fixturesKeys.list(), fixtureId] as const
+    details: (fixtureId: string) => [...fixturesKeys.list(), fixtureId] as const
 }
