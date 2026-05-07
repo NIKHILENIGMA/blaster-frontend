@@ -1,4 +1,4 @@
-import { LayoutDashboard, Activity, Calendar, Users } from 'lucide-react'
+import { LayoutDashboard, Activity, Calendar, Users, Shield } from 'lucide-react'
 import { NavLink } from 'react-router'
 
 import { cn } from '@/shared/lib/utils'
@@ -7,6 +7,7 @@ const navItems = [
     { id: '/admin/dashboard', label: 'Dashboard', icon: LayoutDashboard },
     { id: '/admin/matches', label: 'Game Cycle', icon: Activity },
     { id: '/admin/fixtures', label: 'IPL Fixtures', icon: Calendar },
+    { id: '/admin/teams', label: 'Teams', icon: Shield },
     { id: '/admin/player-stats', label: 'Player Stats', icon: Users }
 ]
 

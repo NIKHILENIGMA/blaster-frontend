@@ -61,5 +61,22 @@ export interface GetFixtureLineupResponse {
         cost: number
         profileImageUrl: string
         selectionType: 'PLAYING' | 'SUBSTITUTE'
+        runs?: number | null
+        fours?: number | null
+        sixes?: number | null
+        wickets?: number | null
+        catches?: number | null
+        runouts?: number | null
+        // Point details
+        basePoints?: number | null
+        multiplier?: number | null
+        bonusPoints?: number | null
+        finalPoints?: number | null
+        breakdown?: Record<string, any> | null
     }[]
+    matchPoints: {
+        id: string
+        totalPoints: number
+        rankSnapshot: number | null
+    } | null
 }
