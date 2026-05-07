@@ -1,9 +1,13 @@
+import { Loader2 } from 'lucide-react'
 import { useState } from 'react'
+import { toast } from 'sonner'
 
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog'
 import { Field, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
+
+import { useCreateMatch } from '../api/matches'
 
 interface CreateMatchModalProps {
     open: boolean
@@ -11,6 +15,7 @@ interface CreateMatchModalProps {
 }
 
 export function CreateMatchModal({ open, onOpenChange }: CreateMatchModalProps) {
+    const createMatchMutation = useCreateMatch()
     const [formData, setFormData] = useState({
         title: '',
         startTime: '',
@@ -19,8 +24,24 @@ export function CreateMatchModal({ open, onOpenChange }: CreateMatchModalProps) 
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault()
-        onOpenChange(false)
-        setFormData({ title: '', startTime: '', endTime: '' })
+        
+        createMatchMutation.mutate(
+            {
+                title: formData.title,
+                startTime: new Date(formData.startTime).toISOString(),
+                endTime: new Date(formData.endTime).toISOString()
+            },
+            {
+                onSuccess: () => {
+                    toast.success('Match created successfully')
+                    onOpenChange(false)
+                    setFormData({ title: '', startTime: '', endTime: '' })
+                },
+                onError: (err) => {
+                    toast.error(err.message || 'Failed to create match')
+                }
+            }
+        )
     }
 
     return (
@@ -73,14 +94,23 @@ export function CreateMatchModal({ open, onOpenChange }: CreateMatchModalProps) 
                         <Button
                             type="button"
                             variant="outline"
+                            disabled={createMatchMutation.isPending}
                             onClick={() => onOpenChange(false)}
                             className="w-full sm:w-auto">
                             Cancel
                         </Button>
                         <Button
                             type="submit"
+                            disabled={createMatchMutation.isPending}
                             className="w-full sm:w-auto">
-                            Create Match
+                            {createMatchMutation.isPending ? (
+                                <>
+                                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                    Creating...
+                                </>
+                            ) : (
+                                'Create Match'
+                            )}
                         </Button>
                     </DialogFooter>
                 </form>
