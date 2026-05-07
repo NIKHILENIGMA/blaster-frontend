@@ -47,6 +47,10 @@ const router = createBrowserRouter([
                 lazy: () => import('./routes/team/current-team-page').then((module) => ({ Component: module.default }))
             },
             {
+                path: 'matches/:fixtureId/summary',
+                lazy: () => import('./routes/team/match-summary-page').then((module) => ({ Component: module.default }))
+            },
+            {
                 path: 'matches/:fixtureId/build',
                 lazy: () => import('./routes/team/build-team-page').then((module) => ({ Component: module.default }))
             },
@@ -90,6 +94,14 @@ const router = createBrowserRouter([
                     {
                         path: 'fixtures',
                         lazy: () => import('./routes/admin/fixtures').then((module) => ({ Component: module.default }))
+                    },
+                    {
+                        path: 'points-preview',
+                        lazy: () => import('./routes/admin/points-preview').then((module) => ({ Component: module.default }))
+                    },
+                    {
+                        path: 'teams',
+                        lazy: () => import('./routes/admin/teams').then((module) => ({ Component: module.default }))
                     },
                     {
                         path: 'player-stats',
