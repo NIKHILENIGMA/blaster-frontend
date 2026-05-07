@@ -14,6 +14,9 @@ interface SquadPlayerCardProps {
     player: Player
     onRemovePlayer: (playerId: string) => void
     isRemoveBtn?: boolean
+    isCaptain?: boolean
+    isViceCaptain?: boolean
+    isImpact?: boolean
 }
 
 type TeamInfo = {
@@ -122,14 +125,40 @@ function teamNameGenerator(iplTeam: TeamName): string[] {
         case 'GT':
             return ['Gujarat', 'Titans']
         default:
-            return ['Mumbai', 'Indians'] // Default to MI if not found
+            return ['Mumbai', 'Indians']
     }
 }
 
-const SquadPlayerCard: FC<SquadPlayerCardProps> = ({ player, onRemovePlayer, isRemoveBtn }) => {
+const SquadPlayerCard: FC<SquadPlayerCardProps> = ({ 
+    player, 
+    onRemovePlayer, 
+    isRemoveBtn,
+    isCaptain,
+    isViceCaptain,
+    isImpact
+}) => {
     const teamInfo = teams[player.iplTeam as TeamName]
     return (
-        <div className="relative w-full h-[410px] lg:h-full p-6 rounded-[28px] bg-[#fdfdfd] shadow-[-5px_9px_19px_-4px_rgba(236,_72,_153,_0.15)] overflow-hidden border-[1px] flex flex-col items-center gap-4">
+        <div className="relative w-full h-[410px] lg:h-full p-6 rounded-[28px] bg-[#fdfdfd] shadow-[-5px_9px_19px_-4px_rgba(236,_72,_153,_0.15)] overflow-hidden border-[1px] flex flex-col items-center gap-4 group hover:border-pink-500/50 transition-all duration-300">
+            {/* Status Badges */}
+            <div className="absolute top-4 left-4 z-30 flex flex-col gap-2">
+                {isCaptain && (
+                    <div className="bg-yellow-500 text-white text-[10px] font-black px-2 py-1 rounded-md shadow-lg border border-white/20 uppercase tracking-tighter">
+                        Captain 2x
+                    </div>
+                )}
+                {isViceCaptain && (
+                    <div className="bg-blue-500 text-white text-[10px] font-black px-2 py-1 rounded-md shadow-lg border border-white/20 uppercase tracking-tighter">
+                        Vice Captain 1.5x
+                    </div>
+                )}
+                {isImpact && (
+                    <div className="bg-purple-600 text-white text-[10px] font-black px-2 py-1 rounded-md shadow-lg border border-white/20 uppercase tracking-tighter">
+                        Impact Player
+                    </div>
+                )}
+            </div>
+
             {isRemoveBtn && (
                 <button
                     onClick={() => onRemovePlayer(player.id)}
@@ -139,7 +168,7 @@ const SquadPlayerCard: FC<SquadPlayerCardProps> = ({ player, onRemovePlayer, isR
             )}
             <div className="absolute top-2 left-2.5 z-20 text-sm text-gray-500">
                 {player.isOverseas ? (
-                    <span className="p-3 bg-primary text-white rounded-full flex items-center gap-1 rotate-0">
+                    <span className="p-3 bg-primary text-white rounded-full flex items-center gap-1 rotate-0 shadow-lg">
                         <GiCommercialAirplane size={20} />
                     </span>
                 ) : null}
@@ -175,7 +204,6 @@ const SquadPlayerCard: FC<SquadPlayerCardProps> = ({ player, onRemovePlayer, isR
             {/* 📝 Content */}
             <div className="text-center relative h-full ">
                 {/* Name */}
-
                 <p className="text-gray-600 tracking-widest text-sm">{player.name.split(' ')[0]}</p>
                 <h2 className="text-xl lg:text-2xl font-extrabold text-gray-900 tracking-wide">{player.name.split(' ')[1]}</h2>
 

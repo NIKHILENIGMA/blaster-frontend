@@ -8,9 +8,21 @@ interface CategorySectionProps {
     onAddPlayer: (player: Player) => void
     onRemovePlayer: (playerId: string) => void
     selectedPlayers: Map<string, Player>
+    captainId?: string
+    viceCaptainId?: string
+    impactPlayerId?: string
 }
 
-export function CategorySection({ title, role, players, onRemovePlayer, selectedPlayers }: CategorySectionProps) {
+export function CategorySection({ 
+    title, 
+    role, 
+    players, 
+    onRemovePlayer, 
+    selectedPlayers,
+    captainId,
+    viceCaptainId,
+    impactPlayerId
+}: CategorySectionProps) {
     const selectedInCategory = players.filter((p) => selectedPlayers.has(p.id))
     const selectedBatsmenCount = selectedInCategory.filter((p) => p.role === 'Batsman').length
     const selectedBowlersCount = selectedInCategory.filter((p) => p.role === 'Bowler').length
@@ -22,7 +34,7 @@ export function CategorySection({ title, role, players, onRemovePlayer, selected
             <div className="header mb-6 flex items-center gap-3 ">
                 <div className="h-[2px] flex-1 bg-gradient-to-r from-transparent via-border to-transparent" />
                 <h3 className="font-black text-sm uppercase tracking-[0.2em] text-muted-foreground px-4 py-1 bg-muted rounded-full border border-border">
-                    {role}s (
+                    {title}s (
                     {role === 'Batsman'
                         ? selectedBatsmenCount
                         : role === 'Bowler'
@@ -44,7 +56,10 @@ export function CategorySection({ title, role, players, onRemovePlayer, selected
                                 key={player.id}
                                 player={player}
                                 onRemovePlayer={onRemovePlayer}
-                                isRemoveBtn={true}
+                                isRemoveBtn={false}
+                                isCaptain={player.id === captainId}
+                                isViceCaptain={player.id === viceCaptainId}
+                                isImpact={player.id === impactPlayerId}
                             />
                         ))}
                     </div>
