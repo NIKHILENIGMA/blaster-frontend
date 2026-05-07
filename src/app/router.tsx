@@ -40,15 +40,15 @@ const router = createBrowserRouter([
             },
             {
                 path: 'matches',
-                lazy: () => import('./routes/franchise/match-management').then((module) => ({ Component: module.default }))
+                lazy: () => import('./routes/team/fixtures-page').then((module) => ({ Component: module.default }))
             },
             {
-                path: 'matches/team',
-                lazy: () => import('./routes/franchise/match-team').then((module) => ({ Component: module.default }))
+                path: 'matches/:fixtureId',
+                lazy: () => import('./routes/team/current-team-page').then((module) => ({ Component: module.default }))
             },
             {
-                path: 'matches/team/build',
-                lazy: () => import('./routes/franchise/build-team-page').then((module) => ({ Component: module.default }))
+                path: 'matches/:fixtureId/build',
+                lazy: () => import('./routes/team/build-team-page').then((module) => ({ Component: module.default }))
             },
             {
                 path: 'my-squad/create',
@@ -80,7 +80,8 @@ const router = createBrowserRouter([
                 children: [
                     {
                         index: true,
-                        path: 'dashboard'
+                        path: 'dashboard',
+                        lazy: () => import('./routes/admin/dashboard').then((module) => ({ Component: module.default }))
                     },
                     {
                         path: 'matches',
