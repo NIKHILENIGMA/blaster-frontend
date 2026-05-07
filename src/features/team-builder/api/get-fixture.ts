@@ -7,8 +7,8 @@ import type { QueryConfig } from '@/shared/lib/react-query'
 
 import type { Fixture } from '../types/fixture'
 
-export const getFixture = async (): Promise<Fixture> => {
-    const response = await client.get<Fixture>(`${TEAMS_API_BASE}/fixtures`)
+export const getFixture = async (): Promise<Fixture[]> => {
+    const response = await client.get<Fixture[]>(`${TEAMS_API_BASE}/fixtures`)
 
     return response.data
 }
