@@ -5,8 +5,8 @@ import { cn } from '@/shared/lib/utils'
 
 const navItems = [
     { id: '/admin/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-    { id: '/admin/matches', label: 'Matches', icon: Activity },
-    { id: '/admin/fixtures', label: 'Fixtures', icon: Calendar },
+    { id: '/admin/matches', label: 'Game Cycle', icon: Activity },
+    { id: '/admin/fixtures', label: 'IPL Fixtures', icon: Calendar },
     { id: '/admin/player-stats', label: 'Player Stats', icon: Users }
 ]
 
@@ -23,11 +23,12 @@ export function AdminSidebar() {
 
             {/* Navigation */}
             <nav className="flex-1 space-y-2 px-3 py-6">
-                {navItems.map((item) => {
+                {navItems.map((item, index) => {
                     const Icon = item.icon
 
                     return (
                         <NavLink
+                            key={index}
                             to={item.id}
                             className={({ isActive }) =>
                                 cn(
