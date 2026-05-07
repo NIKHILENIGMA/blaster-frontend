@@ -34,7 +34,7 @@ const NAV_LINKS: NavItem[] = [
     {
         to: '/matches',
         icon: Users,
-        label: 'Match Hub'
+        label: 'Matches'
     },
     {
         to: '/analytics',
