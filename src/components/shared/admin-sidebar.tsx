@@ -1,9 +1,10 @@
-import { LayoutDashboard, Activity, Calendar, Shield } from 'lucide-react'
-import { NavLink } from 'react-router'
+import { LayoutDashboard, Activity, Calendar, Shield, MoveLeft } from 'lucide-react'
+import { NavLink, useNavigate } from 'react-router'
 
 import { cn } from '@/shared/lib/utils'
 import { GiPlayerBase } from 'react-icons/gi'
-
+import { Button } from '../ui/button'
+ 
 const navItems = [
     { id: '/admin', label: 'Dashboard', icon: LayoutDashboard },
     { id: '/admin/matches', label: 'Game Cycle', icon: Activity },
@@ -13,8 +14,9 @@ const navItems = [
 ]
 
 export function AdminSidebar() {
+    const navigate = useNavigate()
     return (
-        <div className="flex h-full flex-col border-r border-border bg-card">
+        <div className="flex h-full flex-col border-r border-border bg-card justify-evenly space-y-2">
             {/* Logo */}
             <div className="flex items-center gap-2 border-b border-border px-6 py-6">
                 <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-green-500 to-blue-600">
@@ -44,6 +46,15 @@ export function AdminSidebar() {
                     )
                 })}
             </nav>
+            {/* Back to Home Button */}
+            <div className="px-6 py-4">
+                <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => navigate('/')}>
+                    <MoveLeft /> Back to Home
+                </Button>
+            </div>
         </div>
     )
 }
