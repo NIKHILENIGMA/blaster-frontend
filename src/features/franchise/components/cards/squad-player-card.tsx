@@ -1,14 +1,8 @@
 import type { FC } from 'react'
 import { GiCommercialAirplane } from 'react-icons/gi'
 
-interface Player {
-    id: string
-    name: string
-    profileImageUrl: string
-    iplTeam: string
-    role: string
-    isOverseas: boolean
-}
+import type { Player } from '../../types/players'
+
 
 interface SquadPlayerCardProps {
     player: Player
@@ -102,41 +96,34 @@ const teams: Record<TeamName, TeamInfo> = {
     }
 }
 
-function teamNameGenerator(iplTeam: TeamName): string[] {
+function teamNameGenerator(iplTeam: TeamName): string {
     switch (iplTeam) {
         case 'KKR':
-            return ['Kolkata Knight', 'Riders']
+            return 'Kolkata'
         case 'CSK':
-            return ['Chennai Super', 'Kings']
+            return 'Chennai'
         case 'MI':
-            return ['Mumbai', 'Indians']
+            return 'Mumbai'
         case 'RCB':
-            return ['Royal Challengers', 'Bangalore']
+            return 'Bangalore'
         case 'SRH':
-            return ['Sunrisers', 'Hyderabad']
+            return 'Hyderabad'
         case 'RR':
-            return ['Rajasthan', 'Royals']
+            return 'Rajasthan'
         case 'DC':
-            return ['Delhi', 'Capitals']
+            return 'Delhi'
         case 'PBKS':
-            return ['Punjab', 'Kings']
+            return 'Punjab'
         case 'LSG':
-            return ['Lucknow', 'Super Giants']
+            return 'Giants'
         case 'GT':
-            return ['Gujarat', 'Titans']
+            return 'Gujarat'
         default:
-            return ['Mumbai', 'Indians']
+            return 'Mumbai'
     }
 }
 
-const SquadPlayerCard: FC<SquadPlayerCardProps> = ({ 
-    player, 
-    onRemovePlayer, 
-    isRemoveBtn,
-    isCaptain,
-    isViceCaptain,
-    isImpact
-}) => {
+const SquadPlayerCard: FC<SquadPlayerCardProps> = ({ player, onRemovePlayer, isRemoveBtn, isCaptain, isViceCaptain, isImpact }) => {
     const teamInfo = teams[player.iplTeam as TeamName]
     return (
         <div className="relative w-full h-[410px] lg:h-full p-6 rounded-[28px] bg-[#fdfdfd] shadow-[-5px_9px_19px_-4px_rgba(236,_72,_153,_0.15)] overflow-hidden border-[1px] flex flex-col items-center gap-4 group hover:border-pink-500/50 transition-all duration-300">
@@ -222,7 +209,6 @@ const SquadPlayerCard: FC<SquadPlayerCardProps> = ({
                     />
                     <div className="text-left uppercase">
                         <p className="font-bold tracking-widest text-lg">{teamNameGenerator(player.iplTeam as TeamName)[0]}</p>
-                        <p className="text-lg tracking-widest text-gray-400">{teamNameGenerator(player.iplTeam as TeamName)[1]}</p>
                     </div>
                 </div>
 
