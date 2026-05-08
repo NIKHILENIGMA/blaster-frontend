@@ -20,7 +20,7 @@ export function ScoreProcessingCard() {
 
     // Filter for fixtures that are completed but not yet fully processed/published
     const pendingFixtures = fixtures?.filter(f => f.matchStatus === 'completed' && !f.isProcessed) || []
-    const selectedFixture = fixtures?.find(f => f.id === selectedFixtureId)
+    // const selectedFixture = fixtures?.find(f => f.id === selectedFixtureId)
 
     const handleCalculate = () => {
         if (!selectedFixtureId || !cricbuzzId) {
