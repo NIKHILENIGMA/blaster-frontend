@@ -11,9 +11,9 @@ interface ProtectedRouteProps {
 const AdminProtectedRoute = ({ children }: ProtectedRouteProps) => {
     const { isLoaded, user } = useUser()
     const location = useLocation()
-    if (!isLoaded) return <div>Loading...</div> // Prevent flash of content
+
     if (!isLoaded) {
-        return <ContainLoader /> // You can replace with a proper loading component
+        return <ContainLoader />
     }
 
     if (!user) {
