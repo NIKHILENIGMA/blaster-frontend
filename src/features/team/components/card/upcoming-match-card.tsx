@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router"
 
 import { cn } from "@/shared/lib/utils"
+import { teams } from "../../constants/team"
 
 interface UpcomingMatchCardProps {
     match: {
@@ -17,6 +18,8 @@ interface UpcomingMatchCardProps {
 }
 
 export default function UpcomingMatchCard({ match, fixtureId }: UpcomingMatchCardProps) {
+
+    
     const navigate = useNavigate()
     return (
         <div className="relative group rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300">
@@ -49,7 +52,7 @@ export default function UpcomingMatchCard({ match, fixtureId }: UpcomingMatchCar
                     <div className="relative flex flex-col items-center w-1/3">
                         <div className="w-20 h-20 rounded-full bg-white flex items-center justify-center shadow-inner">
                             <img
-                                src="https://res.cloudinary.com/dynbvnhcc/image/upload/v1777385137/CSKoutline_ue3e4o.avif"
+                                src={teams[match.teamA as keyof typeof teams]?.teamLogoUrl}
                                 alt={match.teamA}
                                 className="object-cover w-full h-full rounded-full z-40"
                             />
@@ -69,7 +72,7 @@ export default function UpcomingMatchCard({ match, fixtureId }: UpcomingMatchCar
                     <div className="flex flex-col items-center w-1/3">
                         <div className="w-20 h-20 rounded-full bg-white flex items-center justify-center shadow-inner">
                             <img
-                                src="https://res.cloudinary.com/dynbvnhcc/image/upload/v1777385137/KKRoutline_wm9ilt.avif"
+                                src={teams[match.teamB as keyof typeof teams]?.teamLogoUrl}
                                 alt={match.teamB}
                                 className="object-cover w-full h-full rounded-full"
                             />

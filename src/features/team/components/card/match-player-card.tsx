@@ -1,6 +1,7 @@
 import type { FC } from 'react'
 import { GiCommercialAirplane } from 'react-icons/gi'
-import { teams } from '@/features/team/constants/team'
+import { teams, type TeamName } from '@/features/team/constants/team'
+import { teamNameGenerator } from '../../util/team-name-generator'
 
 interface MatchPlayerCardProps {
     player: {
@@ -19,38 +20,13 @@ interface MatchPlayerCardProps {
     onClick?: () => void
 }
 
-type TeamName = 'KKR' | 'CSK' | 'MI' | 'RCB' | 'SRH' | 'RR' | 'DC' | 'PBKS' | 'LSG' | 'GT'
-
-function teamNameGenerator(iplTeam: string): string[] {
-    switch (iplTeam) {
-        case 'KKR': return ['Kolkata Knight', 'Riders']
-        case 'CSK': return ['Chennai Super', 'Kings']
-        case 'MI': return ['Mumbai', 'Indians']
-        case 'RCB': return ['Royal Challengers', 'Bangalore']
-        case 'SRH': return ['Sunrisers', 'Hyderabad']
-        case 'RR': return ['Rajasthan', 'Royals']
-        case 'DC': return ['Delhi', 'Capitals']
-        case 'PBKS': return ['Punjab', 'Kings']
-        case 'LSG': return ['Lucknow', 'Super Giants']
-        case 'GT': return ['Gujarat', 'Titans']
-        default: return ['Mumbai', 'Indians']
-    }
-}
-
-const MatchPlayerCard: FC<MatchPlayerCardProps> = ({ 
-    player, 
-    isCaptain,
-    isViceCaptain,
-    isImpact,
-    onClick
-}) => {
+const MatchPlayerCard: FC<MatchPlayerCardProps> = ({ player, isCaptain, isViceCaptain, isImpact, onClick }) => {
     const teamInfo = teams[player.iplTeam as TeamName]
-    
+
     return (
-        <div 
+        <div
             onClick={onClick}
-            className="relative w-full h-full p-6 rounded-[28px] bg-[#fdfdfd] shadow-md overflow-hidden border border-border flex flex-col items-center gap-4 group hover:border-primary/50 transition-all duration-300 cursor-pointer"
-        >
+            className="relative w-full h-full p-6 rounded-[28px] bg-[#fdfdfd] shadow-md overflow-hidden border border-border flex flex-col items-center gap-4 group hover:border-primary/50 transition-all duration-300 cursor-pointer">
             {/* Status Badges */}
             <div className="absolute top-4 left-4 z-30 flex flex-col gap-2">
                 {isCaptain && (

@@ -72,7 +72,7 @@ export function FixtureLineupDetails({
     return (
         <div className="space-y-8">
             {showMatchBanner ? (
-                <div className="w-full flex flex-col gap-6 lg:grid lg:grid-cols-[2fr_1fr]">
+                <div className="w-full flex flex-col gap-6 lg:grid lg:grid-cols-[minmax(0,2fr)_minmax(320px,1fr)] lg:items-stretch">
                     <div className="match-banner w-full min-h-[18rem] lg:min-h-[22rem] flex bg-gradient-to-br from-indigo-900 via-purple-700 to-indigo-900 rounded-2xl items-center justify-center relative overflow-hidden shadow-xl text-white">
                         <div className="absolute inset-0 opacity-20 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]"></div>
 
@@ -116,7 +116,7 @@ export function FixtureLineupDetails({
                         </div>
                     </div>
 
-                    <div className="w-full grid grid-cols-2 gap-4">
+                    <div className="w-full grid grid-cols-2 gap-4 lg:min-w-[320px]">
                         {stats.map((stat) => (
                             <div
                                 key={stat.name}
@@ -147,70 +147,72 @@ export function FixtureLineupDetails({
                 </div>
             ) : null}
 
-            <div className="w-full pt-2 relative">
-                <div className="flex flex-col items-center mb-8 text-center">
-                    <h2 className="text-3xl font-black uppercase tracking-tight mb-2">{heading}</h2>
-                    <div className="h-1 w-20 bg-primary rounded-full mb-4"></div>
-                    <p className="text-sm text-muted-foreground max-w-xl">
-                        {description ?? `Selected lineup for the ${fixture.teamA} vs ${fixture.teamB} clash.`}
-                    </p>
+            <div className="w-full pt-2">
+                <div className="mb-8 flex flex-col gap-6">
+                    <div className="flex flex-col items-center lg:items-start text-center lg:text-left">
+                        <h2 className="text-3xl font-black uppercase tracking-tight mb-2">{heading}</h2>
+                        <div className="h-1 w-20 bg-primary rounded-full mb-4"></div>
+                        <p className="text-sm text-muted-foreground max-w-xl">
+                            {description ?? `Selected lineup for the ${fixture.teamA} vs ${fixture.teamB} clash.`}
+                        </p>
+                    </div>
+
+                    {action ? <div className="flex w-full justify-center lg:justify-end">{action}</div> : null}
+
+                    {playingPlayers.length > 0 ? (
+                        <div className="mx-auto w-full max-w-6xl space-y-4">
+                            <CategorySection
+                                title="Wicket-Keeper"
+                                role="Wicket-Keeper"
+                                players={playingPlayers.filter((player) => player.role === 'Wicket-Keeper')}
+                                onAddPlayer={() => {}}
+                                onRemovePlayer={() => {}}
+                                selectedPlayers={selectedPlayersMap}
+                                captainId={lineupResponse.lineup?.captainId}
+                                viceCaptainId={lineupResponse.lineup?.viceCaptainId}
+                                impactPlayerId={lineupResponse.lineup?.impactPlayerId}
+                            />
+                            <CategorySection
+                                title="Batsman"
+                                role="Batsman"
+                                players={playingPlayers.filter((player) => player.role === 'Batsman')}
+                                onAddPlayer={() => {}}
+                                onRemovePlayer={() => {}}
+                                selectedPlayers={selectedPlayersMap}
+                                captainId={lineupResponse.lineup?.captainId}
+                                viceCaptainId={lineupResponse.lineup?.viceCaptainId}
+                                impactPlayerId={lineupResponse.lineup?.impactPlayerId}
+                            />
+                            <CategorySection
+                                title="All-Rounder"
+                                role="All-Rounder"
+                                players={playingPlayers.filter((player) => player.role === 'All-Rounder')}
+                                onAddPlayer={() => {}}
+                                onRemovePlayer={() => {}}
+                                selectedPlayers={selectedPlayersMap}
+                                captainId={lineupResponse.lineup?.captainId}
+                                viceCaptainId={lineupResponse.lineup?.viceCaptainId}
+                                impactPlayerId={lineupResponse.lineup?.impactPlayerId}
+                            />
+                            <CategorySection
+                                title="Bowler"
+                                role="Bowler"
+                                players={playingPlayers.filter((player) => player.role === 'Bowler')}
+                                onAddPlayer={() => {}}
+                                onRemovePlayer={() => {}}
+                                selectedPlayers={selectedPlayersMap}
+                                captainId={lineupResponse.lineup?.captainId}
+                                viceCaptainId={lineupResponse.lineup?.viceCaptainId}
+                                impactPlayerId={lineupResponse.lineup?.impactPlayerId}
+                            />
+                        </div>
+                    ) : (
+                        <div className="mx-auto w-full max-w-3xl rounded-2xl border border-dashed border-border bg-card/60 px-6 py-12 text-center">
+                            <h3 className="text-lg font-semibold text-foreground">{emptyStateTitle}</h3>
+                            <p className="mt-2 text-sm text-muted-foreground">{emptyStateDescription}</p>
+                        </div>
+                    )}
                 </div>
-
-                {action ? <div className="absolute top-0 right-0 flex justify-end">{action}</div> : null}
-
-                {playingPlayers.length > 0 ? (
-                    <div className="space-y-4">
-                        <CategorySection
-                            title="Wicket-Keeper"
-                            role="Wicket-Keeper"
-                            players={playingPlayers.filter((player) => player.role === 'Wicket-Keeper')}
-                            onAddPlayer={() => {}}
-                            onRemovePlayer={() => {}}
-                            selectedPlayers={selectedPlayersMap}
-                            captainId={lineupResponse.lineup?.captainId}
-                            viceCaptainId={lineupResponse.lineup?.viceCaptainId}
-                            impactPlayerId={lineupResponse.lineup?.impactPlayerId}
-                        />
-                        <CategorySection
-                            title="Batsman"
-                            role="Batsman"
-                            players={playingPlayers.filter((player) => player.role === 'Batsman')}
-                            onAddPlayer={() => {}}
-                            onRemovePlayer={() => {}}
-                            selectedPlayers={selectedPlayersMap}
-                            captainId={lineupResponse.lineup?.captainId}
-                            viceCaptainId={lineupResponse.lineup?.viceCaptainId}
-                            impactPlayerId={lineupResponse.lineup?.impactPlayerId}
-                        />
-                        <CategorySection
-                            title="All-Rounder"
-                            role="All-Rounder"
-                            players={playingPlayers.filter((player) => player.role === 'All-Rounder')}
-                            onAddPlayer={() => {}}
-                            onRemovePlayer={() => {}}
-                            selectedPlayers={selectedPlayersMap}
-                            captainId={lineupResponse.lineup?.captainId}
-                            viceCaptainId={lineupResponse.lineup?.viceCaptainId}
-                            impactPlayerId={lineupResponse.lineup?.impactPlayerId}
-                        />
-                        <CategorySection
-                            title="Bowler"
-                            role="Bowler"
-                            players={playingPlayers.filter((player) => player.role === 'Bowler')}
-                            onAddPlayer={() => {}}
-                            onRemovePlayer={() => {}}
-                            selectedPlayers={selectedPlayersMap}
-                            captainId={lineupResponse.lineup?.captainId}
-                            viceCaptainId={lineupResponse.lineup?.viceCaptainId}
-                            impactPlayerId={lineupResponse.lineup?.impactPlayerId}
-                        />
-                    </div>
-                ) : (
-                    <div className="rounded-2xl border border-dashed border-border bg-card/60 px-6 py-12 text-center">
-                        <h3 className="text-lg font-semibold text-foreground">{emptyStateTitle}</h3>
-                        <p className="mt-2 text-sm text-muted-foreground">{emptyStateDescription}</p>
-                    </div>
-                )}
             </div>
         </div>
     )

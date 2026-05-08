@@ -1,18 +1,17 @@
-import { CircleCheck, Trophy, X, AlertTriangle, Star, Zap } from 'lucide-react'
+import { CircleAlert, CircleCheck, Trophy, X, Star, Zap } from 'lucide-react'
 import { useState, useMemo, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router'
 import { toast } from 'sonner'
 
-import PlayerSidebarCard from '@/components/shared/player/player-sidebar-card'
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { Progress } from '@/components/ui/progress'
-import { ScrollArea } from '@/components/ui/scroll-area'
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
 import { useGetFranchiseOverview } from '@/features/franchise/api/get-franchise-overview'
 import type { Player } from '@/features/franchise/types/players'
 import { useGetLineup } from '@/features/team/api/get-lineup'
 import { useSaveLineup } from '@/features/team/api/save-lineup'
+import BuildTeamPlayerPool from '@/features/team/components/build-team-player-pool'
 import { teams } from '@/features/team/constants/team'
 import { cn } from '@/shared/lib/utils'
 
@@ -156,7 +155,7 @@ const BuildTeamPage = () => {
 
     return (
         <div className="flex min-h-screen flex-col bg-background pb-32 md:pb-0">
-            <main className="flex-1 w-full px-4 py-6 lg:px-8 max-w-7xl mx-auto flex flex-col space-y-6">
+            <main className="flex-1 w-full px-4 py-6 lg:px-3 max-w-7xl mx-auto flex flex-col space-y-6">
                 {/* Match Banner */}
                 {fixture && (
                     <div className="match-banner w-full min-h-[12rem] lg:min-h-[16rem] flex bg-gradient-to-br from-indigo-900 to-purple-800 rounded-2xl items-center justify-center relative overflow-hidden shadow-lg text-white">
@@ -197,22 +196,35 @@ const BuildTeamPage = () => {
                     <div className="space-y-6">
                         {/* Validation Messages */}
                         {validation.errors.length > 0 && (
-                            <div className="p-4 bg-destructive/10 border border-destructive/20 rounded-xl flex items-start gap-3">
-                                <AlertTriangle className="text-destructive w-5 h-5 mt-0.5 shrink-0" />
-                                <div className="flex-1">
-                                    <h4 className="text-sm font-bold text-destructive uppercase tracking-wider mb-1">Squad Requirements</h4>
-                                    <ul className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-1">
-                                        {validation.errors.map((err, i) => (
-                                            <li
-                                                key={i}
-                                                className="text-xs text-destructive/80 flex items-center gap-1.5">
-                                                <div className="w-1 h-1 bg-destructive/40 rounded-full" />
-                                                {err}
-                                            </li>
-                                        ))}
-                                    </ul>
+                            <section className="rounded-xl border border-destructive/25 bg-card shadow-sm overflow-hidden">
+                                <div className="flex flex-col gap-3 border-b border-destructive/15 bg-destructive/5 p-4 sm:flex-row sm:items-center sm:justify-between">
+                                    <div className="flex items-start gap-3">
+                                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-destructive/10 text-destructive">
+                                            <CircleAlert className="h-5 w-5" />
+                                        </div>
+                                        <div>
+                                            <h4 className="text-base font-black text-foreground">Lineup checklist</h4>
+                                            <p className="mt-1 text-sm text-muted-foreground">
+                                                Complete these requirements before locking your match team.
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <span className="w-fit rounded-md border border-destructive/20 bg-background px-3 py-1 text-xs font-black text-destructive">
+                                        {validation.errors.length} pending
+                                    </span>
                                 </div>
-                            </div>
+
+                                <ul className="grid gap-2 p-4 md:grid-cols-2">
+                                    {validation.errors.map((err) => (
+                                        <li
+                                            key={err}
+                                            className="flex items-start gap-2 rounded-lg border border-border bg-background px-3 py-2 text-sm font-medium text-foreground">
+                                            <span className="mt-1 h-2 w-2 shrink-0 rounded-full bg-destructive" />
+                                            <span className="leading-6">{err}</span>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </section>
                         )}
 
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -249,17 +261,21 @@ const BuildTeamPage = () => {
                                 {selectedPlayers.map((player) => (
                                     <div
                                         key={player.id}
-                                        className="relative group bg-card border border-border p-3 rounded-xl hover:border-primary/50 transition-all shadow-sm">
+                                        className="relative group bg-card border border-border p-5 rounded-xl hover:border-primary/50 transition-all shadow-sm">
                                         <div className="flex items-center gap-3">
-                                            <Avatar className="w-10 h-10 border-2 border-background">
-                                                <AvatarImage src={player.profileImageUrl} />
+                                            <Avatar className="w-20 h-20 border-2 border-background">
+                                                <AvatarImage
+                                                    src={player.profileImageUrl}
+                                                    className="object-cover object-top"
+                                                />
                                                 <AvatarFallback className="bg-primary/10 text-primary text-xs font-bold">
                                                     {player.name[0]}
                                                 </AvatarFallback>
                                             </Avatar>
+
                                             <div className="flex-1 min-w-0">
-                                                <p className="text-sm font-black truncate">{player.name}</p>
-                                                <p className="text-[10px] font-bold text-muted-foreground uppercase">
+                                                <p className="text-lg font-black truncate">{player.name}</p>
+                                                <p className="text-[13px] font-bold text-muted-foreground uppercase">
                                                     {player.role} • {player.iplTeam}
                                                 </p>
                                             </div>
@@ -317,25 +333,13 @@ const BuildTeamPage = () => {
                     </div>
 
                     {/* Right: Available Pool (Desktop) */}
-                    <div className="hidden lg:flex flex-col h-[calc(100vh-300px)] sticky top-[100px]">
-                        <div className="bg-card border border-border rounded-2xl flex flex-col h-full overflow-hidden shadow-sm">
-                            <div className="p-4 border-b border-border bg-muted/30">
-                                <h3 className="font-black text-sm uppercase tracking-wider">Franchise Pool</h3>
-                                <p className="text-[10px] font-bold text-muted-foreground">{availablePlayers.length} Players Available</p>
-                            </div>
-                            <ScrollArea className="flex-1 overflow-y-scroll">
-                                <div className="p-3 space-y-2">
-                                    {availablePlayers.map((player) => (
-                                        <PlayerSidebarCard
-                                            key={player.id}
-                                            player={player}
-                                            onAddPlayer={() => handleAddPlayer(player)}
-                                            canAddMore={selectedPlayingIds.size < 12}
-                                        />
-                                    ))}
-                                </div>
-                            </ScrollArea>
-                        </div>
+                    <div className="hidden lg:flex flex-col h-[calc(100vh-8rem)] sticky top-24">
+                        <BuildTeamPlayerPool
+                            players={availablePlayers}
+                            selectedCount={selectedPlayingIds.size}
+                            onAddPlayer={handleAddPlayer}
+                            className="overflow-hidden rounded-2xl border border-border shadow-sm"
+                        />
                     </div>
                 </div>
             </main>
@@ -364,24 +368,11 @@ const BuildTeamPage = () => {
                             <SheetContent
                                 side="bottom"
                                 className="h-[80vh] rounded-t-3xl p-0">
-                                <div className="p-6 h-full flex flex-col">
-                                    <div className="mb-4">
-                                        <h3 className="font-black text-lg uppercase tracking-tight">Available Players</h3>
-                                        <p className="text-xs font-bold text-muted-foreground">Select players from your 25-man franchise</p>
-                                    </div>
-                                    <ScrollArea className="flex-1">
-                                        <div className="space-y-3 pb-8">
-                                            {availablePlayers.map((player) => (
-                                                <PlayerSidebarCard
-                                                    key={player.id}
-                                                    player={player}
-                                                    onAddPlayer={() => handleAddPlayer(player)}
-                                                    canAddMore={selectedPlayingIds.size < 12}
-                                                />
-                                            ))}
-                                        </div>
-                                    </ScrollArea>
-                                </div>
+                                <BuildTeamPlayerPool
+                                    players={availablePlayers}
+                                    selectedCount={selectedPlayingIds.size}
+                                    onAddPlayer={handleAddPlayer}
+                                />
                             </SheetContent>
                         </Sheet>
 

@@ -1,6 +1,5 @@
 import { Calendar, History, Loader } from 'lucide-react'
 import { type FC, useMemo } from 'react'
-import { useNavigate } from 'react-router'
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useGetFixture } from '@/features/team/api/get-fixtures'
@@ -8,7 +7,6 @@ import PastMatchCard from '@/features/team/components/card/past-match-card'
 import UpcomingMatchCard from '@/features/team/components/card/upcoming-match-card'
 
 const FixturesPage: FC = () => {
-    const navigate = useNavigate()
     const { data: fixtureData, isPending } = useGetFixture({})
 
     const { upcomingFixtures, pastFixtures } = useMemo(() => {
@@ -94,7 +92,17 @@ const FixturesPage: FC = () => {
                                 ))}
                             </div>
                         ) : (
-                            <div className="py-12 text-center text-gray-500">No upcoming matches in this cycle.</div>
+                            <div className="py-12">
+                                <div className="mx-auto max-w-xl rounded-2xl border border-border bg-card/60 px-6 py-10 text-center">
+                                    <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-primary">
+                                        <Calendar className="h-6 w-6" />
+                                    </div>
+                                    <h3 className="text-lg font-semibold text-foreground mb-2">No upcoming matches</h3>
+                                    <p className="text-sm text-muted-foreground">
+                                        Fixtures for this session haven't been added yet — they should appear shortly. If fixtures don't appear after a few minutes, please contact the admin for assistance.
+                                    </p>
+                                </div>
+                            </div>
                         )}
                     </TabsContent>
                     <TabsContent value="history">
@@ -105,7 +113,6 @@ const FixturesPage: FC = () => {
                                 {pastFixtures.map((fixture, idx) => (
                                     <div
                                         key={fixture.id || idx}
-                                        onClick={() => navigate(`/matches/${fixture.id}/summary`)}
                                         className="cursor-pointer">
                                         <PastMatchCard
                                             match={{
@@ -117,12 +124,23 @@ const FixturesPage: FC = () => {
                                                 result: fixture.matchResult || 'Completed',
                                                 date: String(new Date(fixture.startTime).toLocaleDateString())
                                             }}
+                                            fixtureId={fixture.id}
                                         />
                                     </div>
                                 ))}
                             </div>
                         ) : (
-                            <div className="py-12 text-center text-gray-500">No past matches in this cycle yet.</div>
+                            <div className="py-12">
+                                <div className="mx-auto max-w-xl rounded-2xl border border-border bg-card/60 px-6 py-10 text-center">
+                                    <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-primary">
+                                        <Calendar className="h-6 w-6" />
+                                    </div>
+                                    <h3 className="text-lg font-semibold text-foreground mb-2">No completed matches yet</h3>
+                                    <p className="text-sm text-muted-foreground">
+                                        Once matches finish, their details will appear here. Fixtures are processed automatically and should appear shortly. If nothing shows up after a few minutes, please contact the admin for assistance.
+                                    </p>
+                                </div>
+                            </div>
                         )}
                     </TabsContent>
                 </Tabs>
