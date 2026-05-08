@@ -56,7 +56,7 @@ export interface GetFixtureLineupResponse {
         id: string
         name: string
         role: 'Batsman' | 'Bowler' | 'All-Rounder' | 'Wicket-Keeper'
-        iplTeam: string
+        iplTeam: 'CSK' | 'MI' | 'RCB' | 'KKR' | 'SRH' | 'DC' | 'PBKS' | 'RR' | 'GT' | 'LSG'
         isOverseas: boolean
         cost: number
         profileImageUrl: string
