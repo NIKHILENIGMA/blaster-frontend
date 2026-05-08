@@ -7,52 +7,52 @@ export const TEAMS = [
     {
         name: 'CSK',
         value: 'CSK',
-        label: 'Chennai Super Kings'
+        label: 'Chennai'
     },
     {
         name: 'MI',
         value: 'MI',
-        label: 'Mumbai Indians'
+        label: 'Mumbai'
     },
     {
         name: 'RCB',
         value: 'RCB',
-        label: 'Royal Challengers Bangalore'
+        label: 'Bangaluru'
     },
     {
         name: 'KKR',
         value: 'KKR',
-        label: 'Kolkata Knight Riders'
+        label: 'Kolkata'
     },
     {
         name: 'SRH',
         value: 'SRH',
-        label: 'Sunrisers Hyderabad'
+        label: 'Hyderabad'
     },
     {
         name: 'DC',
         value: 'DC',
-        label: 'Delhi Capitals'
+        label: 'Delhi'
     },
     {
         name: 'PBKS',
         value: 'PBKS',
-        label: 'Punjab Kings'
+        label: 'Punjab'
     },
     {
         name: 'RR',
         value: 'RR',
-        label: 'Rajasthan Royals'
+        label: 'Rajasthan'
     },
     {
         name: 'GT',
         value: 'GT',
-        label: 'Gujarat Titans'
+        label: 'Gujarat'
     },
     {
         name: 'LSG',
         value: 'LSG',
-        label: 'Lucknow Super Giants'
+        label: 'Lucknow'
     }
 ]
 
