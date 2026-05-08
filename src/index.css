@@ -124,7 +124,7 @@
     --popover-foreground: oklch(0.2 0.02 260);
 
     /* Brand Colors */
-    --primary: oklch(0.48 0.23 264.4); /* #2962FF */
+    --primary: oklch(0.496 0.265 301.924); /* #2962FF */
     --primary-foreground: oklch(0.99 0 0);
 
     --secondary: oklch(0.69 0.22 41.5); /* #FF6D00 */
