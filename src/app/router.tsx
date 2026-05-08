@@ -73,41 +73,40 @@ const router = createBrowserRouter([
             {
                 path: 'profile',
                 lazy: () => import('./routes/profile/profile').then((module) => ({ Component: module.default }))
+            }
+        ]
+    },
+    {
+        path: '/admin',
+        element: (
+            <AdminProtectedRoute>
+                <AdminLayout />
+            </AdminProtectedRoute>
+        ),
+        children: [
+            {
+                index: true,
+                lazy: () => import('./routes/admin/dashboard').then((module) => ({ Component: module.default }))
             },
             {
-                path: '/admin',
-                element: (
-                    <AdminProtectedRoute>
-                        <AdminLayout />
-                    </AdminProtectedRoute>
-                ),
-                children: [
-                    {
-                        index: true,
-                        path: 'dashboard',
-                        lazy: () => import('./routes/admin/dashboard').then((module) => ({ Component: module.default }))
-                    },
-                    {
-                        path: 'matches',
-                        lazy: () => import('./routes/admin/matches').then((module) => ({ Component: module.default }))
-                    },
-                    {
-                        path: 'fixtures',
-                        lazy: () => import('./routes/admin/fixtures').then((module) => ({ Component: module.default }))
-                    },
-                    {
-                        path: 'points-preview',
-                        lazy: () => import('./routes/admin/points-preview').then((module) => ({ Component: module.default }))
-                    },
-                    {
-                        path: 'teams',
-                        lazy: () => import('./routes/admin/teams').then((module) => ({ Component: module.default }))
-                    },
-                    {
-                        path: 'player-stats',
-                        lazy: () => import('./routes/admin/player-stats').then((module) => ({ Component: module.default }))
-                    }
-                ]
+                path: 'matches',
+                lazy: () => import('./routes/admin/matches').then((module) => ({ Component: module.default }))
+            },
+            {
+                path: 'fixtures',
+                lazy: () => import('./routes/admin/fixtures').then((module) => ({ Component: module.default }))
+            },
+            {
+                path: 'points-preview',
+                lazy: () => import('./routes/admin/points-preview').then((module) => ({ Component: module.default }))
+            },
+            {
+                path: 'teams',
+                lazy: () => import('./routes/admin/teams').then((module) => ({ Component: module.default }))
+            },
+            {
+                path: 'player-stats',
+                lazy: () => import('./routes/admin/player-stats').then((module) => ({ Component: module.default }))
             }
         ]
     },
