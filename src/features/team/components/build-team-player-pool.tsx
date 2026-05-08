@@ -2,13 +2,12 @@ import { Plus, Search, Shield, UserRound } from 'lucide-react'
 import { useMemo, useState, type FC } from 'react'
 
 import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import type { Player } from '@/features/franchise/types/players'
 import { teams, type TeamName } from '@/features/team/constants/team'
 import { cn } from '@/shared/lib/utils'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Select } from '@radix-ui/react-select'
-import { SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 
 type RoleFilter = 'All' | Player['role']
 type TeamFilter = 'All' | Player['iplTeam']
@@ -21,7 +20,19 @@ interface BuildTeamPlayerPoolProps {
 }
 
 const ROLE_FILTERS: RoleFilter[] = ['All', 'Batsman', 'Bowler', 'All-Rounder', 'Wicket-Keeper']
-const TEAM_FILTERS: TeamFilter[] = ['All', 'CSK', 'MI', 'RCB', 'KKR', 'SRH', 'DC', 'PBKS', 'RR', 'GT', 'LSG']
+const TEAM_FILTERS: TeamFilter[] = ['All', 'CSK', 'DC', 'KKR', 'MI', 'PBKS', 'RCB', 'RR', 'GT', 'LSG', 'SRH']
+const TEAM_DISPLAY_NAMES: Record<Exclude<TeamFilter, 'All'>, string> = {
+    CSK: 'Chennai',
+    DC: 'Delhi',
+    KKR: 'Kolkata',
+    MI: 'Mumbai',
+    PBKS: 'Punjab',
+    RCB: 'Bengaluru',
+    RR: 'Rajasthan',
+    GT: 'Gujarat',
+    LSG: 'Lucknow',
+    SRH: 'Hyderabad'
+}
 
 const roleTone: Record<Player['role'], string> = {
     Batsman: 'bg-green-500/10 text-green-700 border-green-500/20',
@@ -41,10 +52,12 @@ const BuildTeamPlayerPool: FC<BuildTeamPlayerPoolProps> = ({ players, selectedCo
         const normalizedSearch = search.trim().toLowerCase()
 
         return players.filter((player) => {
+            const teamDisplayName = TEAM_DISPLAY_NAMES[player.iplTeam as Exclude<TeamFilter, 'All'>]?.toLowerCase() ?? ''
             const matchesSearch =
                 normalizedSearch.length === 0 ||
                 player.name.toLowerCase().includes(normalizedSearch) ||
                 player.iplTeam.toLowerCase().includes(normalizedSearch) ||
+                teamDisplayName.includes(normalizedSearch) ||
                 player.role.toLowerCase().includes(normalizedSearch)
 
             const matchesTeam = teamFilter === 'All' || player.iplTeam === teamFilter
@@ -79,8 +92,7 @@ const BuildTeamPlayerPool: FC<BuildTeamPlayerPoolProps> = ({ players, selectedCo
                         <Button
                             variant={'ghost'}
                             onClick={() => (setSearch(''), setTeamFilter('All'), setRoleFilter('All'))}
-                            className='absolute top-[10%] right-1.5'
-                            >
+                            className="absolute top-[10%] right-1.5">
                             Clear
                         </Button>
                     </Label>
@@ -96,7 +108,7 @@ const BuildTeamPlayerPool: FC<BuildTeamPlayerPoolProps> = ({ players, selectedCo
                                     <SelectItem
                                         key={team}
                                         value={team}>
-                                        {team === 'All' ? 'All teams' : team}
+                                        {team === 'All' ? 'All teams' : TEAM_DISPLAY_NAMES[team]}
                                     </SelectItem>
                                 ))}
                             </SelectContent>
@@ -161,7 +173,9 @@ const BuildTeamPlayerPool: FC<BuildTeamPlayerPoolProps> = ({ players, selectedCo
                                                         ) : (
                                                             <Shield className="h-3.5 w-3.5" />
                                                         )}
-                                                        <span>{player.iplTeam}</span>
+                                                        <span>
+                                                            {TEAM_DISPLAY_NAMES[player.iplTeam as Exclude<TeamFilter, 'All'>] ?? player.iplTeam}
+                                                        </span>
                                                         <span>•</span>
                                                         <span>{player.cost} cr</span>
                                                     </div>

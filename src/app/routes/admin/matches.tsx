@@ -9,6 +9,7 @@ import { Switch } from '@/components/ui/switch'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { useMatches, useToggleMatchLock } from '@/features/admin/api/matches'
 import { CreateMatchModal } from '@/features/admin/components/create-match-modal'
+import type { Match } from '@/features/admin/types/match'
 
 // const getStatusColor = (status: string) => {
 //     switch (status.toUpperCase()) {
@@ -26,6 +27,7 @@ import { CreateMatchModal } from '@/features/admin/components/create-match-modal
 
 export default function MatchesPage() {
     const [createModalOpen, setCreateModalOpen] = useState(false)
+    const [editingMatch, setEditingMatch] = useState<Match | null>(null)
     const { data: matches, isLoading, error } = useMatches()
     const toggleLockMutation = useToggleMatchLock()
 
@@ -42,6 +44,8 @@ export default function MatchesPage() {
             }
         )
     }
+
+    const formatDateTime = (value?: string | null) => (value ? new Date(value).toLocaleString() : 'Not set')
 
     if (isLoading) {
         return (
@@ -69,7 +73,10 @@ export default function MatchesPage() {
                     <p className="text-sm text-muted-foreground">Manage match schedules and lock status</p>
                 </div>
                 <Button
-                    onClick={() => setCreateModalOpen(true)}
+                    onClick={() => {
+                        setEditingMatch(null)
+                        setCreateModalOpen(true)
+                    }}
                     className="w-full sm:w-auto gap-2">
                     <Plus className="h-4 w-4" />
                     Create Match
@@ -78,7 +85,11 @@ export default function MatchesPage() {
 
             <CreateMatchModal
                 open={createModalOpen}
-                onOpenChange={setCreateModalOpen}
+                onOpenChange={(open) => {
+                    setCreateModalOpen(open)
+                    if (!open) setEditingMatch(null)
+                }}
+                match={editingMatch}
             />
 
             {/* Table container - responsive */}
@@ -95,6 +106,8 @@ export default function MatchesPage() {
                                     <TableHead className="font-semibold">Title</TableHead>
                                     <TableHead className="font-semibold">Start Time</TableHead>
                                     <TableHead className="font-semibold">End Time</TableHead>
+                                    <TableHead className="font-semibold">Buy Window</TableHead>
+                                    <TableHead className="font-semibold">Squad Lock</TableHead>
                                     {/* <TableHead className="font-semibold">Status</TableHead> */}
                                     <TableHead className="font-semibold text-center">Lock</TableHead>
                                     <TableHead className="text-right font-semibold">Actions</TableHead>
@@ -106,12 +119,13 @@ export default function MatchesPage() {
                                         key={match.id}
                                         className="hover:bg-accent/50 border-b">
                                         <TableCell className="font-medium text-sm">{match.title}</TableCell>
+                                        <TableCell className="text-sm text-muted-foreground">{formatDateTime(match.startTime)}</TableCell>
+                                        <TableCell className="text-sm text-muted-foreground">{formatDateTime(match.endTime)}</TableCell>
                                         <TableCell className="text-sm text-muted-foreground">
-                                            {new Date(match.startTime).toLocaleString()}
+                                            <div>{formatDateTime(match.buyWindowOpenAt)}</div>
+                                            <div>{formatDateTime(match.buyWindowCloseAt)}</div>
                                         </TableCell>
-                                        <TableCell className="text-sm text-muted-foreground">
-                                            {new Date(match.endTime).toLocaleString()}
-                                        </TableCell>
+                                        <TableCell className="text-sm text-muted-foreground">{formatDateTime(match.squadLockAt)}</TableCell>
                                         {/* <TableCell>
                                             <Badge className={getStatusColor(match. || 'Scheduled')}>
                                                 {match.status || 'Scheduled'}
@@ -131,7 +145,11 @@ export default function MatchesPage() {
                                                 <Button
                                                     variant="ghost"
                                                     size="sm"
-                                                    className="h-8 w-8 p-0">
+                                                    className="h-8 w-8 p-0"
+                                                    onClick={() => {
+                                                        setEditingMatch(match)
+                                                        setCreateModalOpen(true)
+                                                    }}>
                                                     <Edit className="h-4 w-4" />
                                                 </Button>
                                             </div>
@@ -152,8 +170,11 @@ export default function MatchesPage() {
                                     <div>
                                         <h3 className="font-semibold text-sm mb-1">{match.title}</h3>
                                         <div className="space-y-1 text-xs text-muted-foreground">
-                                            <p>📅 {new Date(match.startTime).toLocaleString()}</p>
-                                            <p>⏱️ Ends: {new Date(match.endTime).toLocaleString()}</p>
+                                            <p>Starts: {formatDateTime(match.startTime)}</p>
+                                            <p>Ends: {formatDateTime(match.endTime)}</p>
+                                            <p>Buy opens: {formatDateTime(match.buyWindowOpenAt)}</p>
+                                            <p>Buy closes: {formatDateTime(match.buyWindowCloseAt)}</p>
+                                            <p>Squad lock: {formatDateTime(match.squadLockAt)}</p>
                                         </div>
                                     </div>
                                     <div className="flex items-center justify-between">
@@ -182,7 +203,11 @@ export default function MatchesPage() {
                                             <Button
                                                 variant="ghost"
                                                 size="sm"
-                                                className="h-8 w-8 p-0">
+                                                className="h-8 w-8 p-0"
+                                                onClick={() => {
+                                                    setEditingMatch(match)
+                                                    setCreateModalOpen(true)
+                                                }}>
                                                 <Edit className="h-4 w-4" />
                                             </Button>
                                         </div>

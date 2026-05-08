@@ -107,6 +107,10 @@ const router = createBrowserRouter([
             {
                 path: 'player-stats',
                 lazy: () => import('./routes/admin/player-stats').then((module) => ({ Component: module.default }))
+            },
+            {
+                path: 'rulesets',
+                lazy: () => import('./routes/admin/rulesets').then((module) => ({ Component: module.default }))
             }
         ]
     },

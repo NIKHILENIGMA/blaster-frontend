@@ -20,6 +20,8 @@ export interface LeaderboardEntry {
     lastName: string
     username: string
     profileImage: string | null
+    teamName?: string | null
+    teamLogo?: string | null
     totalScore: number
     rank: number
 }
