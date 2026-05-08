@@ -9,12 +9,14 @@ interface MobileActionBarProps {
 
 export function MobileActionBar({ onOpenDrawer, selectedCount }: MobileActionBarProps) {
     return (
-        <div className="fixed bottom-0 w-full border-t border-border bg-card p-4 md:hidden z-50">
+        <div className="sticky bottom-0 w-full border-t border-border bg-card p-4 md:hidden z-50">
             <Button
+                variant="default"
+                size="lg"
                 onClick={onOpenDrawer}
-                className="w-full gap-2 bg-primary text-primary-foreground hover:bg-primary/90">
-                <Plus className="h-5 w-5" />
-                Add Players ({selectedCount}/25)
+                className="w-full max-w-md">
+                <Plus className="mr-2" />
+                {selectedCount > 0 ? 'Edit Squad' : 'Build Your Squad'}
             </Button>
         </div>
     )

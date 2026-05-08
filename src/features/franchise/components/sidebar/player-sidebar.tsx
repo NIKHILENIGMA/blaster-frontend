@@ -1,3 +1,4 @@
+import { AlertCircle, CheckCircle2, CloudUpload } from 'lucide-react'
 import { useCallback } from 'react'
 
 import { Button } from '@/components/ui/button'
@@ -17,14 +18,25 @@ interface PlayerSidebarProps {
     selectedPlayers: Map<string, Player>
     onSubmit: () => void
     isSubmitDisabled: boolean
+    budgetRemaining: number
+    selectedCount: number
 }
 
-export function PlayerSidebar({ allPlayers, onAddPlayer, onRemovePlayer, selectedPlayers, onSubmit, isSubmitDisabled }: PlayerSidebarProps) {
-    const { isUpdatingFranchise } = useBuildFranchise()
+export function PlayerSidebar({
+    allPlayers,
+    onAddPlayer,
+    onRemovePlayer,
+    selectedPlayers,
+    onSubmit,
+    isSubmitDisabled,
+    budgetRemaining,
+    selectedCount
+}: PlayerSidebarProps) {
+    const { isUpdatingFranchise, saveStatus, lastSavedAt } = useBuildFranchise()
     const { searchQuery, roleFilter, teamFilter, nationalityFilter } = useFilterStore()
 
+    // Filter out already selected players
     const availablePlayers = allPlayers.filter((player) => !selectedPlayers.has(player.id))
-
     const filteredPlayers = availablePlayers.filter((player) => {
         // search by name
         if (searchQuery && !player.name.toLowerCase().includes(searchQuery.toLowerCase())) {
@@ -52,7 +64,42 @@ export function PlayerSidebar({ allPlayers, onAddPlayer, onRemovePlayer, selecte
     )
 
     return (
-        <div className="flex flex-col border-l border-border bg-sidebar max-h-[78vh]">
+        <div className="flex flex-col border-l border-border bg-sidebar max-h-[90vh]">
+            <div className="flex items-center  px-4 py-3 bg-primary/10 text-primary rounded-b-lg mb-4">
+                <div className="w-full flex justify-between gap-8">
+                    <div className="flex flex-col gap-1">
+                        <p className="text-xs font-medium ">Budget Remaining</p>
+                        <p className="text-xl font-bold">{budgetRemaining.toLocaleString()} Points</p>
+                    </div>
+                    <div className="flex flex-col gap-1">
+                        <p className="text-xs font-medium ">Squad Size</p>
+                        <p className="text-xl font-bold ">{selectedCount}/25</p>
+                    </div>
+                </div>
+            </div>
+            <div className="px-4 mb-1 flex items-center justify-between gap-2">
+                <h2 className="text-xl font-bold">Buy Players</h2>
+                <div className="flex items-center gap-2 text-xs font-medium">
+                    {saveStatus === 'saving' && (
+                        <span className="flex items-center text-blue-500 animate-pulse">
+                            <CloudUpload className="w-4 h-4 mr-1" /> Saving...
+                        </span>
+                    )}
+
+                    {saveStatus === 'saved' && (
+                        <span className="flex items-center text-green-500">
+                            <CheckCircle2 className="w-4 h-4 mr-1" />
+                            Saved {lastSavedAt && `at ${lastSavedAt.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`}
+                        </span>
+                    )}
+
+                    {saveStatus === 'error' && (
+                        <span className="flex items-center text-red-500">
+                            <AlertCircle className="w-4 h-4 mr-1" /> Save Failed
+                        </span>
+                    )}
+                </div>
+            </div>
             <Filters
                 availablePlayers={availablePlayers}
                 selectedPlayers={selectedPlayers}

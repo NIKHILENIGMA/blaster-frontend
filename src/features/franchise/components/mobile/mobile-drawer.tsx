@@ -1,3 +1,4 @@
+import { AlertCircle, CheckCircle2, CloudUpload } from 'lucide-react'
 import { useCallback } from 'react'
 
 import { Button } from '@/components/ui/button'
@@ -8,6 +9,7 @@ import { useFilterStore } from '../../store/use-filter-store'
 import type { Player } from '../../types/players'
 import PlayerSidebarItem from '../cards/player-sidebar-item'
 import Filters from '../sidebar/filters'
+import { useBuildFranchise } from '../../hook/use-build-franchise'
 
 interface MobileDrawerProps {
     isOpen: boolean
@@ -18,6 +20,8 @@ interface MobileDrawerProps {
     selectedPlayers: Map<string, Player>
     onSubmit: () => void
     isSubmitDisabled: boolean
+    budgetRemaining: number
+    selectedCount: number
 }
 
 export function MobileDrawer({
@@ -28,10 +32,13 @@ export function MobileDrawer({
     onRemovePlayer,
     selectedPlayers,
     onSubmit,
-    isSubmitDisabled
+    isSubmitDisabled,
+    budgetRemaining,
+    selectedCount
 }: MobileDrawerProps) {
     const availablePlayers = allPlayers.filter((player) => !selectedPlayers.has(player.id))
     const { searchQuery, roleFilter, teamFilter, nationalityFilter } = useFilterStore()
+    const { saveStatus, lastSavedAt } = useBuildFranchise()
 
     const filteredPlayers = availablePlayers.filter((player) => {
         // search by name
@@ -65,19 +72,55 @@ export function MobileDrawer({
             onOpenChange={onOpenChange}>
             <SheetContent
                 side="bottom"
-                className="h-[75vh] rounded-t-2xl bg-background p-6 md:hidden">
-                <SheetHeader className="mb-4">
-                    <SheetTitle className="text-sidebar-foreground">Add Players</SheetTitle>
+                className="h-[95vh] rounded-t-2xl bg-background p-6 md:hidden">
+                <SheetHeader className="mb-1">
+                    <SheetTitle className="text-sidebar-foreground">Buy Players</SheetTitle>
                 </SheetHeader>
+                <div className="flex items-start px-4 py-1 bg-primary/10 text-primary rounded-b-lg ">
+                    <div className="w-full flex justify-between gap-8">
+                        <div className="flex flex-col gap-1">
+                            <p className="text-xs font-medium ">Budget Remaining</p>
+                            <p className="text-xl font-bold">{budgetRemaining.toLocaleString()} Points</p>
+                        </div>
+                        <div className="flex flex-col gap-1">
+                            <p className="text-xs font-medium ">Squad Size</p>
+                            <p className="text-xl font-bold ">{selectedCount}/25</p>
+                        </div>
+                    </div>
+                </div>
+                <div className="px-4 flex items-center justify-between gap-2">
+                    <h2 className="text-xl font-bold">Buy Players</h2>
+                    <div className="flex items-center gap-2 text-xs font-medium">
+                        {saveStatus === 'saving' && (
+                            <span className="flex items-center text-blue-500 animate-pulse">
+                                <CloudUpload className="w-4 h-4 mr-1" /> Saving...
+                            </span>
+                        )}
 
-                <div className="space-y-4">
+                        {saveStatus === 'saved' && (
+                            <span className="flex items-center text-green-500">
+                                <CheckCircle2 className="w-4 h-4 mr-1" />
+                                Saved {lastSavedAt && `at ${lastSavedAt.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`}
+                            </span>
+                        )}
+
+                        {saveStatus === 'error' && (
+                            <span className="flex items-center text-red-500">
+                                <AlertCircle className="w-4 h-4 mr-1" /> Save Failed
+                            </span>
+                        )}
+                    </div>
+                </div>
+
+                <div className="space-y-2">
                     <Filters
                         availablePlayers={availablePlayers}
                         selectedPlayers={selectedPlayers}
+                        classes="space-y-1"
                     />
                 </div>
 
-                <ScrollArea className="mt-4 h-[calc(85vh-320px)]">
+                <ScrollArea className="h-[calc(85vh-120px)] overflow-y-scroll">
                     <div className="space-y-2 pr-4">
                         {availablePlayers.length === 0 ? (
                             <div className="flex flex-col items-center justify-center py-8 text-center">
@@ -102,9 +145,9 @@ export function MobileDrawer({
                     </div>
                 </ScrollArea>
 
-                <div className="mt-4 space-y-2 border-t border-border pt-4">
+                <div className="space-y-2 border-t border-border pt-4">
                     <Button
-                        disabled={isSubmitDisabled}
+                        disabled={isSubmitDisabled }
                         className={`w-full ${
                             isSubmitDisabled ? 'bg-muted text-muted-foreground' : 'bg-primary text-primary-foreground hover:bg-primary/90'
                         }`}
@@ -113,12 +156,6 @@ export function MobileDrawer({
                             onOpenChange(false)
                         }}>
                         Submit Franchise
-                    </Button>
-                    <Button
-                        variant="outline"
-                        className="w-full border-border"
-                        onClick={() => onOpenChange(false)}>
-                        Close
                     </Button>
                 </div>
             </SheetContent>

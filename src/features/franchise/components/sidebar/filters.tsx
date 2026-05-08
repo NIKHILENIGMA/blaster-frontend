@@ -12,9 +12,10 @@ import type { Nationality, Roles, Teams } from '../../types/teams'
 interface FiltersProps {
     availablePlayers: Player[]
     selectedPlayers: Map<string, Player>
+    classes?: string
 }
 
-const Filters: FC<FiltersProps> = ({ availablePlayers, selectedPlayers }) => {
+const Filters: FC<FiltersProps> = ({ availablePlayers, selectedPlayers, classes }) => {
     const {
         searchQuery,
         setSearchQuery,
@@ -28,9 +29,9 @@ const Filters: FC<FiltersProps> = ({ availablePlayers, selectedPlayers }) => {
     } = useFilterStore()
 
     return (
-        <div className="space-y-4 border-b border-border p-4">
-            <div>
-                <label className="mb-2 block text-xs font-semibold text-sidebar-foreground">Search Players</label>
+        <div className={`space-y-4 border-b border-border p-4 ${classes}`}>
+            <div className="flex flex-col gap-2">
+                <label className="block text-xs font-semibold text-sidebar-foreground">Search Players</label>
                 <Input
                     type="text"
                     placeholder="Search by name..."
@@ -42,7 +43,7 @@ const Filters: FC<FiltersProps> = ({ availablePlayers, selectedPlayers }) => {
 
             <div className="flex flex-col gap-2">
                 <div className="flex items-center justify-between">
-                    <label className="mb-2 block text-xs font-semibold text-sidebar-foreground">Filters</label>
+                    <label className="block text-xs font-semibold text-sidebar-foreground">Filters</label>
                     <Button
                         size="sm"
                         variant="ghost"
@@ -53,7 +54,7 @@ const Filters: FC<FiltersProps> = ({ availablePlayers, selectedPlayers }) => {
                     </Button>
                 </div>
 
-                <div className="flex gap-2 flex-wrap">
+                <div className="flex space-x-1.5 flex-wrap">
                     <Select
                         value={roleFilter}
                         onValueChange={(val: Roles) => setRoleFilter(val)}>
