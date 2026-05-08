@@ -11,6 +11,7 @@ interface CategorySectionProps {
     captainId?: string
     viceCaptainId?: string
     impactPlayerId?: string
+    showRemoveBtn?: boolean
 }
 
 export function CategorySection({ 
@@ -21,7 +22,8 @@ export function CategorySection({
     selectedPlayers,
     captainId,
     viceCaptainId,
-    impactPlayerId
+    impactPlayerId,
+    showRemoveBtn = false
 }: CategorySectionProps) {
     const selectedInCategory = players.filter((p) => selectedPlayers.has(p.id))
     const selectedBatsmenCount = selectedInCategory.filter((p) => p.role === 'Batsman').length
@@ -56,7 +58,7 @@ export function CategorySection({
                                 key={player.id}
                                 player={player}
                                 onRemovePlayer={onRemovePlayer}
-                                isRemoveBtn={false}
+                                isRemoveBtn={showRemoveBtn}
                                 isCaptain={player.id === captainId}
                                 isViceCaptain={player.id === viceCaptainId}
                                 isImpact={player.id === impactPlayerId}
