@@ -3,8 +3,6 @@ import { FaArrowLeftLong } from 'react-icons/fa6'
 import { useNavigate } from 'react-router'
 import { Toaster, toast } from 'sonner'
 
-import Footer from '@/components/shared/footer'
-import Header from '@/components/shared/header'
 import { Button } from '@/components/ui/button'
 import { useGetCurrentRosterCycle, useGetFranchiseOverview, useSaveSquad } from '@/features/team-builder/api/franchise'
 import { useGetPlayers } from '@/features/team-builder/api/get-players'
@@ -44,7 +42,6 @@ export default function SelectPlayers() {
 
     return (
         <div className="min-h-screen bg-neutral-background">
-            <Header />
             <main className="flex flex-col items-center py-5 relative">
                 <Button
                     onClick={() => navigate(-1)}
@@ -70,7 +67,6 @@ export default function SelectPlayers() {
                     </div>
                 )}
             </main>
-            <Footer />
             <Toaster />
         </div>
     )

@@ -1,7 +1,5 @@
 import type { FC } from 'react'
 
-import Footer from '@/components/shared/footer'
-import Header from '@/components/shared/header'
 import { useLeaderboardEntries } from '@/features/leaderboard/api/get-leader-board-entry'
 import LeaderboardHeader from '@/features/leaderboard/components/leaderboard-header'
 import LeaderboardTable from '@/features/leaderboard/components/leaderboard-table'
@@ -23,7 +21,6 @@ const LeaderboardPage: FC = () => {
 
     return (
         <div className="min-h-screen bg-neutral-background">
-            <Header />
             <main className="w-full py-8">
                 <div className="max-w-6xl mx-4 md:mx-auto">
                     {/* Header */}
@@ -42,7 +39,6 @@ const LeaderboardPage: FC = () => {
                     />
                 </div>
             </main>
-            <Footer />
         </div>
     )
 }

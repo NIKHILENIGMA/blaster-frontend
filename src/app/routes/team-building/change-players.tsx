@@ -3,8 +3,6 @@ import { FaArrowLeftLong } from 'react-icons/fa6'
 import { useNavigate, useParams } from 'react-router'
 import { toast } from 'sonner'
 
-import Footer from '@/components/shared/footer'
-import Header from '@/components/shared/header'
 import { Button } from '@/components/ui/button'
 import { useGetFixtureLineup, useSaveLineup } from '@/features/team-builder/api/franchise'
 import type { RosterCyclePlayer } from '@/features/team-builder/types/franchise'
@@ -148,7 +146,6 @@ export default function ChangePlayers() {
 
     return (
         <div className="min-h-screen bg-neutral-background">
-            <Header />
             <main className="mx-auto max-w-7xl px-4 py-6 space-y-6">
                 <Button
                     onClick={() => navigate('/my-squad')}
@@ -243,7 +240,6 @@ export default function ChangePlayers() {
                     </>
                 )}
             </main>
-            <Footer />
         </div>
     )
 }

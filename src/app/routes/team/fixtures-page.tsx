@@ -1,12 +1,11 @@
-import { Calendar, History } from 'lucide-react'
+import { Calendar, History, Loader } from 'lucide-react'
 import { type FC, useMemo } from 'react'
+import { useNavigate } from 'react-router'
 
-import Header from '@/components/shared/header'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useGetFixture } from '@/features/team/api/get-fixtures'
 import PastMatchCard from '@/features/team/components/card/past-match-card'
 import UpcomingMatchCard from '@/features/team/components/card/upcoming-match-card'
-import { useNavigate } from 'react-router'
 
 const FixturesPage: FC = () => {
     const navigate = useNavigate()
@@ -16,9 +15,7 @@ const FixturesPage: FC = () => {
         if (!fixtureData?.fixtures) return { upcomingFixtures: [], pastFixtures: [] }
 
         return {
-            upcomingFixtures: fixtureData.fixtures.filter(
-                (f) => f.matchStatus === 'scheduled' || f.matchStatus === 'live' || !f.matchStatus
-            ),
+            upcomingFixtures: fixtureData.fixtures.filter((f) => f.matchStatus === 'scheduled' || f.matchStatus === 'live' || !f.matchStatus),
             pastFixtures: fixtureData.fixtures.filter((f) => f.matchStatus === 'completed')
         }
     }, [fixtureData])
@@ -26,15 +23,27 @@ const FixturesPage: FC = () => {
     if (isPending) {
         return (
             <div className="w-full min-h-screen flex items-center justify-center">
-                <p className="text-gray-500 text-lg">Loading fixtures...</p>
+                <Loader
+                    size="md"
+                    color="border-primary"
+                />
             </div>
         )
     }
 
     if (!fixtureData) {
         return (
-            <div className="w-full min-h-screen flex items-center justify-center">
-                <p className="text-gray-500 text-lg">No fixtures available.</p>
+            <div className="w-full min-h-screen flex items-center justify-center bg-background">
+                <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="text-center px-6">
+                        <div className="flex justify-center mb-6">
+                            <Calendar className="w-20 h-20 text-primary/30" />
+                        </div>
+                        <h2 className="text-3xl font-bold text-foreground mb-3">Match Session Ended</h2>
+                        <p className="text-lg text-muted-foreground mb-2">All fixtures of this match session have ended.</p>
+                        <p className="text-lg text-primary font-semibold">Please wait for new fixtures. Happy playing! 🎉</p>
+                    </div>
+                </div>
             </div>
         )
     }
@@ -42,8 +51,7 @@ const FixturesPage: FC = () => {
     return (
         <div className="w-full min-h-screen bg-background">
             {/* Header */}
-            <Header />
-            <div className=" mx-auto px-12 py-6 mt-20 w-full">
+            <div className="mx-auto px-12 py-6 w-full">
                 <div className="mb-6">
                     <h1 className="text-2xl font-bold">Match Fixtures</h1>
                     <p className="text-gray-600 mt-1">Stay updated with the latest match schedules and results.</p>
@@ -95,11 +103,10 @@ const FixturesPage: FC = () => {
                         {pastFixtures.length > 0 ? (
                             <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
                                 {pastFixtures.map((fixture, idx) => (
-                                    <div 
+                                    <div
                                         key={fixture.id || idx}
                                         onClick={() => navigate(`/matches/${fixture.id}/summary`)}
-                                        className="cursor-pointer"
-                                    >
+                                        className="cursor-pointer">
                                         <PastMatchCard
                                             match={{
                                                 matchNo: Number(fixture.matchNumber) || idx + 1,

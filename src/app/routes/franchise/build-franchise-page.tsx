@@ -1,7 +1,7 @@
 import { AlertCircle, CheckCircle2, CloudUpload } from 'lucide-react'
 import type { FC } from 'react'
 
-import Header from '@/components/shared/header'
+import { Loader } from '@/components'
 import { CountdownBanner } from '@/features/franchise/components/banner/countdown-banner'
 import { MobileActionBar } from '@/features/franchise/components/mobile/mobile-action-bar'
 import { MobileDrawer } from '@/features/franchise/components/mobile/mobile-drawer'
@@ -27,13 +27,17 @@ const BuildFranchisePage: FC = () => {
     } = useBuildFranchise()
 
     if (isPlayersLoading) {
-        return <div>Loading players...</div>
+        return (
+            <Loader
+                size="xl"
+                color="border-primary"
+            />
+        )
     }
 
     return (
         <div className="flex min-h-screen flex-col bg-background">
-            <Header />
-            <div className="flex-1 mt-20">
+            <div className="flex-1">
                 <CountdownBanner />
                 <StickyHeader
                     budgetRemaining={budgetRemaining}

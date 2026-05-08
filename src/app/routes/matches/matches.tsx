@@ -1,8 +1,5 @@
 import type { FC } from 'react'
 
-import Footer from '@/components/shared/footer'
-import Header from '@/components/shared/header'
-
 const fixtures = [
     { date: '22 Mar 2026', time: '7:30 PM', match: 'Mumbai Indians vs Chennai Super Kings', venue: 'Wankhede Stadium, Mumbai' },
     {
@@ -19,7 +16,6 @@ const fixtures = [
 const Matches: FC = () => {
     return (
         <div className="min-h-screen bg-gradient-to-b from-neutral-background to-slate-100">
-            <Header />
             <section className="mx-auto w-full max-w-4xl px-4 py-8 md:px-6">
                 <h2 className="mb-5 text-2xl font-bold font-heading tracking-tight text-slate-900 md:text-3xl">IPL Fixtures</h2>
                 <ul className="m-0 grid list-none gap-4 p-0 font-body">
@@ -36,7 +32,6 @@ const Matches: FC = () => {
                     ))}
                 </ul>
             </section>
-            <Footer />
         </div>
     )
 }

@@ -2,7 +2,6 @@ import { type FC } from 'react'
 import { IoInformationCircleOutline } from 'react-icons/io5'
 import { RiTeamFill } from 'react-icons/ri'
 
-import Header from '@/components/shared/header'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 
@@ -12,8 +11,7 @@ import { DETAILS, REWARDS } from '../constants/franchise-constants'
 
 const NoFranchise: FC = () => {
     return (
-        <div className="flex  flex-col mt-20 bg-amber-200">
-            <Header />
+        <div className="flex flex-col bg-amber-200">
             <main className="w-full relative">
                 <section className="relative w-full min-h-[calc(100vh-64px)] overflow-hidden">
                     <img

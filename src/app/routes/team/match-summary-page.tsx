@@ -1,16 +1,17 @@
 import { useMemo, useState, type FC } from 'react'
 import { useParams } from 'react-router'
 
-import Header from '@/components/shared/header'
 import { useGetLineup } from '@/features/team/api/get-lineup'
-import { teams } from '@/features/team/constants/team'
-import type { GetFixtureLineupResponse } from '@/features/team/types/fixtures'
 import MatchPlayerCard from '@/features/team/components/card/match-player-card'
 import PointBreakdownDialog from '@/features/team/components/dialog/point-breakdown-dialog'
+import { teams } from '@/features/team/constants/team'
+import type { GetFixtureLineupResponse } from '@/features/team/types/fixtures'
+
+type LineupPlayer = GetFixtureLineupResponse['lineupPlayers'][number]
 
 const MatchSummaryPage: FC = () => {
     const { fixtureId } = useParams<{ fixtureId: string }>()
-    const [selectedPlayer, setSelectedPlayer] = useState<any | null>(null)
+    const [selectedPlayer, setSelectedPlayer] = useState<LineupPlayer | null>(null)
     const [isDialogOpen, setIsDialogOpen] = useState(false)
 
     const { data: lineupData } = useGetLineup({
@@ -26,10 +27,10 @@ const MatchSummaryPage: FC = () => {
 
     const groupedPlayers = useMemo(() => {
         const groups = {
-            'Wicket-Keeper': [] as any[],
-            Batsman: [] as any[],
-            'All-Rounder': [] as any[],
-            Bowler: [] as any[]
+            'Wicket-Keeper': [] as LineupPlayer[],
+            Batsman: [] as LineupPlayer[],
+            'All-Rounder': [] as LineupPlayer[],
+            Bowler: [] as LineupPlayer[]
         }
 
         playingPlayers.forEach((p) => {
@@ -41,7 +42,7 @@ const MatchSummaryPage: FC = () => {
         return groups
     }, [playingPlayers])
 
-    const handlePlayerClick = (player: any) => {
+    const handlePlayerClick = (player: LineupPlayer) => {
         setSelectedPlayer(player)
         setIsDialogOpen(true)
     }
@@ -58,8 +59,7 @@ const MatchSummaryPage: FC = () => {
 
     return (
         <div className="flex min-h-screen w-full flex-col bg-background">
-            <Header />
-            <main className="flex-1 w-full pt-24 pb-12 px-4 lg:px-8 max-w-7xl mx-auto flex flex-col space-y-8">
+            <main className="flex-1 w-full py-6 pb-12 px-4 lg:px-8 max-w-7xl mx-auto flex flex-col space-y-8">
                 <div className="flex flex-col items-center gap-2">
                     <h2 className="text-2xl font-bold uppercase tracking-tight">Match Summary</h2>
                     <div className="bg-primary/10 text-primary px-4 py-1 rounded-full text-sm font-bold border border-primary/20">
@@ -109,7 +109,9 @@ const MatchSummaryPage: FC = () => {
                 {/* Squad Performance */}
                 <div className="space-y-12">
                     {Object.entries(groupedPlayers).map(([role, players]) => (
-                        <div key={role} className="space-y-6">
+                        <div
+                            key={role}
+                            className="space-y-6">
                             <div className="flex items-center gap-4">
                                 <div className="h-[1px] flex-1 bg-border" />
                                 <h3 className="text-sm font-black uppercase tracking-[0.2em] text-muted-foreground px-4 py-1 bg-muted rounded-full border border-border">
@@ -117,7 +119,7 @@ const MatchSummaryPage: FC = () => {
                                 </h3>
                                 <div className="h-[1px] flex-1 bg-border" />
                             </div>
-                            
+
                             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                                 {players.map((player) => (
                                     <MatchPlayerCard

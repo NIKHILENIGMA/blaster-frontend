@@ -1,8 +1,7 @@
 // import { ActionBar } from '@/features/franchise/action-bar'
 import { type FC } from 'react'
 
-import Loader from '@/components/loader/loader'
-import Header from '@/components/shared/header'
+import ContainLoader from '@/components/loader/contain-loader'
 import { useGetFranchiseOverview } from '@/features/franchise/api/get-franchise-overview'
 import FranchiseBanner from '@/features/franchise/components/create-franchise/franchise-banner'
 import FranchiseSquad from '@/features/franchise/components/create-franchise/franchise-squad'
@@ -11,7 +10,7 @@ import NoFranchise from '@/features/franchise/create/no-franchise'
 const FranchisePage: FC = () => {
     const { data, isPending } = useGetFranchiseOverview()
 
-    if (isPending) return <Loader />
+    if (isPending) return <ContainLoader />
 
     // If we don't have data or the franchise is null, it means the user doesn't have a franchise
     if (!data || data.franchise === null) return <NoFranchise />
@@ -26,8 +25,7 @@ const FranchisePage: FC = () => {
     const isRosterAvailable: boolean = Boolean(data.rosterCycle && data.rosterCycle.length > 0)
 
     return (
-        <div className="w-full min-h-screen bg-background mt-20">
-            <Header />
+        <div className="w-full min-h-screen bg-background">
             {isRosterAvailable ? (
                 <FranchiseSquad
                     franchise={franchise}

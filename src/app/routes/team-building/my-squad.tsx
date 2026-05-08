@@ -1,7 +1,5 @@
 import { useState } from 'react'
 
-import Footer from '@/components/shared/footer'
-import Header from '@/components/shared/header'
 import { useGetFranchiseOverview, useGetUpcomingFixtures } from '@/features/team-builder/api/franchise'
 import { CreateFranchiseDialog } from '@/features/team-builder/components/create-franchise-dialog'
 import CreateTeam from '@/features/team-builder/components/create-team'
@@ -25,7 +23,6 @@ const MySquad = () => {
 
     return (
         <div className="min-h-screen bg-neutral-background">
-            <Header />
             {isPending ? (
                 <div className="flex items-center justify-center h-64">
                     <p className="text-gray-500">Loading franchise squad...</p>
@@ -56,7 +53,6 @@ const MySquad = () => {
                     )}
                 </>
             )}
-            <Footer />
         </div>
     )
 }
