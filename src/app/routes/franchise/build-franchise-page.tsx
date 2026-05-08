@@ -1,13 +1,12 @@
-import { AlertCircle, CheckCircle2, CloudUpload } from 'lucide-react'
 import type { FC } from 'react'
 
 import { Loader } from '@/components'
-import { CountdownBanner } from '@/features/franchise/components/banner/countdown-banner'
+// import { CountdownBanner } from '@/features/franchise/components/banner/countdown-banner'
 import { MobileActionBar } from '@/features/franchise/components/mobile/mobile-action-bar'
 import { MobileDrawer } from '@/features/franchise/components/mobile/mobile-drawer'
 import { PlayerSidebar } from '@/features/franchise/components/sidebar/player-sidebar'
 import { CategorySection } from '@/features/franchise/create/category-section'
-import { StickyHeader } from '@/features/franchise/create/sticky-header'
+// import { StickyHeader } from '@/features/franchise/create/sticky-header'
 import { useBuildFranchise } from '@/features/franchise/hook/use-build-franchise'
 
 const BuildFranchisePage: FC = () => {
@@ -38,35 +37,10 @@ const BuildFranchisePage: FC = () => {
     return (
         <div className="flex min-h-screen flex-col bg-background">
             <div className="flex-1">
-                <CountdownBanner />
-                <StickyHeader
-                    budgetRemaining={budgetRemaining}
-                    selectedCount={selectedPlayers.size}
-                />
-
                 <div className="flex flex-1 overflow-hidden">
                     {/* Main Content Area */}
-                    <main className="flex-1 overflow-y-scroll lg:max-h-[78vh]">
-                        <div className="flex items-center gap-2 text-xs font-medium">
-                            {saveStatus === 'saving' && (
-                                <span className="flex items-center text-blue-500 animate-pulse">
-                                    <CloudUpload className="w-4 h-4 mr-1" /> Saving...
-                                </span>
-                            )}
-
-                            {saveStatus === 'saved' && (
-                                <span className="flex items-center text-green-500">
-                                    <CheckCircle2 className="w-4 h-4 mr-1" />
-                                    Saved {lastSavedAt && `at ${lastSavedAt.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`}
-                                </span>
-                            )}
-
-                            {saveStatus === 'error' && (
-                                <span className="flex items-center text-red-500">
-                                    <AlertCircle className="w-4 h-4 mr-1" /> Save Failed
-                                </span>
-                            )}
-                        </div>
+                    <main className="flex-1 overflow-y-scroll lg:max-h-[90vh]">
+                        <h2 className="pb-1 text-center text-2xl font-bold uppercase tracking-tight py-4">Your Franchise</h2>
                         <div className="mx-auto max-w-7xl px-4 py-8">
                             <CategorySection
                                 title="Batsmen"
@@ -75,6 +49,7 @@ const BuildFranchisePage: FC = () => {
                                 onAddPlayer={handleAddPlayer}
                                 onRemovePlayer={handleRemovePlayer}
                                 selectedPlayers={selectedPlayers}
+                                showRemoveBtn={true}
                             />
 
                             <CategorySection
@@ -84,6 +59,7 @@ const BuildFranchisePage: FC = () => {
                                 onAddPlayer={handleAddPlayer}
                                 onRemovePlayer={handleRemovePlayer}
                                 selectedPlayers={selectedPlayers}
+                                showRemoveBtn={true}
                             />
 
                             <CategorySection
@@ -93,6 +69,7 @@ const BuildFranchisePage: FC = () => {
                                 onAddPlayer={handleAddPlayer}
                                 onRemovePlayer={handleRemovePlayer}
                                 selectedPlayers={selectedPlayers}
+                                showRemoveBtn={true}
                             />
 
                             <CategorySection
@@ -102,6 +79,7 @@ const BuildFranchisePage: FC = () => {
                                 onAddPlayer={handleAddPlayer}
                                 onRemovePlayer={handleRemovePlayer}
                                 selectedPlayers={selectedPlayers}
+                                showRemoveBtn={true}
                             />
                         </div>
                     </main>
@@ -115,6 +93,8 @@ const BuildFranchisePage: FC = () => {
                             selectedPlayers={selectedPlayers}
                             onSubmit={handleSubmit}
                             isSubmitDisabled={selectedPlayers.size !== 25}
+                            budgetRemaining={budgetRemaining}
+                            selectedCount={selectedPlayers.size}
                         />
                     </aside>
                 </div>
@@ -134,6 +114,8 @@ const BuildFranchisePage: FC = () => {
                     selectedPlayers={selectedPlayers}
                     onSubmit={handleSubmit}
                     isSubmitDisabled={selectedPlayers.size !== 25}
+                    budgetRemaining={budgetRemaining}
+                    selectedCount={selectedPlayers.size}
                 />
             </div>
         </div>
