@@ -1,14 +1,15 @@
-import { LayoutDashboard, Activity, Calendar, Users, Shield } from 'lucide-react'
+import { LayoutDashboard, Activity, Calendar, Shield } from 'lucide-react'
 import { NavLink } from 'react-router'
 
 import { cn } from '@/shared/lib/utils'
+import { GiPlayerBase } from 'react-icons/gi'
 
 const navItems = [
-    { id: '/admin/dashboard', label: 'Dashboard', icon: LayoutDashboard },
+    { id: '/admin', label: 'Dashboard', icon: LayoutDashboard },
     { id: '/admin/matches', label: 'Game Cycle', icon: Activity },
     { id: '/admin/fixtures', label: 'IPL Fixtures', icon: Calendar },
     { id: '/admin/teams', label: 'Teams', icon: Shield },
-    { id: '/admin/player-stats', label: 'Player Stats', icon: Users }
+    { id: '/admin/player-stats', label: 'Player Management', icon: GiPlayerBase }
 ]
 
 export function AdminSidebar() {
