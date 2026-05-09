@@ -5,7 +5,7 @@ import z from 'zod'
 
 import { FRANCHISE_API_BASE } from '@/shared/constants'
 import client from '@/shared/lib/api-client'
-import { franchiseKeys } from '@/shared/lib/query-keys'
+import { fixturesKeys, franchiseKeys } from '@/shared/lib/query-keys'
 import type { MutationConfig } from '@/shared/lib/react-query'
 
 import { useFranchiseStore } from '../store/use-franchise-store'
@@ -39,6 +39,18 @@ export const useUpdateFranchise = ({ mutationConfig }: UseUpdateFranchiseOptions
             setSaveStatus('saved')
             await queryClient.invalidateQueries({
                 queryKey: franchiseKeys.overview()
+            })
+            await queryClient.invalidateQueries({
+                queryKey: franchiseKeys.currentCycle()
+            })
+            await queryClient.invalidateQueries({
+                queryKey: franchiseKeys.upcomingFixtures()
+            })
+            await queryClient.invalidateQueries({
+                queryKey: ['franchise', 'lineup']
+            })
+            await queryClient.invalidateQueries({
+                queryKey: fixturesKeys.list()
             })
             setTimeout(() => {
                 setSaveStatus('idle')

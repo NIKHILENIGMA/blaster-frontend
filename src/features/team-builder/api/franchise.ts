@@ -2,7 +2,7 @@ import { queryOptions, useMutation, useQuery, useQueryClient } from '@tanstack/r
 
 import { FRANCHISE_API_BASE } from '@/shared/constants'
 import client from '@/shared/lib/api-client'
-import { franchiseKeys } from '@/shared/lib/query-keys'
+import { fixturesKeys, franchiseKeys } from '@/shared/lib/query-keys'
 import type { MutationConfig, QueryConfig } from '@/shared/lib/react-query'
 
 import type { CurrentRosterCycleResponse, FixtureLineupResponse, FranchiseOverview, UpcomingFixturesResponse } from '../types/franchise'
@@ -156,6 +156,8 @@ export const useSaveSquad = ({
             await queryClient.invalidateQueries({ queryKey: franchiseKeys.overview() })
             await queryClient.invalidateQueries({ queryKey: franchiseKeys.currentCycle() })
             await queryClient.invalidateQueries({ queryKey: franchiseKeys.upcomingFixtures() })
+            await queryClient.invalidateQueries({ queryKey: ['franchise', 'lineup'] })
+            await queryClient.invalidateQueries({ queryKey: fixturesKeys.list() })
             await mutationConfig?.onSuccess?.(...args)
         }
     })
