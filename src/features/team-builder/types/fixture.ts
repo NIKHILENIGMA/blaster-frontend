@@ -3,5 +3,6 @@ export type Fixture = {
     teamA: string
     teamB: string
     startTime: string
+    lineupLockAt?: string | Date | null
     isProcessed: boolean
 }
