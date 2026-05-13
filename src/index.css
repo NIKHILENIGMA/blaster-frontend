@@ -209,7 +209,7 @@
     --shadow-lg: 0px 2px 3px 0px hsl(0 0% 0% / 16%), 0px 4px 6px -1px hsl(0 0% 0% / 16%);
     --shadow-xl: 0px 2px 3px 0px hsl(0 0% 0% / 16%), 0px 8px 10px -1px hsl(0 0% 0% / 16%);
     --shadow-2xl: 0px 2px 3px 0px hsl(0 0% 0% / 40%);
-    --folder-bg: oklch(0.257 0.0129 279.1);
+    /* --folder-bg: oklch(0.257 0.0129 279.1); */
 }
 
 body {
