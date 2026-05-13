@@ -1,3 +1,4 @@
+import { useUser } from '@clerk/clerk-react'
 import { CircleUser, LayoutDashboard, Swords, Users } from 'lucide-react'
 import type { ComponentType, FC, ReactNode } from 'react'
 import { NavLink } from 'react-router'
@@ -11,6 +12,11 @@ interface NavItem {
 }
 
 const NAV_LINKS: NavItem[] = [
+    {
+        to: '/admin',
+        icon: LayoutDashboard,
+        label: 'Admin'
+    },
     {
         to: '/dashboard',
         icon: LayoutDashboard,
@@ -43,18 +49,24 @@ interface MobileSidebarProps {
 }
 
 const MobileSidebar: FC<MobileSidebarProps> = ({ children }) => {
+    const { user } = useUser()
+    const isAdmin = user?.publicMetadata?.role === 'admin'
+    const visibleLinks = NAV_LINKS.filter((link) => isAdmin || link.to !== '/admin')
+
     return (
         <>
             <span className="sr-only">{children}</span>
             <nav
                 aria-label="Primary mobile navigation"
                 className="fixed inset-x-3 bottom-3 z-50 rounded-2xl border border-border/70 bg-background px-2 py-2 shadow-2xl shadow-black/20 backdrop-blur-md lg:hidden">
-                <ul className="grid grid-cols-5 items-end gap-1">
-                    {NAV_LINKS.map((link) => (
+                <ul
+                    className="grid items-end gap-1"
+                    style={{ gridTemplateColumns: `repeat(${visibleLinks.length}, minmax(0, 1fr))` }}>
+                    {visibleLinks.map((link) => (
                         <li key={link.to}>
                             <NavLink
                                 to={link.to}
-                                end={link.to === '/dashboard'}
+                                end={link.to === '/dashboard' || link.to === '/admin'}
                                 className={({ isActive }) =>
                                     [
                                         'flex min-h-14 flex-col items-center justify-center gap-1 rounded-xl px-1 text-[11px] font-semibold transition-colors',
