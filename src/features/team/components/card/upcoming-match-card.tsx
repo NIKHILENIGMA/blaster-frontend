@@ -1,15 +1,14 @@
-import { useNavigate } from "react-router"
+import { useNavigate } from 'react-router'
 
-import { cn } from "@/shared/lib/utils"
-import { teams } from "../../constants/team"
+import { cn } from '@/shared/lib/utils'
+import { teams } from '../../constants/team'
+import { teamNameGenerator } from '../../util/team-name-generator'
 
 interface UpcomingMatchCardProps {
     match: {
         matchNo: number
         teamA: string
         teamB: string
-        teamAGradient: string
-        teamBGradient: string
         date: string
         time: string
         venue: string
@@ -17,18 +16,58 @@ interface UpcomingMatchCardProps {
     fixtureId: string
 }
 
-export default function UpcomingMatchCard({ match, fixtureId }: UpcomingMatchCardProps) {
+const teamGradientEffects: Record<string, { home: string; away: string }> = {
+    KKR: {
+        home: 'from-[#391970]',
+        away: 'to-[#391970]'
+    },
+    MI: {
+        home: 'from-[#20449f]',
+        away: 'to-[#20449f]'
+    },
+    CSK: {
+        home: 'from-[#efc707]',
+        away: 'to-[#efc707]'
+    },
+    RCB: {
+        home: 'from-[#ce010f]',
+        away: 'to-[#ce010f]'
+    },
+    DC: {
+        home: 'from-[#0528ae]',
+        away: 'to-[#0528ae]'
+    },
+    RR: {
+        home: 'from-[#c5265b]',
+        away: 'to-[#c5265b]'
+    },
+    PBKS: {
+        home: 'from-[#ed3614]',
+        away: 'to-[#ed3614]'
+    },
+    SRH: {
+        home: 'from-[#f56315]',
+        away: 'to-[#f56315]'
+    },
+    GT: {
+        home: 'from-[#22314f]',
+        away: 'to-[#22314f]'
+    },
+    LSG: {
+        home: 'from-[#eb4644]',
+        away: 'to-[#eb4644]'
+    }
+}
 
-    
+export default function UpcomingMatchCard({ match, fixtureId }: UpcomingMatchCardProps) {
     const navigate = useNavigate()
     return (
         <div className="relative group rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300">
             {/* Background Glow */}
-            <div className={cn(
-              "absolute inset-0 bg-gradient-to-br",
-              match.teamAGradient,
-              match.teamBGradient
-            )} />
+            <div
+                className={cn('absolute inset-0 bg-gradient-to-br', teamGradientEffects[match.teamA]?.home, teamGradientEffects[match.teamB]?.away)}
+            />
+            <div className="absolute inset-0 opacity-20 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]"></div>
 
             {/* Stadium Light Effect */}
             <div className="absolute inset-0 opacity-30">
@@ -57,7 +96,7 @@ export default function UpcomingMatchCard({ match, fixtureId }: UpcomingMatchCar
                                 className="object-cover w-full h-full rounded-full z-40"
                             />
                         </div>
-                        <p className="text-sm mt-2 text-center font-bold">{match.teamA}</p>
+                        <p className="text-sm mt-2 text-center font-bold">{teamNameGenerator(match.teamA)}</p>
                     </div>
 
                     {/* VS */}
@@ -77,7 +116,7 @@ export default function UpcomingMatchCard({ match, fixtureId }: UpcomingMatchCar
                                 className="object-cover w-full h-full rounded-full"
                             />
                         </div>
-                        <p className="text-sm mt-2 text-center font-bold">{match.teamB}</p>
+                        <p className="text-sm mt-2 text-center font-bold">{teamNameGenerator(match.teamB)}</p>
                     </div>
                 </div>
 
@@ -89,8 +128,8 @@ export default function UpcomingMatchCard({ match, fixtureId }: UpcomingMatchCar
                     </div>
 
                     <button
-                    onClick={() => navigate(`${fixtureId}`)}
-                    className="bg-white/20 hover:bg-white/30 px-4 py-2 rounded-full text-sm font-medium transition cursor-pointer z-50">
+                        onClick={() => navigate(`${fixtureId}`)}
+                        className="bg-white/20 hover:bg-white/30 px-4 py-2 rounded-full text-sm font-medium transition cursor-pointer z-50">
                         Your Team
                     </button>
                 </div>

@@ -7,6 +7,7 @@ import type { Player } from '@/features/franchise/types/players'
 import type { Teams } from '@/features/franchise/types/teams'
 import { teams } from '@/features/team/constants/team'
 import type { GetFixtureLineupResponse } from '@/features/team/types/fixtures'
+import { teamNameGenerator } from '../util/team-name-generator'
 
 type FixtureLineupDetailsProps = {
     lineupResponse: GetFixtureLineupResponse
@@ -77,14 +78,14 @@ export function FixtureLineupDetails({
                         <div className="absolute inset-0 opacity-20 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]"></div>
 
                         <div className="relative z-10 w-[35%] flex flex-col items-center justify-center gap-4">
-                            <div className="bg-white/10 backdrop-blur-md p-4 rounded-full border border-white/20 shadow-2xl">
+                            <div className="bg-white/10 backdrop-blur-md p-4 rounded-full border border-white/20 shadow-[0px_4px_13px_1px_rgba(0,_0,_0,_0.1)] overflow-hidden">
                                 <img
                                     src={teams[fixture.teamA as keyof typeof teams]?.teamLogoUrl}
                                     alt={fixture.teamA}
-                                    className="w-20 lg:w-32 h-20 lg:h-32 object-contain"
+                                    className="w-20 lg:w-32 h-20 lg:h-32 object-cover"
                                 />
                             </div>
-                            <h2 className="text-lg lg:text-2xl text-center font-black tracking-wider uppercase drop-shadow-md">{fixture.teamA}</h2>
+                            <h2 className="text-lg lg:text-2xl text-center font-black tracking-wider uppercase drop-shadow-md">{teamNameGenerator(fixture.teamA)}</h2>
                         </div>
 
                         <div className="relative z-10 w-[30%] flex flex-col items-center justify-center gap-4">
@@ -105,14 +106,14 @@ export function FixtureLineupDetails({
                         </div>
 
                         <div className="relative z-10 w-[35%] flex flex-col items-center justify-center gap-4">
-                            <div className="bg-white/10 backdrop-blur-md p-4 rounded-full border border-white/20 shadow-2xl">
+                            <div className="bg-white/10 backdrop-blur-md p-4 rounded-full border border-white/20 shadow-[0px_4px_13px_1px_rgba(0,_0,_0,_0.1)] overflow-hidden">
                                 <img
                                     src={teams[fixture.teamB as keyof typeof teams]?.teamLogoUrl}
                                     alt={fixture.teamB}
-                                    className="w-20 lg:w-32 h-20 lg:h-32 object-contain"
+                                    className="w-20 lg:w-32 h-20 lg:h-32 object-cover"
                                 />
                             </div>
-                            <h2 className="text-lg lg:text-2xl text-center font-black tracking-wider uppercase drop-shadow-md">{fixture.teamB}</h2>
+                            <h2 className="text-lg lg:text-2xl text-center font-black tracking-wider uppercase drop-shadow-md">{teamNameGenerator(fixture.teamB)}</h2>
                         </div>
                     </div>
 
