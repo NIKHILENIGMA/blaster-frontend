@@ -8,6 +8,7 @@ import { PlayerSidebar } from '@/features/franchise/components/sidebar/player-si
 import { CategorySection } from '@/features/franchise/create/category-section'
 // import { StickyHeader } from '@/features/franchise/create/sticky-header'
 import { useBuildFranchise } from '@/features/franchise/hook/use-build-franchise'
+import CountdownTimer from '@/components/shared/countdown-timer'
 
 const BuildFranchisePage: FC = () => {
     const {
@@ -22,6 +23,7 @@ const BuildFranchisePage: FC = () => {
         handleAddPlayer,
         handleRemovePlayer,
         handleSubmit,
+        closeWindowAt,
         ...filteredPlayers
     } = useBuildFranchise()
 
@@ -39,7 +41,8 @@ const BuildFranchisePage: FC = () => {
             <div className="flex-1">
                 <div className="flex flex-1 overflow-hidden">
                     {/* Main Content Area */}
-                    <main className="flex-1 overflow-y-scroll lg:max-h-[90vh]">
+                    <main className="flex-1 overflow-y-scroll lg:max-h-[90vh] space-y-1.5">
+                        <CountdownTimer windowClosesAt={closeWindowAt} />
                         <h2 className="pb-1 text-center text-2xl font-bold uppercase tracking-tight py-4">Your Franchise</h2>
                         <div className="mx-auto max-w-7xl px-4 py-8">
                             <CategorySection

@@ -14,6 +14,8 @@ import { useSaveLineup } from '@/features/team/api/save-lineup'
 import BuildTeamPlayerPool from '@/features/team/components/build-team-player-pool'
 import { teams } from '@/features/team/constants/team'
 import { cn } from '@/shared/lib/utils'
+import CountdownTimer from '@/components/shared/countdown-timer'
+import { teamNameGenerator } from '@/features/team/util/team-name-generator'
 
 const ROLE_CONFIG = {
     Batsman: { target: 4, color: 'bg-green-500' },
@@ -156,6 +158,7 @@ const BuildTeamPage = () => {
     return (
         <div className="flex min-h-screen flex-col bg-background pb-32 md:pb-0">
             <main className="flex-1 w-full px-4 py-6 lg:px-3 max-w-7xl mx-auto flex flex-col space-y-6">
+                <h2 className="text-center text-2xl font-black tracking-tight">Build Your Match Team</h2>
                 {/* Match Banner */}
                 {fixture && (
                     <div className="match-banner w-full min-h-[12rem] lg:min-h-[16rem] flex bg-gradient-to-br from-indigo-900 to-purple-800 rounded-2xl items-center justify-center relative overflow-hidden shadow-lg text-white">
@@ -169,7 +172,7 @@ const BuildTeamPage = () => {
                                         className="w-16 h-16 lg:w-24 lg:h-24 object-contain"
                                     />
                                 </div>
-                                <h2 className="font-black text-lg">{fixture.teamA}</h2>
+                                <h2 className="font-black text-lg">{teamNameGenerator(fixture.teamA)}</h2>
                             </div>
                             <div className="flex flex-col items-center gap-2">
                                 <span className="text-3xl font-black italic opacity-50">VS</span>
@@ -185,11 +188,14 @@ const BuildTeamPage = () => {
                                         className="w-16 h-16 lg:w-24 lg:h-24 object-contain"
                                     />
                                 </div>
-                                <h2 className="font-black text-lg">{fixture.teamB}</h2>
+                                <h2 className="font-black text-lg">{teamNameGenerator(fixture.teamB)}</h2>
                             </div>
                         </div>
                     </div>
                 )}
+
+                {/* Countdown Timer */}
+                {fixture?.lineupLockAt && <CountdownTimer windowClosesAt={new Date(fixture.lineupLockAt)} />}
 
                 <div className="flex flex-col lg:grid lg:grid-cols-[1fr_350px] gap-8">
                     {/* Left: Squad Canvas */}
@@ -345,7 +351,7 @@ const BuildTeamPage = () => {
             </main>
 
             {/* Sticky Footer for Actions */}
-            <footer className="fixed bottom-0 left-0 right-0 border-t border-border bg-background/95 backdrop-blur-md p-4 z-40">
+            <footer className="fixed bottom-24 left-4 right-4 z-40 rounded-2xl border border-border bg-background/95 p-3 shadow-xl shadow-black/15 backdrop-blur-md md:bottom-0 md:left-0 md:right-0 md:rounded-none md:border-x-0 md:border-b-0 md:p-4">
                 <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
                     <div className="hidden md:flex flex-col">
                         <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Team Status</p>
