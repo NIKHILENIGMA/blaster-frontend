@@ -20,6 +20,7 @@ export const useBuildFranchise = () => {
     const { mutateAsync: updateFranchiseSquad, isPending: isUpdatingFranchise } = useUpdateFranchise()
     const { saveStatus, lastSavedAt } = useFranchiseStore()
     const matchId = overview?.activeCycle?.id || ''
+    const closeWindowAt: Date | string = overview?.activeCycle?.buyWindowCloseAt || ''
 
     const budgetRemaining = useMemo(() => {
         const totalSpent = Array.from(selectedPlayers.values()).reduce((sum, player) => sum + player.cost, 0)
@@ -152,7 +153,8 @@ export const useBuildFranchise = () => {
         isDrawerOpen,
         setIsDrawerOpen,
         saveStatus,
-        lastSavedAt
+        lastSavedAt,
+        closeWindowAt
         // ... all other states and handlers
     }
 }
