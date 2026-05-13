@@ -36,7 +36,7 @@ const LeaderboardTable: FC<LeaderboardTableProps> = ({ entries = [], isPending =
                 <h2 className="font-heading text-2xl font-semibold">Global Challengers</h2>
             </header>
 
-            <div className="grid grid-cols-[56px_1.2fr_1fr_90px] items-center gap-3 border-b border-gray-200 pb-3 font-heading text-sm font-semibold uppercase text-black/80 sm:grid-cols-[80px_1.4fr_1fr_140px] sm:text-md">
+            <div className="hidden grid-cols-[80px_1.4fr_1fr_140px] items-center gap-3 border-b border-gray-200 pb-3 font-heading text-sm font-semibold uppercase text-black/80 sm:grid sm:text-md">
                 <span>Rank</span>
                 <span>Player</span>
                 <span>Team</span>
@@ -57,8 +57,8 @@ const LeaderboardTable: FC<LeaderboardTableProps> = ({ entries = [], isPending =
                         return (
                             <div
                                 key={player.username}
-                                className="grid grid-cols-[56px_1.2fr_1fr_90px] items-center gap-3 py-4 text-sm transition-colors hover:bg-gray-50 sm:grid-cols-[80px_1.4fr_1fr_140px] sm:text-md">
-                                <div className="font-semibold text-gray-700">#{player.rank}</div>
+                                className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 py-4 text-sm transition-colors hover:bg-gray-50 sm:grid-cols-[80px_1.4fr_1fr_140px] sm:text-md">
+                                <div className="hidden font-semibold text-gray-700 sm:block">#{player.rank}</div>
 
                                 <div className="flex min-w-0 items-center gap-3">
                                     <img
@@ -68,12 +68,16 @@ const LeaderboardTable: FC<LeaderboardTableProps> = ({ entries = [], isPending =
                                     />
 
                                     <div className="min-w-0">
-                                        <p className="font-medium truncate">{fullName}</p>
+                                        <div className="mb-1 flex items-center gap-2 sm:hidden">
+                                            <span className="shrink-0 rounded-full bg-gray-100 px-2 py-0.5 text-xs font-semibold text-gray-700">#{player.rank}</span>
+                                            <span className="min-w-0 truncate text-xs font-medium text-gray-500">{player.teamName || 'No team'}</span>
+                                        </div>
+                                        <p className="truncate font-medium">{fullName}</p>
                                         <p className="text-xs text-gray-500 truncate">@{player.username}</p>
                                     </div>
                                 </div>
 
-                                <div className="flex min-w-0 items-center gap-2">
+                                <div className="hidden min-w-0 items-center gap-2 sm:flex">
                                     <img
                                         src={teamLogo}
                                         alt={player.teamName || 'Team logo'}
@@ -82,7 +86,10 @@ const LeaderboardTable: FC<LeaderboardTableProps> = ({ entries = [], isPending =
                                     <span className="truncate font-medium text-gray-700">{player.teamName || 'No team'}</span>
                                 </div>
 
-                                <div className="text-right font-bold text-blue-600">{player.totalScore.toLocaleString()}</div>
+                                <div className="shrink-0 text-right font-bold text-blue-600">
+                                    <span className="block">{player.totalScore.toLocaleString()}</span>
+                                    <span className="block text-[11px] font-semibold uppercase text-gray-400 sm:hidden">pts</span>
+                                </div>
                             </div>
                         )
                     })

@@ -86,7 +86,7 @@ const Ranking: FC<RankingProps> = ({ entries = [], isPending }) => {
                         alt="medal"
                         className="w-10 h-10 absolute top-13 left-[60%] md:top-20 md:w-12 md:h-12 md:left-[59%] -translate-x-1/2 object-cover rounded-full"
                     />
-                    <p className="mt-2 font-medium">{player.name}</p>
+                    <p className="mt-2 truncate font-medium">{player.name}</p>
                     <p className="text-blue-600 font-semibold">{player.points.toLocaleString()} pts</p>
                     <div className={cn('mt-3', player.classes)}>
                         <p className="p-6 text-white/30 text-xl md:text-6xl tracking-widest">{player.type.toUpperCase()}</p>
