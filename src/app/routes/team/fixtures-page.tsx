@@ -82,8 +82,6 @@ const FixturesPage: FC = () => {
                                             matchNo: Number(fixture.matchNumber) || idx + 1,
                                             teamA: fixture.teamA,
                                             teamB: fixture.teamB,
-                                            teamAGradient: 'from-cyan-500',
-                                            teamBGradient: 'to-red-600',
                                             date: String(new Date(fixture.startTime).toLocaleDateString()),
                                             time: String(new Date(fixture.startTime).toLocaleTimeString()),
                                             venue: fixture.venueId || 'TBD'
