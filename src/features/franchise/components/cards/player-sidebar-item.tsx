@@ -25,36 +25,36 @@ const PlayerSidebarItem: FC<PlayerSidebarItemProps> = ({ player, onAddPlayer, on
     return (
         <div
             className={cn(
-                'relative flex items-end justify-between p-4 rounded-xl bg-gradient-to-b from-white via-gray-100 to-white overflow-hidden shadow-lg',
+                'relative flex min-h-44 items-end justify-between gap-3 overflow-hidden rounded-xl bg-gradient-to-b from-white via-gray-100 to-white p-3 shadow-[0px_7px_11px_-7px_rgba(0,_0,_0,_0.1)] sm:p-4',
                 teams[player.iplTeam as TeamName] ? teams[player.iplTeam as TeamName].shadowColor : 'shadow-none'
             )}>
             {/* Ghost Logo */}
             <img
                 src={teams[player.iplTeam as TeamName]?.teamLogoUrl}
-                className="absolute right-6 opacity-10 w-52"
+                className="absolute right-2 top-4 w-40 opacity-10 sm:right-6 sm:w-52"
             />
 
-            <div className="absolute left-2 top-2.5 z-20 text-sm ">
+            <div className="absolute left-2 top-2 z-20 text-sm">
                 {player.isOverseas ? (
-                    <span className="p-3 bg-yellow-500 text-black rounded-full flex items-center gap-1 rotate-45">
+                    <span className="flex rotate-45 items-center gap-1 rounded-full bg-yellow-500 p-2.5 text-black">
                         <FaPlaneUp />
                     </span>
                 ) : null}
             </div>
-            <div className="absolute right-2 top-6.5 z-20 text-sm text-gray-500">
-                <Label>Points</Label>
+            <div className="absolute right-3 top-3 z-20 text-right text-xs text-gray-500">
+                <Label className="text-[10px] uppercase">Points</Label>
                 {player.cost ? (
-                    <span className="p-3 text-black rounded-full flex items-center gap-1 font-extrabold text-2xl">{player.cost}</span>
+                    <span className="block rounded-full text-xl font-extrabold text-black">{player.cost}</span>
                 ) : null}
             </div>
             {/* Left Image */}
-            <div className="relative z-10 w-fit">
+            <div className="relative z-10 w-fit shrink-0">
                 {/* Background */}
                 <div className="p-1 rounded-2xl">
                     <img
                         src={teams[player.iplTeam as TeamName]?.bgCover}
                         alt="avatar-background"
-                        className="w-28 h-40 object-cover rounded-lg"
+                        className="h-36 w-24 rounded-lg object-cover sm:h-40 sm:w-28"
                     />
                 </div>
 
@@ -62,7 +62,7 @@ const PlayerSidebarItem: FC<PlayerSidebarItemProps> = ({ player, onAddPlayer, on
                 <div
                     className={cn(
                         'absolute inset-0 left-1/2 -translate-x-1/2 top-0',
-                        'w-24 h-40 rounded-xl overflow-hidden',
+                        'h-36 w-20 overflow-hidden rounded-xl sm:h-40 sm:w-24',
                         'ring-2 ring-white shadow-xl'
                     )}>
                     <img
@@ -73,24 +73,24 @@ const PlayerSidebarItem: FC<PlayerSidebarItemProps> = ({ player, onAddPlayer, on
             </div>
 
             {/* Info */}
-            <div className="flex-1 ml-4 z-10">
+            <div className="z-10 min-w-0 flex-1 pb-11">
                 <p className="text-xs text-gray-500">NAME:</p>
-                <h2 className="text-2xl font-bold text-gray-900 font-heading leading-tight">{player.name}</h2>
+                <h2 className="line-clamp-2 pr-12 font-heading text-xl font-bold leading-tight text-gray-900 sm:text-2xl">{player.name}</h2>
 
-                <div className="mt-3">
+                <div className="mt-2">
                     <p className="text-xs text-gray-500">TEAM:</p>
                     <div className="flex items-center gap-2 mt-1">
                         <img
                             src={teams[player.iplTeam as TeamName]?.teamLogoUrl}
-                            className="w-5 h-5"
+                            className="h-5 w-5 shrink-0"
                         />
-                        <span className="font-medium text-sm">{teamNameGenerator(player.iplTeam as TeamName)}</span>
+                        <span className="truncate text-sm font-medium">{teamNameGenerator(player.iplTeam as TeamName)}</span>
                     </div>
                 </div>
 
-                <div className="mt-3">
+                <div className="mt-2">
                     <p className="text-xs text-gray-500">ROLE:</p>
-                    <span className="inline-block mt-1 px-3 py-1 rounded-full bg-gradient-to-r from-green-500 via-green-500 to-green-700 text-white text-xs font-semibold">
+                    <span className="mt-1 inline-block rounded-full bg-gradient-to-r from-green-500 via-green-500 to-green-700 px-3 py-1 text-xs font-semibold text-white">
                         {player.role === 'Batsman' ? (
                             <span className="flex items-center space-x-1">BATSMAN</span>
                         ) : player.role === 'Bowler' ? (
@@ -107,7 +107,7 @@ const PlayerSidebarItem: FC<PlayerSidebarItemProps> = ({ player, onAddPlayer, on
             {/* Button */}
             <button
                 className={cn(
-                    'relative z-10 rounded-sm px-3 py-1.5 text-sm font-semibold cursor-pointer text-white shadow-md transition',
+                    'absolute bottom-3 right-3 z-10 min-h-10 min-w-24 cursor-pointer rounded-lg px-4 py-2 text-sm font-semibold text-white shadow-md transition',
                     isSelected
                         ? 'bg-red-600 hover:bg-red-700'
                         : teams[player.iplTeam as TeamName]?.btnGradient

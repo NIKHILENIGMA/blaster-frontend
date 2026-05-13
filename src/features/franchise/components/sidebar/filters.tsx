@@ -29,36 +29,38 @@ const Filters: FC<FiltersProps> = ({ availablePlayers, selectedPlayers, classes 
     } = useFilterStore()
 
     return (
-        <div className={`space-y-4 border-b border-border p-4 ${classes}`}>
-            <div className="flex flex-col gap-2">
+        <div className={`space-y-3 border-b border-border px-2 py-3 sm:p-4 ${classes}`}>
+            <div className="flex items-center justify-between gap-3">
                 <label className="block text-xs font-semibold text-sidebar-foreground">Search Players</label>
+                <Button
+                    size="sm"
+                    variant="ghost"
+                    className="h-7 px-2 text-xs"
+                    onClick={() => {
+                        resetFilters()
+                    }}>
+                    Clear
+                </Button>
+            </div>
+
+            <div className="flex flex-col gap-2">
                 <Input
                     type="text"
                     placeholder="Search by name..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="bg-background text-foreground placeholder:text-muted-foreground focus-visible:ring-primary"
+                    className="h-9 bg-background text-sm text-foreground placeholder:text-muted-foreground focus-visible:ring-primary"
                 />
             </div>
 
             <div className="flex flex-col gap-2">
-                <div className="flex items-center justify-between">
-                    <label className="block text-xs font-semibold text-sidebar-foreground">Filters</label>
-                    <Button
-                        size="sm"
-                        variant="ghost"
-                        onClick={() => {
-                            resetFilters()
-                        }}>
-                        Clear
-                    </Button>
-                </div>
+                <label className="block text-xs font-semibold text-sidebar-foreground">Filters</label>
 
-                <div className="flex space-x-1.5 flex-wrap">
+                <div className="grid grid-cols-3 gap-1.5">
                     <Select
                         value={roleFilter}
                         onValueChange={(val: Roles) => setRoleFilter(val)}>
-                        <SelectTrigger className="text-sm rounded-md border px-2 py-1 bg-background">
+                        <SelectTrigger className="h-9 min-w-0 rounded-md border bg-background px-2 py-1 text-xs sm:text-sm">
                             <SelectValue placeholder="All Roles" />
                         </SelectTrigger>
                         <SelectContent>
@@ -75,7 +77,7 @@ const Filters: FC<FiltersProps> = ({ availablePlayers, selectedPlayers, classes 
                     <Select
                         value={teamFilter}
                         onValueChange={(val: Teams) => setTeamFilter(val)}>
-                        <SelectTrigger className="text-sm rounded-md border px-2 py-1 bg-background">
+                        <SelectTrigger className="h-9 min-w-0 rounded-md border bg-background px-2 py-1 text-xs sm:text-sm">
                             <SelectValue placeholder="All Teams" />
                         </SelectTrigger>
                         <SelectContent>
@@ -92,7 +94,7 @@ const Filters: FC<FiltersProps> = ({ availablePlayers, selectedPlayers, classes 
                     <Select
                         value={nationalityFilter}
                         onValueChange={(val: Nationality) => setNationalityFilter(val)}>
-                        <SelectTrigger className="text-sm rounded-md border px-2 py-1 bg-background">
+                        <SelectTrigger className="h-9 min-w-0 rounded-md border bg-background px-2 py-1 text-xs sm:text-sm">
                             <SelectValue placeholder="All" />
                         </SelectTrigger>
                         <SelectContent>
@@ -108,7 +110,7 @@ const Filters: FC<FiltersProps> = ({ availablePlayers, selectedPlayers, classes 
                 </div>
             </div>
 
-            <div className="flex items-center justify-between rounded-lg bg-background/50 px-3 py-2 text-xs font-medium">
+            <div className="flex items-center justify-between rounded-lg bg-background/50 px-3 py-1.5 text-xs font-medium">
                 <span className="text-muted-foreground">Available: {availablePlayers.length}</span>
                 <span className="text-primary">Selected: {selectedPlayers.size}</span>
             </div>
