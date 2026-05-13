@@ -9,7 +9,7 @@ const DashboardLayout: FC = () => {
     return (
         <div className="w-full flex">
             <Sidebar />
-            <div className="flex-1 w-full min-h-screen bg-background flex flex-col">
+            <div className="flex-1 w-full min-h-screen bg-background flex flex-col pb-24 lg:pb-0">
                 <Header />
                 <main className="flex-1">
                     <Outlet />

@@ -1,5 +1,5 @@
 import { useClerk, useUser } from '@clerk/clerk-react'
-import { List, LogOut, Settings } from 'lucide-react'
+import { LogOut, Settings } from 'lucide-react'
 import { useNavigate } from 'react-router'
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
@@ -22,9 +22,7 @@ const Header = () => {
     return (
         <header className="sticky top-0 z-40 bg-white w-full h-20 border-b border-border">
             <div className="relative w-full h-full px-4 md:px-6 flex items-center gap-4 justify-between">
-                <MobileSidebar>
-                    <List className="lg:hidden" />
-                </MobileSidebar>
+                <MobileSidebar>Open mobile navigation</MobileSidebar>
 
                 <h1 className="text-sm font-bold font-body">Welcome back, {user?.firstName}!</h1>
 

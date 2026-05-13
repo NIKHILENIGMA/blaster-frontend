@@ -72,25 +72,25 @@ export function MobileDrawer({
             onOpenChange={onOpenChange}>
             <SheetContent
                 side="bottom"
-                className="h-[95vh] rounded-t-2xl bg-background p-6 md:hidden">
-                <SheetHeader className="mb-1">
+                className="flex h-[92vh] flex-col rounded-t-2xl bg-background p-3 md:hidden">
+                <SheetHeader className="mb-1 px-1">
                     <SheetTitle className="text-sidebar-foreground">Buy Players</SheetTitle>
                 </SheetHeader>
-                <div className="flex items-start px-4 py-1 bg-primary/10 text-primary rounded-b-lg ">
-                    <div className="w-full flex justify-between gap-8">
-                        <div className="flex flex-col gap-1">
-                            <p className="text-xs font-medium ">Budget Remaining</p>
-                            <p className="text-xl font-bold">{budgetRemaining.toLocaleString()} Points</p>
+                <div className="rounded-xl bg-primary/10 px-3 py-2 text-primary">
+                    <div className="flex w-full justify-between gap-4">
+                        <div className="min-w-0">
+                            <p className="text-[11px] font-medium">Budget</p>
+                            <p className="truncate text-base font-bold">{budgetRemaining.toLocaleString()} Points</p>
                         </div>
-                        <div className="flex flex-col gap-1">
-                            <p className="text-xs font-medium ">Squad Size</p>
-                            <p className="text-xl font-bold ">{selectedCount}/25</p>
+                        <div className="shrink-0 text-right">
+                            <p className="text-[11px] font-medium">Squad</p>
+                            <p className="text-base font-bold">{selectedCount}/25</p>
                         </div>
                     </div>
                 </div>
-                <div className="px-4 flex items-center justify-between gap-2">
-                    <h2 className="text-xl font-bold">Buy Players</h2>
-                    <div className="flex items-center gap-2 text-xs font-medium">
+                <div className="flex items-center justify-between gap-2 px-1">
+                    <h2 className="text-lg font-bold">Buy Players</h2>
+                    <div className="flex min-w-0 items-center justify-end gap-2 text-xs font-medium">
                         {saveStatus === 'saving' && (
                             <span className="flex items-center text-blue-500 animate-pulse">
                                 <CloudUpload className="w-4 h-4 mr-1" /> Saving...
@@ -112,16 +112,16 @@ export function MobileDrawer({
                     </div>
                 </div>
 
-                <div className="space-y-2">
+                <div>
                     <Filters
                         availablePlayers={availablePlayers}
                         selectedPlayers={selectedPlayers}
-                        classes="space-y-1"
+                        classes="space-y-2"
                     />
                 </div>
 
-                <ScrollArea className="h-[calc(85vh-120px)] overflow-y-scroll">
-                    <div className="space-y-2 pr-4">
+                <ScrollArea className="min-h-0 flex-1 overflow-y-scroll">
+                    <div className="space-y-3 pr-2 pb-3">
                         {availablePlayers.length === 0 ? (
                             <div className="flex flex-col items-center justify-center py-8 text-center">
                                 <p className="text-sm text-muted-foreground">No players found</p>
@@ -145,9 +145,9 @@ export function MobileDrawer({
                     </div>
                 </ScrollArea>
 
-                <div className="space-y-2 border-t border-border pt-4">
+                <div className="border-t border-border pt-3">
                     <Button
-                        disabled={isSubmitDisabled }
+                        disabled={isSubmitDisabled}
                         className={`w-full ${
                             isSubmitDisabled ? 'bg-muted text-muted-foreground' : 'bg-primary text-primary-foreground hover:bg-primary/90'
                         }`}
