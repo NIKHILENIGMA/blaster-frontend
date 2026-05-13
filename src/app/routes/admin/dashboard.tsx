@@ -1,11 +1,14 @@
-import { Activity, Calendar, Users, Trophy } from 'lucide-react'
+import { Activity, Calendar, Eye, Users, Trophy } from 'lucide-react'
+import { useNavigate } from 'react-router'
 
+import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { useFixtures } from '@/features/admin/api/fixtures'
 import { useMatches } from '@/features/admin/api/matches'
 import { ScoreProcessingCard } from '@/features/admin/components/score-processing-card'
 
 export default function DashboardPage() {
+    const navigate = useNavigate()
     const { data: fixtures } = useFixtures()
     const { data: matches } = useMatches()
 
@@ -39,9 +42,18 @@ export default function DashboardPage() {
     return (
         <div className="space-y-6 p-4 sm:p-6 lg:p-8">
             {/* Page header */}
-            <div className="space-y-1">
-                <h1 className="text-2xl sm:text-3xl font-bold text-foreground">Admin Dashboard</h1>
-                <p className="text-sm sm:text-base text-muted-foreground">Manage match results and scoring engine</p>
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+                <div className="space-y-1">
+                    <h1 className="text-2xl sm:text-3xl font-bold text-foreground">Admin Dashboard</h1>
+                    <p className="text-sm sm:text-base text-muted-foreground">Manage match results and scoring engine</p>
+                </div>
+                <Button
+                    type="button"
+                    className="w-full sm:w-auto"
+                    onClick={() => navigate('/admin/points-preview')}>
+                    <Eye className="mr-2 h-4 w-4" />
+                    Points preview
+                </Button>
             </div>
 
             {/* Stats grid */}

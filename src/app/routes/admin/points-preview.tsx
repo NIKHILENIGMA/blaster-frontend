@@ -58,7 +58,7 @@ export default function AdminPointsPreviewPage() {
                     <Button
                         variant="ghost"
                         className="h-auto px-0 text-muted-foreground"
-                        onClick={() => navigate('/admin/dashboard')}>
+                        onClick={() => navigate('/admin')}>
                         <ArrowLeft className="mr-2 h-4 w-4" />
                         Back to dashboard
                     </Button>
