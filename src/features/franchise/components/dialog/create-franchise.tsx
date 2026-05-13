@@ -9,8 +9,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 
 import { useCreateFranchise } from '../../api/create-franchise'
-
-const LOGO_OPTIONS = ['/fortune-logo.png', '/fortune-logo-2.png', '/brand-logo.png', '/dummylogo.jpg']
+import { LOGO_OPTIONS } from '@/shared/lib/team-logos'
 
 interface CreateFranchiseDialogProps {
     children: ReactNode
@@ -93,7 +92,7 @@ export const CreateFranchiseDialog: React.FC<CreateFranchiseDialogProps> = ({ ch
                             Select Logo
                         </Label>
                         <div className="flex flex-wrap gap-3">
-                            {LOGO_OPTIONS.map((logo) => (
+                            {LOGO_OPTIONS.map((logo: string) => (
                                 <button
                                     key={logo}
                                     type="button"
@@ -105,7 +104,7 @@ export const CreateFranchiseDialog: React.FC<CreateFranchiseDialogProps> = ({ ch
                                     <img
                                         src={logo}
                                         alt="Team logo option"
-                                        className="h-16 w-16 object-cover"
+                                        className="w-20 object-cover rounded-full"
                                     />
                                 </button>
                             ))}
