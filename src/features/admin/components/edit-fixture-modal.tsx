@@ -33,13 +33,23 @@ const toLocalInputValue = (value: Date | string | null | undefined) => {
 
 export function EditFixtureModal({ fixture, open, onOpenChange }: EditFixtureModalProps) {
     const updateFixtureMutation = useUpdateFixture()
+    const [teamA, setTeamA] = useState('')
+    const [teamB, setTeamB] = useState('')
+    const [startTime, setStartTime] = useState('')
     const [lineupLockAt, setLineupLockAt] = useState('')
+    const [matchNumber, setMatchNumber] = useState('')
+    const [venueId, setVenueId] = useState('')
     const [matchStatus, setMatchStatus] = useState<'scheduled' | 'live' | 'completed'>('scheduled')
 
     useEffect(() => {
         if (!fixture) return
 
+        setTeamA(fixture.teamA)
+        setTeamB(fixture.teamB)
+        setStartTime(toLocalInputValue(fixture.startTime))
         setLineupLockAt(toLocalInputValue(fixture.lineupLockAt))
+        setMatchNumber(fixture.matchNumber ?? '')
+        setVenueId(fixture.venueId ?? '')
         setMatchStatus(fixture.matchStatus ?? 'scheduled')
     }, [fixture])
 
@@ -51,6 +61,11 @@ export function EditFixtureModal({ fixture, open, onOpenChange }: EditFixtureMod
             {
                 fixtureId: fixture.id,
                 data: {
+                    teamA: teamA.trim(),
+                    teamB: teamB.trim(),
+                    startTime: new Date(startTime).toISOString(),
+                    matchNumber: matchNumber.trim() || null,
+                    venueId: venueId.trim() || null,
                     matchStatus,
                     lineupLockAt: lineupLockAt ? new Date(lineupLockAt).toISOString() : null
                 }
@@ -71,11 +86,11 @@ export function EditFixtureModal({ fixture, open, onOpenChange }: EditFixtureMod
         <Dialog
             open={open}
             onOpenChange={onOpenChange}>
-            <DialogContent className="w-full max-w-md">
+            <DialogContent className="max-h-[90vh] w-full max-w-2xl overflow-y-auto">
                 <DialogHeader>
                     <DialogTitle>Edit Fixture</DialogTitle>
                     <DialogDescription>
-                        Update fixture status and control when lineup changes get locked.
+                        Update teams, schedule, venue, status, and lineup lock timing.
                     </DialogDescription>
                 </DialogHeader>
 
@@ -85,9 +100,50 @@ export function EditFixtureModal({ fixture, open, onOpenChange }: EditFixtureMod
                     <Field>
                         <FieldLabel>Fixture</FieldLabel>
                         <div className="rounded-md border bg-muted/30 px-3 py-2 text-sm">
-                            {fixture?.teamA} vs {fixture?.teamB}
+                            <p className="font-medium">{fixture?.id}</p>
+                            <p className="mt-1 text-xs text-muted-foreground">Match ID: {fixture?.matchId}</p>
                         </div>
                     </Field>
+
+                    <div className="grid gap-4 sm:grid-cols-2">
+                        <Field>
+                            <FieldLabel htmlFor="teamA">Team A</FieldLabel>
+                            <Input
+                                id="teamA"
+                                value={teamA}
+                                onChange={(e) => setTeamA(e.target.value)}
+                            />
+                        </Field>
+                        <Field>
+                            <FieldLabel htmlFor="teamB">Team B</FieldLabel>
+                            <Input
+                                id="teamB"
+                                value={teamB}
+                                onChange={(e) => setTeamB(e.target.value)}
+                            />
+                        </Field>
+                    </div>
+
+                    <div className="grid gap-4 sm:grid-cols-2">
+                        <Field>
+                            <FieldLabel htmlFor="matchNumber">Match Number</FieldLabel>
+                            <Input
+                                id="matchNumber"
+                                placeholder="Match 1"
+                                value={matchNumber}
+                                onChange={(e) => setMatchNumber(e.target.value)}
+                            />
+                        </Field>
+                        <Field>
+                            <FieldLabel htmlFor="venueId">Venue</FieldLabel>
+                            <Input
+                                id="venueId"
+                                placeholder="Wankhede Stadium"
+                                value={venueId}
+                                onChange={(e) => setVenueId(e.target.value)}
+                            />
+                        </Field>
+                    </div>
 
                     <Field>
                         <FieldLabel>Status</FieldLabel>
@@ -103,6 +159,17 @@ export function EditFixtureModal({ fixture, open, onOpenChange }: EditFixtureMod
                                 <SelectItem value="completed">Completed</SelectItem>
                             </SelectContent>
                         </Select>
+                    </Field>
+
+                    <Field>
+                        <FieldLabel htmlFor="startTime">Start Time</FieldLabel>
+                        <Input
+                            id="startTime"
+                            type="datetime-local"
+                            value={startTime}
+                            onChange={(e) => setStartTime(e.target.value)}
+                            required
+                        />
                     </Field>
 
                     <Field>

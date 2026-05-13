@@ -48,6 +48,11 @@ export const useUpdateFixture = () => {
         }: {
             fixtureId: string
             data: {
+                teamA?: string
+                teamB?: string
+                startTime?: string
+                matchNumber?: string | null
+                venueId?: string | null
                 matchStatus?: 'scheduled' | 'live' | 'completed'
                 lineupLockAt?: string | null
             }
