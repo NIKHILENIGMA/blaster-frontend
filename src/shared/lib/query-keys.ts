@@ -18,6 +18,10 @@ export const franchiseKeys = {
     lineup: (fixtureId: string) => ['franchise', 'lineup', fixtureId] as const
 }
 
+export const userKeys = {
+    profile: () => ['users', 'profile'] as const
+}
+
 export const playersKeys = {
     list: () => ['players', 'list'] as const,
     details: (playerId: number) => [...playersKeys.list(), playerId] as const
