@@ -1,9 +1,6 @@
-import { ChartNoAxesColumn, LayoutDashboard, Users } from 'lucide-react'
+import { ChartNoAxesColumn, CircleUser, LayoutDashboard, Swords, Users } from 'lucide-react'
 import type { ComponentType, FC, ReactNode } from 'react'
-import { IoAnalyticsOutline } from 'react-icons/io5'
-import { Link } from 'react-router'
-
-import { Drawer, DrawerContent, DrawerDescription, DrawerHeader, DrawerTitle, DrawerTrigger } from '@/components/ui/drawer'
+import { NavLink } from 'react-router'
 
 interface NavItem {
     to: string
@@ -29,13 +26,13 @@ const NAV_LINKS: NavItem[] = [
     },
     {
         to: '/matches',
-        icon: Users,
-        label: 'Match Hub'
+        icon: Swords,
+        label: 'Matches'
     },
     {
-        to: '/analytics',
-        icon: IoAnalyticsOutline,
-        label: 'Analytics'
+        to: '/profile',
+        icon: CircleUser,
+        label: 'Profile'
     }
 ]
 
@@ -45,37 +42,31 @@ interface MobileSidebarProps {
 
 const MobileSidebar: FC<MobileSidebarProps> = ({ children }) => {
     return (
-        <Drawer direction="left">
-            <DrawerTrigger>{children}</DrawerTrigger>
-            <DrawerContent className="max-w-[50vw]">
-                <DrawerHeader>
-                    <DrawerTitle>
-                        <img
-                            src="./fortune-logo-2.png"
-                            alt="Logo"
-                            className="w-28 h-auto mx-auto object-cover"
-                        />
-                    </DrawerTitle>
-                    <DrawerDescription></DrawerDescription>
-                </DrawerHeader>
-                <div className="flex flex-col gap-4 p-4">
-                    <nav className="flex flex-col gap-4 items-center">
-                        <ul className="flex flex-col gap-2">
-                            {NAV_LINKS.map((link) => (
-                                <li key={link.to}>
-                                    <Link
-                                        to={link.to}
-                                        className="flex items-center gap-2 p-2 rounded-md hover:bg-muted">
-                                        <link.icon className="w-5 h-5" />
-                                        <span>{link.label}</span>
-                                    </Link>
-                                </li>
-                            ))}
-                        </ul>
-                    </nav>
-                </div>
-            </DrawerContent>
-        </Drawer>
+        <>
+            <span className="sr-only">{children}</span>
+            <nav
+                aria-label="Primary mobile navigation"
+                className="fixed inset-x-3 bottom-3 z-50 rounded-2xl border border-border/70 bg-white/95 px-2 py-2 shadow-2xl shadow-black/20 backdrop-blur-md lg:hidden">
+                <ul className="grid grid-cols-5 items-end gap-1">
+                    {NAV_LINKS.map((link) => (
+                        <li key={link.to}>
+                            <NavLink
+                                to={link.to}
+                                end={link.to === '/dashboard'}
+                                className={({ isActive }) =>
+                                    [
+                                        'flex min-h-14 flex-col items-center justify-center gap-1 rounded-xl px-1 text-[11px] font-semibold transition-colors',
+                                        isActive ? 'bg-primary text-primary-foreground shadow-md shadow-primary/20' : 'text-muted-foreground hover:bg-muted hover:text-foreground'
+                                    ].join(' ')
+                                }>
+                                <link.icon className="h-5 w-5 shrink-0" />
+                                <span className="max-w-full truncate leading-none">{link.label}</span>
+                            </NavLink>
+                        </li>
+                    ))}
+                </ul>
+            </nav>
+        </>
     )
 }
 
