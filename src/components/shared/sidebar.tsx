@@ -1,7 +1,9 @@
 import { useUser } from '@clerk/clerk-react'
-import { ChartNoAxesColumn, LayoutDashboard, Users } from 'lucide-react'
+import { CircleUser, LayoutDashboard, Users } from 'lucide-react'
 import type { FC } from 'react'
 import { Link, NavLink } from 'react-router'
+
+import LeaderboardIcon from '@/shared/assets/custom/leaderboard-icon'
 
 interface NavItem {
     to: string
@@ -22,7 +24,7 @@ const NAV_LINKS: NavItem[] = [
     },
     {
         to: '/leaderboard',
-        icon: ChartNoAxesColumn,
+        icon: LeaderboardIcon,
         label: 'Leaderboard'
     },
     {
@@ -34,6 +36,11 @@ const NAV_LINKS: NavItem[] = [
         to: '/matches',
         icon: Users,
         label: 'Matches'
+    },
+    {
+        to: '/profile',
+        icon: CircleUser,
+        label: 'Profile'
     }
 ]
 

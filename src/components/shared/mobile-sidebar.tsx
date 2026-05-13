@@ -1,6 +1,8 @@
-import { ChartNoAxesColumn, CircleUser, LayoutDashboard, Swords, Users } from 'lucide-react'
+import { CircleUser, LayoutDashboard, Swords, Users } from 'lucide-react'
 import type { ComponentType, FC, ReactNode } from 'react'
 import { NavLink } from 'react-router'
+
+import LeaderboardIcon from '@/shared/assets/custom/leaderboard-icon'
 
 interface NavItem {
     to: string
@@ -16,7 +18,7 @@ const NAV_LINKS: NavItem[] = [
     },
     {
         to: '/leaderboard',
-        icon: ChartNoAxesColumn,
+        icon: LeaderboardIcon,
         label: 'Leaderboard'
     },
     {
@@ -46,7 +48,7 @@ const MobileSidebar: FC<MobileSidebarProps> = ({ children }) => {
             <span className="sr-only">{children}</span>
             <nav
                 aria-label="Primary mobile navigation"
-                className="fixed inset-x-3 bottom-3 z-50 rounded-2xl border border-border/70 bg-white/95 px-2 py-2 shadow-2xl shadow-black/20 backdrop-blur-md lg:hidden">
+                className="fixed inset-x-3 bottom-3 z-50 rounded-2xl border border-border/70 bg-background px-2 py-2 shadow-2xl shadow-black/20 backdrop-blur-md lg:hidden">
                 <ul className="grid grid-cols-5 items-end gap-1">
                     {NAV_LINKS.map((link) => (
                         <li key={link.to}>
@@ -56,7 +58,7 @@ const MobileSidebar: FC<MobileSidebarProps> = ({ children }) => {
                                 className={({ isActive }) =>
                                     [
                                         'flex min-h-14 flex-col items-center justify-center gap-1 rounded-xl px-1 text-[11px] font-semibold transition-colors',
-                                        isActive ? 'bg-primary text-primary-foreground shadow-md shadow-primary/20' : 'text-muted-foreground hover:bg-muted hover:text-foreground'
+                                        isActive ? 'text-primary border-primary shadow-md shadow-primary/20' : 'text-muted-foreground hover:bg-muted hover:text-foreground'
                                     ].join(' ')
                                 }>
                                 <link.icon className="h-5 w-5 shrink-0" />
