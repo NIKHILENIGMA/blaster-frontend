@@ -1,6 +1,7 @@
 import { useMemo, useState, type FC } from 'react'
 import { useParams } from 'react-router'
 
+import AppBreadcrumb from '@/components/shared/app-breadcrumb'
 import { useGetLineup } from '@/features/team/api/get-lineup'
 import MatchPlayerCard from '@/features/team/components/card/match-player-card'
 import PointBreakdownDialog from '@/features/team/components/dialog/point-breakdown-dialog'
@@ -56,10 +57,18 @@ const MatchSummaryPage: FC = () => {
     }
 
     const { fixture, matchPoints } = lineupResponse
+    const fixtureLabel = `${fixture.teamA} vs ${fixture.teamB}`
 
     return (
         <div className="flex min-h-screen w-full flex-col bg-background">
             <main className="flex-1 w-full py-6 pb-12 px-4 lg:px-8 max-w-7xl mx-auto flex flex-col space-y-8">
+                <AppBreadcrumb
+                    items={[
+                        { label: 'Matches', to: '/matches' },
+                        { label: fixtureLabel, to: `/matches/${fixtureId}` },
+                        { label: 'Summary' }
+                    ]}
+                />
                 <div className="flex flex-col items-center gap-2">
                     <h2 className="text-2xl font-bold uppercase tracking-tight">Match Summary</h2>
                     <div className="bg-primary/10 text-primary px-4 py-1 rounded-full text-sm font-bold border border-primary/20">

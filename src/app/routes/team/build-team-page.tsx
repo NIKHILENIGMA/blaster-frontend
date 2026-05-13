@@ -3,6 +3,8 @@ import { useState, useMemo, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router'
 import { toast } from 'sonner'
 
+import AppBreadcrumb from '@/components/shared/app-breadcrumb'
+import CountdownTimer from '@/components/shared/countdown-timer'
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { Progress } from '@/components/ui/progress'
@@ -14,7 +16,6 @@ import { useSaveLineup } from '@/features/team/api/save-lineup'
 import BuildTeamPlayerPool from '@/features/team/components/build-team-player-pool'
 import { teams } from '@/features/team/constants/team'
 import { cn } from '@/shared/lib/utils'
-import CountdownTimer from '@/components/shared/countdown-timer'
 import { teamNameGenerator } from '@/features/team/util/team-name-generator'
 
 const ROLE_CONFIG = {
@@ -154,10 +155,18 @@ const BuildTeamPage = () => {
     }
 
     const fixture = lineupData?.fixture
+    const fixtureLabel = fixture ? `${teamNameGenerator(fixture.teamA)} vs ${teamNameGenerator(fixture.teamB)}` : 'Selected Match'
 
     return (
         <div className="flex min-h-screen flex-col bg-background pb-32 md:pb-0">
             <main className="flex-1 w-full px-4 py-6 lg:px-3 max-w-7xl mx-auto flex flex-col space-y-6">
+                <AppBreadcrumb
+                    items={[
+                        { label: 'Matches', to: '/matches' },
+                        { label: fixtureLabel, to: fixtureId ? `/matches/${fixtureId}` : '/matches' },
+                        { label: 'Build Team' }
+                    ]}
+                />
                 <h2 className="text-center text-2xl font-black tracking-tight">Build Your Match Team</h2>
                 {/* Match Banner */}
                 {fixture && (
