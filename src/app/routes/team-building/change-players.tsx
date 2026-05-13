@@ -3,10 +3,11 @@ import { FaArrowLeftLong } from 'react-icons/fa6'
 import { useNavigate, useParams } from 'react-router'
 import { toast } from 'sonner'
 
+import AppBreadcrumb from '@/components/shared/app-breadcrumb'
 import { Button } from '@/components/ui/button'
 import { useGetFixtureLineup, useSaveLineup } from '@/features/team-builder/api/franchise'
 import type { RosterCyclePlayer } from '@/features/team-builder/types/franchise'
-import { getTimeState } from '@/features/team-builder/utils/time'
+import { getFixtureLockTime, getTimeState } from '@/features/team-builder/utils/time'
 
 const ROLE_REQUIREMENTS = {
     Batsman: 4,
@@ -41,7 +42,7 @@ export default function ChangePlayers() {
     }, [data])
 
     const squadPlayers = useMemo(() => data?.squadPlayers ?? [], [data?.squadPlayers])
-    const isLocked = data?.fixture ? getTimeState(data.fixture.startTime).isLocked : true
+    const isLocked = data?.fixture ? getTimeState(getFixtureLockTime(data.fixture.startTime, data.fixture.lineupLockAt)).isLocked : true
 
     const playingPlayers = useMemo(() => squadPlayers.filter((player) => playingIds.includes(player.id)), [playingIds, squadPlayers])
     const substitutePlayers = useMemo(() => squadPlayers.filter((player) => !playingIds.includes(player.id)), [playingIds, squadPlayers])
@@ -147,6 +148,13 @@ export default function ChangePlayers() {
     return (
         <div className="min-h-screen bg-neutral-background">
             <main className="mx-auto max-w-7xl px-4 py-6 space-y-6">
+                <AppBreadcrumb
+                    items={[
+                        { label: 'My Squad', to: '/my-squad' },
+                        { label: data?.fixture ? `${data.fixture.teamA} vs ${data.fixture.teamB}` : 'Fixture Lineup' },
+                        { label: 'Change Players' }
+                    ]}
+                />
                 <Button
                     onClick={() => navigate('/my-squad')}
                     variant="outline">

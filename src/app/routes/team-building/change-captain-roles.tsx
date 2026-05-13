@@ -3,9 +3,10 @@ import { BiSolidLeftArrowCircle } from 'react-icons/bi'
 import { useNavigate, useParams } from 'react-router'
 import { toast } from 'sonner'
 
+import AppBreadcrumb from '@/components/shared/app-breadcrumb'
 import { Button } from '@/components/ui/button'
 import { useGetFixtureLineup, useSaveLineup } from '@/features/team-builder/api/franchise'
-import { getTimeState } from '@/features/team-builder/utils/time'
+import { getFixtureLockTime, getTimeState } from '@/features/team-builder/utils/time'
 
 export default function ChangeCaptainRoles() {
     const { fixtureId } = useParams<{ fixtureId: string }>()
@@ -27,7 +28,7 @@ export default function ChangeCaptainRoles() {
         setImpactPlayerId(data.lineup?.impactPlayerId ?? playingPlayers[2]?.id ?? null)
     }, [data, playingPlayers])
 
-    const isLocked = data?.fixture ? getTimeState(data.fixture.startTime).isLocked : true
+    const isLocked = data?.fixture ? getTimeState(getFixtureLockTime(data.fixture.startTime, data.fixture.lineupLockAt)).isLocked : true
 
     const isFormValid =
         Boolean(captainId) && Boolean(viceCaptainId) && Boolean(impactPlayerId) && new Set([captainId, viceCaptainId, impactPlayerId]).size === 3
@@ -75,6 +76,13 @@ export default function ChangeCaptainRoles() {
     return (
         <div className="min-h-screen bg-neutral-background">
             <main className="max-w-3xl mx-auto px-4 py-6 pb-20 space-y-6">
+                <AppBreadcrumb
+                    items={[
+                        { label: 'My Squad', to: '/my-squad' },
+                        { label: data?.fixture ? `${data.fixture.teamA} vs ${data.fixture.teamB}` : 'Fixture Roles' },
+                        { label: 'Change Roles' }
+                    ]}
+                />
                 <Button onClick={() => navigate('/my-squad')}>
                     <BiSolidLeftArrowCircle />
                     Go back

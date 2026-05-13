@@ -3,6 +3,7 @@ import { FaArrowLeftLong } from 'react-icons/fa6'
 import { useNavigate } from 'react-router'
 import { Toaster, toast } from 'sonner'
 
+import AppBreadcrumb from '@/components/shared/app-breadcrumb'
 import { Button } from '@/components/ui/button'
 import { useGetCurrentRosterCycle, useGetFranchiseOverview, useSaveSquad } from '@/features/team-builder/api/franchise'
 import { useGetPlayers } from '@/features/team-builder/api/get-players'
@@ -43,6 +44,15 @@ export default function SelectPlayers() {
     return (
         <div className="min-h-screen bg-neutral-background">
             <main className="flex flex-col items-center py-5 relative">
+                <div className="w-full px-4">
+                    <AppBreadcrumb
+                        className="mx-auto max-w-7xl"
+                        items={[
+                            { label: 'My Squad', to: '/my-squad' },
+                            { label: 'Build Squad' }
+                        ]}
+                    />
+                </div>
                 <Button
                     onClick={() => navigate(-1)}
                     variant="outline"

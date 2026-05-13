@@ -1,6 +1,8 @@
 import type { FC } from 'react'
 
 import { Loader } from '@/components'
+import AppBreadcrumb from '@/components/shared/app-breadcrumb'
+import CountdownTimer from '@/components/shared/countdown-timer'
 // import { CountdownBanner } from '@/features/franchise/components/banner/countdown-banner'
 import { MobileActionBar } from '@/features/franchise/components/mobile/mobile-action-bar'
 import { MobileDrawer } from '@/features/franchise/components/mobile/mobile-drawer'
@@ -8,7 +10,6 @@ import { PlayerSidebar } from '@/features/franchise/components/sidebar/player-si
 import { CategorySection } from '@/features/franchise/create/category-section'
 // import { StickyHeader } from '@/features/franchise/create/sticky-header'
 import { useBuildFranchise } from '@/features/franchise/hook/use-build-franchise'
-import CountdownTimer from '@/components/shared/countdown-timer'
 
 const BuildFranchisePage: FC = () => {
     const {
@@ -42,6 +43,14 @@ const BuildFranchisePage: FC = () => {
                 <div className="flex flex-1 overflow-hidden">
                     {/* Main Content Area */}
                     <main className="flex-1 overflow-y-scroll lg:max-h-[90vh] space-y-1.5">
+                        <div className="mx-auto w-full max-w-7xl px-4 pt-4">
+                            <AppBreadcrumb
+                                items={[
+                                    { label: 'Franchise', to: '/franchise' },
+                                    { label: 'Build Franchise' }
+                                ]}
+                            />
+                        </div>
                         <CountdownTimer windowClosesAt={closeWindowAt} />
                         <h2 className="pb-1 text-center text-2xl font-bold uppercase tracking-tight py-4">Your Franchise</h2>
                         <div className="mx-auto max-w-7xl px-4 py-8">
