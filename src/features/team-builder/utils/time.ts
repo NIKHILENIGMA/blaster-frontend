@@ -1,11 +1,23 @@
-export function getTimeState(startTime: string | Date) {
-    const now = Date.now()
-    const start = new Date(startTime).getTime()
+const HOUR_IN_MS = 60 * 60 * 1000
 
-    if (Number.isNaN(start)) {
+export function getFixtureLockTime(startTime: string | Date, lineupLockAt?: string | Date | null) {
+    if (lineupLockAt) return lineupLockAt
+
+    const start = new Date(startTime).getTime()
+    if (Number.isNaN(start)) return startTime
+
+    return new Date(start - HOUR_IN_MS)
+}
+
+export function getTimeState(lockTime: string | Date) {
+    const now = Date.now()
+    const lock = new Date(lockTime).getTime()
+
+    if (Number.isNaN(lock)) {
         return {
             diff: 0,
             minutes: 0,
+            hasPassed: true,
             hasStarted: true,
             isWarning: false,
             isLocked: true,
@@ -13,24 +25,24 @@ export function getTimeState(startTime: string | Date) {
         }
     }
 
-    const diff = start - now
+    const diff = lock - now
     const minutes = Math.floor(diff / 60000)
 
     const warningWindowMs = 2 * 60 * 60 * 1000
-    const lockWindowMs = 1 * 60 * 60 * 1000
 
     return {
         diff,
         minutes,
+        hasPassed: diff <= 0,
         hasStarted: diff <= 0,
-        isWarning: diff > lockWindowMs && diff <= warningWindowMs,
-        isLocked: diff <= lockWindowMs,
-        canEdit: diff > lockWindowMs
+        isWarning: diff > 0 && diff <= warningWindowMs,
+        isLocked: diff <= 0,
+        canEdit: diff > 0
     }
 }
 
 export function formatTimeRemaining(diff: number) {
-    if (diff <= 0) return 'Match started'
+    if (diff <= 0) return 'Closed'
 
     const minutes = Math.floor(diff / 60000)
 
