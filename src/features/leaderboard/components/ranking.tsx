@@ -6,6 +6,7 @@ import { cn } from '@/shared/lib/utils'
 type RankingProps = {
     entries?: LeaderboardEntry[]
     isPending?: boolean
+    currentUserId?: string
 }
 
 type TopPlayer = {
@@ -15,30 +16,31 @@ type TopPlayer = {
     type: 'gold' | 'silver' | 'bronze'
     avatar: string
     classes: string
+    isCurrentUser: boolean
 }
 
 const styleByRank: Record<number, { type: 'gold' | 'silver' | 'bronze'; classes: string; bg: string }> = {
     1: {
         type: 'gold',
         classes:
-            'h-48 bg-gradient-to-b from-yellow-200 via-yellow-500 to-yellow-800 rounded-t-lg flex items-start justify-center text-yellow-600 font-bold shadow-xl',
+            'h-48 lg:h-64 bg-gradient-to-b from-yellow-200 via-yellow-500 to-yellow-800 rounded-t-lg flex items-start justify-center text-yellow-600 font-bold shadow-xl',
         bg: 'FFD700'
     },
     2: {
         type: 'silver',
         classes:
-            'h-40 bg-gradient-to-b from-gray-200 via-gray-500 to-gray-800 rounded-t-lg flex items-start justify-center text-gray-500 font-bold shadow-xl',
+            'h-40 lg:h-56 bg-gradient-to-b from-gray-200 via-gray-500 to-gray-800 rounded-t-lg flex items-start justify-center text-gray-500 font-bold shadow-xl',
         bg: 'C0C0C0'
     },
     3: {
         type: 'bronze',
         classes:
-            'h-36 bg-gradient-to-b from-amber-200 via-amber-500 to-amber-900 rounded-t-lg flex items-start justify-center text-amber-600 font-bold shadow-lg shadow-amber-900/40',
+            'h-36 lg:h-52 bg-gradient-to-b from-amber-200 via-amber-500 to-amber-900 rounded-t-lg flex items-start justify-center text-amber-600 font-bold shadow-lg shadow-amber-900/40',
         bg: '8B4513'
     }
 }
 
-const Ranking: FC<RankingProps> = ({ entries = [], isPending }) => {
+const Ranking: FC<RankingProps> = ({ entries = [], isPending, currentUserId }) => {
     if (isPending) {
         return <section className="mb-10 rounded-xl bg-white p-6 text-center text-gray-500 shadow">Loading top players...</section>
     }
@@ -57,7 +59,8 @@ const Ranking: FC<RankingProps> = ({ entries = [], isPending }) => {
                 classes: style.classes,
                 avatar: entry.profileImage
                     ? entry.profileImage
-                    : 'https://res.cloudinary.com/dynbvnhcc/image/upload/v1775216051/Default-Men_pzwcaj.avif'
+                    : 'https://res.cloudinary.com/dynbvnhcc/image/upload/v1775216051/Default-Men_pzwcaj.avif',
+                isCurrentUser: Boolean(currentUserId && entry.userId === currentUserId)
             }
         })
 
@@ -68,28 +71,36 @@ const Ranking: FC<RankingProps> = ({ entries = [], isPending }) => {
         return <section className="">No top ranking data available.</section>
     }
     return (
-        <section className="grid grid-cols-3 gap-6 items-end mb-10">
+        <section className="mb-10 grid grid-cols-3 items-end gap-3 sm:gap-6 lg:gap-8">
             {displayOrder.map((player) => (
                 <div
                     key={player.rank}
-                    className="text-center relative">
+                    className={cn(
+                        'relative rounded-xl px-2 pt-3 text-center',
+                        player.isCurrentUser && 'bg-blue-50 ring-2 ring-blue-500/60 ring-offset-2'
+                    )}>
                     <img
                         src={player.avatar}
                         alt={player.name}
                         className={cn(
-                            'md:w-28 md:h-28 w-20 h-20 rounded-full mx-auto border-4',
+                            'mx-auto h-20 w-20 rounded-full border-4 object-cover md:h-28 md:w-28 lg:h-36 lg:w-36',
                             player.type === 'gold' ? 'border-yellow-400' : player.type === 'silver' ? 'border-gray-400' : 'border-amber-400'
                         )}
                     />
                     <img
                         src={player.type === 'gold' ? './gold.png' : player.type === 'silver' ? './silver.png' : './bronze.png'}
                         alt="medal"
-                        className="w-10 h-10 absolute top-13 left-[60%] md:top-20 md:w-12 md:h-12 md:left-[59%] -translate-x-1/2 object-cover rounded-full"
+                        className="absolute left-[60%] top-13 h-10 w-10 -translate-x-1/2 rounded-full object-cover md:left-[59%] md:top-20 md:h-12 md:w-12 lg:top-27 lg:h-14 lg:w-14"
                     />
-                    <p className="mt-2 truncate font-medium">{player.name}</p>
-                    <p className="text-blue-600 font-semibold">{player.points.toLocaleString()} pts</p>
+                    <div className="mt-3 flex min-w-0 items-center justify-center gap-2">
+                        <p className="truncate text-sm font-semibold sm:text-base lg:text-xl">{player.name}</p>
+                        {player.isCurrentUser ? (
+                            <span className="shrink-0 rounded-full bg-blue-600 px-2 py-0.5 text-[10px] font-bold uppercase text-white lg:text-xs">Me</span>
+                        ) : null}
+                    </div>
+                    <p className="text-sm font-semibold text-blue-600 lg:text-lg">{player.points.toLocaleString()} pts</p>
                     <div className={cn('mt-3', player.classes)}>
-                        <p className="p-6 text-white/30 text-xl md:text-6xl tracking-widest">{player.type.toUpperCase()}</p>
+                        <p className="p-6 text-xl font-bold tracking-widest text-white/30 md:text-6xl lg:text-7xl">{player.type.toUpperCase()}</p>
                     </div>
                 </div>
             ))}

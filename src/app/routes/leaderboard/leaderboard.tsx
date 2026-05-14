@@ -1,3 +1,4 @@
+import { useUser } from '@clerk/clerk-react'
 import type { FC } from 'react'
 
 import { useLeaderboardEntries } from '@/features/leaderboard/api/get-leader-board-entry'
@@ -6,12 +7,11 @@ import LeaderboardTable from '@/features/leaderboard/components/leaderboard-tabl
 import Ranking from '@/features/leaderboard/components/ranking'
 
 const LeaderboardPage: FC = () => {
+    const { user } = useUser()
     const { data: leaderboardEntries, isPending } = useLeaderboardEntries({})
-    if (!leaderboardEntries) {
-        return
-    }
+    const currentUserId = user?.id
 
-    const sortedEntries = [...leaderboardEntries].sort((a, b) => {
+    const sortedEntries = [...(leaderboardEntries ?? [])].sort((a, b) => {
         if (a.rank !== b.rank) return a.rank - b.rank
         return b.totalScore - a.totalScore
     })
@@ -21,8 +21,8 @@ const LeaderboardPage: FC = () => {
 
     return (
         <div className="min-h-screen bg-neutral-background">
-            <main className="w-full py-8">
-                <div className="max-w-6xl mx-4 md:mx-auto">
+            <main className="w-full py-8 lg:py-10">
+                <div className="mx-4 max-w-7xl md:mx-8 xl:mx-auto">
                     {/* Header */}
                     <LeaderboardHeader />
 
@@ -30,12 +30,14 @@ const LeaderboardPage: FC = () => {
                     <Ranking
                         entries={topThreeEntries}
                         isPending={isPending}
+                        currentUserId={currentUserId}
                     />
 
                     {/* Table */}
                     <LeaderboardTable
                         entries={remainingEntries}
                         isPending={isPending}
+                        currentUserId={currentUserId}
                     />
                 </div>
             </main>

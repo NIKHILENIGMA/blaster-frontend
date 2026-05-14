@@ -16,6 +16,7 @@ export interface StatCard {
 }
 
 export interface LeaderboardEntry {
+    userId: string
     firstName: string
     lastName: string
     username: string
