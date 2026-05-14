@@ -101,6 +101,10 @@ const router = createBrowserRouter([
                 lazy: () => import('./routes/admin/points-preview').then((module) => ({ Component: module.default }))
             },
             {
+                path: 'leaderboard',
+                lazy: () => import('./routes/admin/leaderboard').then((module) => ({ Component: module.default }))
+            },
+            {
                 path: 'teams',
                 lazy: () => import('./routes/admin/teams').then((module) => ({ Component: module.default }))
             },

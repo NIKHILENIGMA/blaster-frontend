@@ -1,4 +1,4 @@
-import { LayoutDashboard, Activity, Calendar, Shield, MoveLeft, SlidersHorizontal } from 'lucide-react'
+import { LayoutDashboard, Activity, Calendar, Shield, MoveLeft, SlidersHorizontal, Trophy } from 'lucide-react'
 import { GiPlayerBase } from 'react-icons/gi'
 import { NavLink, useNavigate } from 'react-router'
 
@@ -10,6 +10,7 @@ const navItems = [
     { id: '/admin', label: 'Dashboard', icon: LayoutDashboard },
     { id: '/admin/matches', label: 'Game Cycle', icon: Activity },
     { id: '/admin/fixtures', label: 'IPL Fixtures', icon: Calendar },
+    { id: '/admin/leaderboard', label: 'Leaderboard', icon: Trophy },
     { id: '/admin/teams', label: 'Teams', icon: Shield },
     { id: '/admin/player-stats', label: 'Player Management', icon: GiPlayerBase },
     { id: '/admin/rulesets', label: 'Rulesets', icon: SlidersHorizontal }

@@ -1,6 +1,7 @@
 import type { FC } from 'react'
 
 import type { LeaderboardEntry } from '@/features/dashboard/types/dashboard'
+import { formatLeaderboardName } from '@/features/leaderboard/lib/format-leaderboard-name'
 import { cn } from '@/shared/lib/utils'
 
 type RankingProps = {
@@ -49,7 +50,7 @@ const Ranking: FC<RankingProps> = ({ entries = [], isPending, currentUserId }) =
         .filter((entry) => entry.rank >= 1 && entry.rank <= 3)
         .map((entry) => {
             const style = styleByRank[entry.rank]
-            const name = [entry.firstName, entry.lastName].filter(Boolean).join(' ').trim() || entry.username
+            const name = formatLeaderboardName(entry)
 
             return {
                 rank: entry.rank,

@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState, type FC } from 'react'
 
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from '@/components/ui/pagination'
 import type { LeaderboardEntry } from '@/features/dashboard/types/dashboard'
+import { formatLeaderboardName } from '@/features/leaderboard/lib/format-leaderboard-name'
 
 type LeaderboardTableProps = {
     entries?: LeaderboardEntry[]
@@ -47,7 +48,7 @@ const LeaderboardTable: FC<LeaderboardTableProps> = ({ entries = [], isPending =
             <div className="divide-y divide-gray-200">
                 {pageEntries.length > 0 ? (
                     pageEntries.map((player) => {
-                        const fullName = [player.firstName, player.lastName].filter(Boolean).join(' ').trim() || player.username
+                        const fullName = formatLeaderboardName(player)
                         const playerAvatar = player.profileImage || 'https://res.cloudinary.com/dynbvnhcc/image/upload/v1775216051/Default-Men_pzwcaj.avif'
                         const teamLogo = player.teamLogo || 'https://res.cloudinary.com/djblasters/image/upload/v1778729286/ChatGPT_Image_May_14_2026_08_57_43_AM_sfqu1i.png'
 
