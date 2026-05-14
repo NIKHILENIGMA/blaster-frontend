@@ -1,5 +1,5 @@
 import { useClerk, useUser } from '@clerk/clerk-react'
-import { ArrowLeft, Camera, CheckCircle2, Eye, EyeOff, KeyRound, LogOut, Mail, Pencil, ShieldCheck, UserRound } from 'lucide-react'
+import { ArrowLeft, Camera, CheckCircle2, Eye, EyeOff, KeyRound, LogOut, Mail, Pencil, ShieldCheck, Upload, UserRound } from 'lucide-react'
 import { useEffect, useMemo, useRef, useState, type ChangeEvent, type FC, type FormEvent } from 'react'
 import { FcGoogle } from 'react-icons/fc'
 import { useNavigate } from 'react-router'
@@ -12,7 +12,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { useChangeUsername, useGetProfile, useSyncProfile, useUpdateFranchise } from '@/features/profile/api/profile'
+import { uploadTeamLogo, useChangeUsername, useGetProfile, useSyncProfile, useUpdateFranchise } from '@/features/profile/api/profile'
 import { LOGO_OPTIONS } from '@/shared/lib/team-logos'
 
 type ExternalAccount = {
@@ -26,6 +26,7 @@ const Profile: FC = () => {
     const { signOut } = useClerk()
     const navigate = useNavigate()
     const fileInputRef = useRef<HTMLInputElement>(null)
+    const teamLogoInputRef = useRef<HTMLInputElement>(null)
 
     const { data: profile, isPending: isProfilePending } = useGetProfile({
         queryConfig: {
@@ -46,6 +47,7 @@ const Profile: FC = () => {
     const [confirmPassword, setConfirmPassword] = useState<string>('')
     const [signOutOtherSessions, setSignOutOtherSessions] = useState<boolean>(false)
     const [isUploadingAvatar, setIsUploadingAvatar] = useState<boolean>(false)
+    const [isUploadingTeamLogo, setIsUploadingTeamLogo] = useState<boolean>(false)
     const [isUpdatingPassword, setIsUpdatingPassword] = useState<boolean>(false)
     const [isEditingAccount, setIsEditingAccount] = useState<boolean>(false)
     const [isEditingFranchise, setIsEditingFranchise] = useState<boolean>(false)
@@ -149,6 +151,35 @@ const Profile: FC = () => {
             toast.error(error instanceof Error ? error.message : 'Failed to update profile picture')
         } finally {
             setIsUploadingAvatar(false)
+            event.target.value = ''
+        }
+    }
+
+    const handleTeamLogoChange = async (event: ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0]
+        if (!file) return
+
+        if (!file.type.startsWith('image/')) {
+            toast.error('Please upload an image file')
+            event.target.value = ''
+            return
+        }
+
+        if (file.size > 2 * 1024 * 1024) {
+            toast.error('Team logo must be 2MB or smaller')
+            event.target.value = ''
+            return
+        }
+
+        try {
+            setIsUploadingTeamLogo(true)
+            const uploadedLogo = await uploadTeamLogo(file)
+            setTeamLogo(uploadedLogo.secureUrl)
+            toast.success('Team logo uploaded successfully')
+        } catch (error) {
+            toast.error(error instanceof Error ? error.message : 'Failed to upload team logo')
+        } finally {
+            setIsUploadingTeamLogo(false)
             event.target.value = ''
         }
     }
@@ -520,7 +551,34 @@ const Profile: FC = () => {
                                             />
                                         </div>
                                         <div className="space-y-3">
-                                            <Label>Select Team Logo</Label>
+                                            <Label>Team Logo</Label>
+                                            <div className="flex items-center gap-3 rounded-xl border border-border bg-background p-3">
+                                                <img
+                                                    src={teamLogo}
+                                                    alt="Selected team logo"
+                                                    className="h-16 w-16 rounded-full border border-border bg-white object-cover p-1"
+                                                />
+                                                <div className="min-w-0 flex-1">
+                                                    <p className="truncate text-sm font-semibold">Selected logo</p>
+                                                    <p className="text-xs text-muted-foreground">Upload a custom image or choose a preset below.</p>
+                                                </div>
+                                                <Button
+                                                    type="button"
+                                                    variant="outline"
+                                                    className="gap-2"
+                                                    disabled={isUploadingTeamLogo}
+                                                    onClick={() => teamLogoInputRef.current?.click()}>
+                                                    <Upload className="h-4 w-4" />
+                                                    {isUploadingTeamLogo ? 'Uploading...' : 'Upload'}
+                                                </Button>
+                                                <input
+                                                    ref={teamLogoInputRef}
+                                                    type="file"
+                                                    accept="image/*"
+                                                    className="hidden"
+                                                    onChange={handleTeamLogoChange}
+                                                />
+                                            </div>
                                             <div className="grid grid-cols-4 gap-3">
                                                 {LOGO_OPTIONS.map((logo) => (
                                                     <button

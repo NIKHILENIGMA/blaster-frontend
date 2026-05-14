@@ -4,7 +4,10 @@ export const envSchema = z.object({
     ENV: z.enum(['development', 'production', 'test']).default('development'),
     PORT: z.coerce.number().min(1000).default(5173),
     BACKEND_PROXY: z.string().default('http://localhost:5000'),
-    CLERK_PUBLISHABLE_KEY: z.string().min(1, { message: 'CLERK_PUBLISHABLE_KEY is required' })
+    CLERK_PUBLISHABLE_KEY: z.string().min(1, { message: 'CLERK_PUBLISHABLE_KEY is required' }),
+    CLOUDINARY_CLOUD_NAME: z.string().default(''),
+    CLOUDINARY_UPLOAD_PRESET: z.string().default(''),
+    CLOUDINARY_TEAM_LOGO_FOLDER: z.string().default('team-logos')
 })
 
 export type Env = z.infer<typeof envSchema>
