@@ -7,10 +7,10 @@ interface AuthLayoutProps {
 }
 
 const banners = [
-    'https://res.cloudinary.com/dynbvnhcc/image/upload/v1775298926/banner-3_pidd2n.png',
-    'https://res.cloudinary.com/dynbvnhcc/image/upload/v1775298575/banner-2_wtkahd.png',
-    'https://res.cloudinary.com/dynbvnhcc/image/upload/v1775298209/login-screen_bftqeq.png',
-    'https://res.cloudinary.com/dynbvnhcc/image/upload/v1775299209/banner-4_glknqz.png'
+    'https://res.cloudinary.com/djblasters/image/upload/v1775298926/banner-3_pidd2n.png',
+    'https://res.cloudinary.com/djblasters/image/upload/v1775298575/banner-2_wtkahd.png',
+    'https://res.cloudinary.com/djblasters/image/upload/v1775298209/login-screen_bftqeq.png',
+    'https://res.cloudinary.com/djblasters/image/upload/v1775299209/banner-4_glknqz.png'
 ]
 
 export default function AuthLayout({ children }: AuthLayoutProps) {

@@ -39,7 +39,7 @@ export default function Home() {
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}>
                             <img
-                                src="https://res.cloudinary.com/dynbvnhcc/image/upload/v1775299513/logo-fortune_qda5xe.png"
+                                src="https://res.cloudinary.com/djblasters/image/upload/v1775299513/logo-fortune_qda5xe.png"
                                 alt="logo"
                                 className={'h-20 w-20 object-cover'}
                             />

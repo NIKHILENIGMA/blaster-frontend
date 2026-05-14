@@ -49,7 +49,7 @@ const LeaderboardTable: FC<LeaderboardTableProps> = ({ entries = [], isPending =
                 {pageEntries.length > 0 ? (
                     pageEntries.map((player) => {
                         const fullName = formatLeaderboardName(player)
-                        const playerAvatar = player.profileImage || 'https://res.cloudinary.com/dynbvnhcc/image/upload/v1775216051/Default-Men_pzwcaj.avif'
+                        const playerAvatar = player.profileImage || 'https://res.cloudinary.com/djblasters/image/upload/v1775216051/Default-Men_pzwcaj.avif'
                         const teamLogo = player.teamLogo || 'https://res.cloudinary.com/djblasters/image/upload/v1778729286/ChatGPT_Image_May_14_2026_08_57_43_AM_sfqu1i.png'
 
                         return (

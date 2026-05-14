@@ -3,6 +3,7 @@ import type { FC } from 'react'
 import { cn } from '@/shared/lib/utils'
 
 import type { Player } from '../../types/players'
+import { teams } from '@/features/team/constants/team'
 
 interface DisplayPlayerCardProps {
     player: Player
@@ -10,74 +11,8 @@ interface DisplayPlayerCardProps {
     canAddMore: boolean
 }
 
-type TeamInfo = {
-    name: string
-    teamLogoUrl: string
-    bgCover: string
-    shadowColor?: string
-    btnGradient?: string
-}
-
 type TeamName = 'KKR' | 'CSK' | 'MI' | 'RCB' | 'SRH' | 'RR' | 'DC' | 'PBKS' | 'LSG' | 'GT'
 
-const teams: Record<TeamName, TeamInfo> = {
-    KKR: {
-        name: 'Kolkata Knight Riders',
-        teamLogoUrl: 'https://res.cloudinary.com/dynbvnhcc/image/upload/v1777385137/KKRoutline_wm9ilt.avif',
-        bgCover: 'https://res.cloudinary.com/dynbvnhcc/image/upload/v1777373117/kkr-avatar-background_y9cbjm.png',
-        shadowColor: 'shadow-purple-500/50',
-        btnGradient: 'from-purple-600 to-purple-900'
-    },
-    CSK: {
-        name: 'Chennai Super Kings',
-        teamLogoUrl: 'https://res.cloudinary.com/dynbvnhcc/image/upload/v1777385137/CSKoutline_ue3e4o.avif',
-        bgCover: 'https://res.cloudinary.com/dynbvnhcc/image/upload/v1777376137/csk-avatar-background_ixbt3c.png'
-    },
-    MI: {
-        name: 'Mumbai Indians',
-        teamLogoUrl: 'https://res.cloudinary.com/dynbvnhcc/image/upload/v1777385138/MIoutline_o3ejqe.avif',
-        bgCover: 'https://res.cloudinary.com/dynbvnhcc/image/upload/v1777376181/mi-avatar-background_ezrjse.png',
-        shadowColor: 'shadow-blue-500/50',
-        btnGradient: 'from-blue-600 to-blue-900'
-    },
-    RCB: {
-        name: 'Royal Challengers Bangalore',
-        teamLogoUrl: 'https://res.cloudinary.com/dynbvnhcc/image/upload/v1777385142/RCBoutline_bqhi8f.avif',
-        bgCover: 'https://res.cloudinary.com/dynbvnhcc/image/upload/v1777376138/rcb-avatar-background_izmszs.png',
-        shadowColor: 'shadow-red-500/50',
-        btnGradient: 'from-red-600 to-red-900'
-    },
-    SRH: {
-        name: 'Sunrisers Hyderabad',
-        teamLogoUrl: 'https://res.cloudinary.com/dynbvnhcc/image/upload/v1777385143/SRHoutline_mwlgle.avif',
-        bgCover: 'https://res.cloudinary.com/dynbvnhcc/image/upload/v1777376136/srk-avatar-background_o8dfr2.png'
-    },
-    RR: {
-        name: 'Rajasthan Royals',
-        teamLogoUrl: 'https://res.cloudinary.com/dynbvnhcc/image/upload/v1777385142/RR_Logo_cpbm10.webp',
-        bgCover: 'https://res.cloudinary.com/dynbvnhcc/image/upload/v1777376136/rr-avatar-background_uzfdsi.png'
-    },
-    DC: {
-        name: 'Delhi Capitals',
-        teamLogoUrl: 'https://res.cloudinary.com/dynbvnhcc/image/upload/v1777385137/DCoutline_xr0zrf.avif',
-        bgCover: 'https://res.cloudinary.com/dynbvnhcc/image/upload/v1777376138/rcb-avatar-background_izmszs.png'
-    },
-    PBKS: {
-        name: 'Punjab Kings',
-        teamLogoUrl: 'https://res.cloudinary.com/dynbvnhcc/image/upload/v1777385141/PBKSoutline_t02dlh.avif',
-        bgCover: 'https://res.cloudinary.com/dynbvnhcc/image/upload/v1777376138/pbks-avatar-background_o7z7je.png'
-    },
-    LSG: {
-        name: 'Lucknow Super Giants',
-        teamLogoUrl: 'https://res.cloudinary.com/dynbvnhcc/image/upload/v1777385138/LSGoutline_g5u9xy.avif',
-        bgCover: 'https://res.cloudinary.com/dynbvnhcc/image/upload/v1777376138/lsg-avatar-background_nvnjnb.png'
-    },
-    GT: {
-        name: 'Gujarat Titans',
-        teamLogoUrl: 'https://res.cloudinary.com/dynbvnhcc/image/upload/v1777385137/GToutline_fn1hjs.avif',
-        bgCover: 'https://res.cloudinary.com/dynbvnhcc/image/upload/v1777376137/gt-avatar-background_svfkkr.png'
-    }
-}
 
 const PlayerSidebarCard: FC<DisplayPlayerCardProps> = ({ player, onAddPlayer, canAddMore }) => {
     return (

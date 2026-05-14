@@ -8,7 +8,7 @@ const FranchiseBanner = () => {
     return (
         <section className="relative w-full min-h-[calc(100vh-64px)] overflow-hidden">
             <img
-                src="https://res.cloudinary.com/dynbvnhcc/image/upload/v1777744606/buy-players-background_1_fi4kh5.png"
+                src="https://res.cloudinary.com/djblasters/image/upload/v1777744606/buy-players-background_1_fi4kh5.png"
                 alt="background-cover"
                 className="absolute top-[10%] lg:top-[25%] h-[55vh]  lg:w-full object-cover object-[50%_50%] lg:object-[50%_60%] lg:mx-auto"
             />

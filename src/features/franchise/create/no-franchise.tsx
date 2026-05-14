@@ -15,7 +15,7 @@ const NoFranchise: FC = () => {
             <main className="w-full relative">
                 <section className="relative w-full min-h-[calc(100vh-64px)] overflow-hidden">
                     <img
-                        src="https://res.cloudinary.com/dynbvnhcc/image/upload/v1777715584/background-image_xpar9c.png"
+                        src="https://res.cloudinary.com/djblasters/image/upload/v1777715584/background-image_xpar9c.png"
                         alt="background-cover"
                         className="absolute inset-0 lg:w-full h-full object-cover object-[80%_80%] lg:object-[50%_50%]"
                     />

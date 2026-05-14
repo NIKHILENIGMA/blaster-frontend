@@ -15,7 +15,7 @@ const NotFound: FC = () => {
         <main className="flex flex-col items-center justify-center min-h-screen bg-background px-4">
             <section className="relative overflow-hidden rounded-xl shadow-lg flex flex-col items-center justify-end text-foreground min-h-[90vh] w-full ">
                 <img
-                    src="https://res.cloudinary.com/dynbvnhcc/image/upload/v1775302659/banner-5_lzpcxx.png"
+                    src="https://res.cloudinary.com/djblasters/image/upload/v1775302659/banner-5_lzpcxx.png"
                     alt="not-found"
                     className="absolute inset-0 h-full w-full object-contain object-center opacity-90"
                 />
