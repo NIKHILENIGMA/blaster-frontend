@@ -3,6 +3,7 @@ import { useEffect, useMemo, useState, type FC } from 'react'
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from '@/components/ui/pagination'
 import type { LeaderboardEntry } from '@/features/dashboard/types/dashboard'
 import { formatLeaderboardName } from '@/features/leaderboard/lib/format-leaderboard-name'
+import { formatFullLeaderboardPoints, formatLeaderboardPoints } from '@/features/leaderboard/lib/format-leaderboard-points'
 
 type LeaderboardTableProps = {
     entries?: LeaderboardEntry[]
@@ -97,9 +98,13 @@ const LeaderboardTable: FC<LeaderboardTableProps> = ({ entries = [], isPending =
                                     <span className="truncate font-medium text-gray-700">{player.teamName || 'No team'}</span>
                                 </div>
 
-                                <div className="shrink-0 text-right font-bold text-blue-600 lg:text-xl">
-                                    <span className="block">{player.totalScore.toLocaleString()}</span>
-                                    <span className="block text-[11px] font-semibold uppercase text-gray-400 sm:hidden">pts</span>
+                                <div
+                                    className="shrink-0 text-right"
+                                    title={`${formatFullLeaderboardPoints(player.totalScore)} pts`}>
+                                    <span className="block font-bold tabular-nums text-blue-600 lg:text-xl">
+                                        {formatLeaderboardPoints(player.totalScore)}
+                                    </span>
+                                    <span className="block text-[11px] font-semibold uppercase tracking-wide text-gray-400">pts</span>
                                 </div>
                             </div>
                         )

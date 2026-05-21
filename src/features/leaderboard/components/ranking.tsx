@@ -2,6 +2,7 @@ import type { FC } from 'react'
 
 import type { LeaderboardEntry } from '@/features/dashboard/types/dashboard'
 import { formatLeaderboardName } from '@/features/leaderboard/lib/format-leaderboard-name'
+import { formatFullLeaderboardPoints, formatLeaderboardPoints } from '@/features/leaderboard/lib/format-leaderboard-points'
 import { cn } from '@/shared/lib/utils'
 
 type RankingProps = {
@@ -99,7 +100,12 @@ const Ranking: FC<RankingProps> = ({ entries = [], isPending, currentUserId }) =
                             <span className="shrink-0 rounded-full bg-blue-600 px-2 py-0.5 text-[10px] font-bold uppercase text-white lg:text-xs">Me</span>
                         ) : null}
                     </div>
-                    <p className="text-sm font-semibold text-blue-600 lg:text-lg">{player.points.toLocaleString()} pts</p>
+                    <p
+                        className="text-sm font-semibold text-blue-600 lg:text-lg"
+                        title={`${formatFullLeaderboardPoints(player.points)} pts`}>
+                        <span className="tabular-nums">{formatLeaderboardPoints(player.points)}</span>
+                        <span className="ml-1 text-xs uppercase tracking-wide text-blue-500/80 lg:text-sm">pts</span>
+                    </p>
                     <div className={cn('mt-3', player.classes)}>
                         <p className="p-6 text-xl font-bold tracking-widest text-white/30 md:text-6xl lg:text-7xl">{player.type.toUpperCase()}</p>
                     </div>
