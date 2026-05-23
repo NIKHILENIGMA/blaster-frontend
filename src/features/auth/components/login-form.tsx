@@ -1,23 +1,22 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { REGEXP_ONLY_DIGITS_AND_CHARS } from 'input-otp'
+import { Lock, Mail } from 'lucide-react'
 import { useEffect, useState, type FC } from 'react'
 import { useForm } from 'react-hook-form'
-import { Link } from 'react-router'
 
 import { FormField } from '@/components'
 import { Button } from '@/components/ui/button'
 import { InputOTP, InputOTPGroup, InputOTPSlot } from '@/components/ui/input-otp'
+import { FcGoogle } from '@/shared/assets/icons'
 import { loginSchema } from '@/shared/schema/auth-schema'
 
 import { useLogin } from '../hooks/use-login'
 import type { LoginFormRequest } from '../types/auth'
 
-import ChooseOptions from './choose-options'
-
-type LoginStep = 'initial' | 'email' | 'code'
+type LoginStep = 'email' | 'code'
 
 const LoginForm: FC = () => {
-    const [step, setStep] = useState<LoginStep>('initial')
+    const [step, setStep] = useState<LoginStep>('email')
     const [code, setCode] = useState('')
     const {
         onSubmit,
@@ -33,7 +32,8 @@ const LoginForm: FC = () => {
     const {
         register,
         handleSubmit,
-        formState: { errors }
+        formState: { errors },
+        setError
     } = useForm<LoginFormRequest>({
         resolver: zodResolver(loginSchema),
         defaultValues: {
@@ -49,33 +49,44 @@ const LoginForm: FC = () => {
     }, [requiresSecondFactor])
 
     return (
-        <div className="relative w-full max-w-md p-6 flex flex-col z-50 font-body">
-            <div className="text-center mb-6">
-                <h1 className="text-3xl font-semibold font-heading">
-                    Welcome back! Please <span className="text-primary">login</span> to your account.
-                </h1>
-            </div>
-
+        <div className="relative z-50 flex w-full flex-col font-body">
             <div className="flex flex-col gap-4">
-                {step == 'initial' ? (
-                    <ChooseOptions
-                        googleText="Log in with Google"
-                        emailBtnText="Log in with Email"
-                        onStepChange={setStep}
-                        isLoading={loadingProvider}
-                        onGoogleAuth={() => handleGoogleLogin('oauth_google')}
-                    />
-                ) : step == 'email' ? (
+                {step == 'email' ? (
                     <div className="w-full flex items-center justify-center">
                         <form
-                            className="w-full max-w-sm"
-                            onSubmit={handleSubmit(onSubmit)}>
+                            className="w-full"
+                            onSubmit={handleSubmit((data) => onSubmit(data, setError))}>
                             <div className="flex flex-col gap-4">
+                                {loadingProvider === 'oauth_google' ? (
+                                    <Button
+                                        type="button"
+                                        variant="outline"
+                                        className="w-full cursor-not-allowed gap-2">
+                                        <span className="h-4 w-4 animate-spin rounded-full border-2 border-primary border-t-transparent"></span>
+                                        Redirecting to Google...
+                                    </Button>
+                                ) : (
+                                    <Button
+                                        type="button"
+                                        variant="outline"
+                                        className="w-full gap-2"
+                                        onClick={() => handleGoogleLogin('oauth_google')}>
+                                        <FcGoogle size={20} />
+                                        Log in with Google
+                                    </Button>
+                                )}
+                                <div className="flex items-center">
+                                    <hr className="flex-grow border-gray-300" />
+                                    <span className="px-2 text-xs text-gray-400 sm:text-sm">OR</span>
+                                    <hr className="flex-grow border-gray-300" />
+                                </div>
                                 <FormField
                                     name="email"
                                     type="email"
                                     label="Email address"
                                     placeholder="johndoe@example.com"
+                                    icon={Mail}
+                                    iconPosition="left"
                                     register={register('email')}
                                     required={true}
                                     errors={errors.email}
@@ -85,6 +96,8 @@ const LoginForm: FC = () => {
                                     type="password"
                                     label="Password"
                                     placeholder="**********"
+                                    icon={Lock}
+                                    iconPosition="left"
                                     register={register('password')}
                                     required={true}
                                     errors={errors.password}
@@ -101,7 +114,7 @@ const LoginForm: FC = () => {
                 ) : step == 'code' ? (
                     <div className="w-full flex items-center justify-center">
                         <form
-                            className="w-full max-w-sm rounded-lg shadow py-4 px-3 flex flex-col items-center gap-4"
+                            className="flex w-full flex-col items-center gap-4 rounded-lg py-4"
                             onSubmit={(event) => {
                                 event.preventDefault()
                                 verifySecondFactor(code)
@@ -140,15 +153,6 @@ const LoginForm: FC = () => {
                         </form>
                     </div>
                 ) : null}
-            </div>
-
-            <div className="text-center text-sm text-gray-500 mt-6">
-                Don’t have an account yet?{' '}
-                <Link
-                    to="/auth/signup"
-                    className="text-primary">
-                    Sign up
-                </Link>
             </div>
         </div>
     )

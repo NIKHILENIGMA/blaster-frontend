@@ -1,4 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod'
+import { Lock, Mail, User } from 'lucide-react'
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 
 import { FormField } from '@/components'
@@ -9,16 +11,18 @@ import { useSignup } from '../hooks/use-signup'
 import type { SignupFormRequest } from '../types/auth'
 
 interface EmailSignupProps {
-    setStep: (step: 'initial' | 'email' | 'code') => void
+    setStep: (step: 'email' | 'code') => void
 }
 
 const EmailSignup = ({ setStep }: EmailSignupProps) => {
+    const [formError, setFormError] = useState<string | null>(null)
     const {
         register,
         handleSubmit,
         formState: { errors, isSubmitting },
         clearErrors,
-        reset
+        reset,
+        setError
     } = useForm<SignupFormRequest>({
         resolver: zodResolver(signupSchema),
         mode: 'onBlur',
@@ -35,13 +39,15 @@ const EmailSignup = ({ setStep }: EmailSignupProps) => {
     return (
         <div className="flex flex-col space-y-4">
             <form
-                onSubmit={handleSubmit((data) => onSubmit(data, clearErrors, reset, setStep))}
-                className="w-full py-2 shadow rounded-lg">
-                <div className="flex space-x-2">
+                onSubmit={handleSubmit((data) => onSubmit(data, clearErrors, reset, setError, setFormError, setStep))}
+                className="w-full">
+                <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
                     <FormField
                         label="First Name"
                         name="firstName"
                         placeholder="First Name"
+                        icon={User}
+                        iconPosition="left"
                         register={register('firstName')}
                         required={true}
                         errors={errors.firstName}
@@ -50,6 +56,8 @@ const EmailSignup = ({ setStep }: EmailSignupProps) => {
                         label="Last Name"
                         name="lastName"
                         placeholder="Last Name"
+                        icon={User}
+                        iconPosition="left"
                         register={register('lastName')}
                         required={true}
                         errors={errors.lastName}
@@ -60,6 +68,8 @@ const EmailSignup = ({ setStep }: EmailSignupProps) => {
                     name="email"
                     type="email"
                     placeholder="Enter your email"
+                    icon={Mail}
+                    iconPosition="left"
                     register={register('email')}
                     required={true}
                     errors={errors.email}
@@ -69,27 +79,21 @@ const EmailSignup = ({ setStep }: EmailSignupProps) => {
                     name="password"
                     type="password"
                     placeholder="*********"
+                    icon={Lock}
+                    iconPosition="left"
                     register={register('password')}
                     required={true}
                     errors={errors.password}
                 />
                 <div id="clerk-captcha"></div>
-                <div className="flex flex-col space-y-2 mt-4">
+                {formError ? <p className="mt-2 text-sm text-red-600">{formError}</p> : null}
+                <div className="mt-4 flex flex-col space-y-2">
                     <Button
                         variant={'default'}
                         type="submit"
                         disabled={isSubmitting}
                         className="w-full">
                         {isSubmitting ? 'Signing up...' : 'Sign Up'}
-                    </Button>
-                    <Button
-                        variant={'secondary'}
-                        type="submit"
-                        className="w-full"
-                        onClick={() => {
-                            setStep('initial')
-                        }}>
-                        Go Back
                     </Button>
                 </div>
             </form>

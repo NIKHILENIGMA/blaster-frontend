@@ -7,7 +7,7 @@ import { InputOTP, InputOTPGroup, InputOTPSlot } from '@/components/ui/input-otp
 import { useSignup } from '../hooks/use-signup'
 
 interface SignupVerificationCodeProps {
-    setStep: (step: 'initial' | 'email' | 'code') => void
+    setStep: (step: 'email' | 'code') => void
 }
 
 const SignupVerificationCode: FC<SignupVerificationCodeProps> = ({ setStep }) => {
@@ -18,13 +18,15 @@ const SignupVerificationCode: FC<SignupVerificationCodeProps> = ({ setStep }) =>
 
     return (
         <div className="flex flex-col space-y-4">
-            <p className="text-center">A verification code has been sent to {emailSendAddress}. Please enter it below to verify your account.</p>
+            <p className="text-center text-sm text-muted-foreground">
+                A verification code has been sent to {emailSendAddress}. Please enter it below to verify your account.
+            </p>
             <form
                 onSubmit={(e) => {
                     e.preventDefault()
                     handleCodeVerification(code, setStep, setErrorMsg)
                 }}
-                className="w-full py-2 shadow rounded-lg flex flex-col space-y-2 items-center">
+                className="flex w-full flex-col items-center space-y-3 rounded-lg py-2">
                 <InputOTP
                     value={code}
                     onChange={(value) => handleCodeChange(value, setCode, setErrorMsg)}
@@ -44,14 +46,14 @@ const SignupVerificationCode: FC<SignupVerificationCodeProps> = ({ setStep }) =>
                     variant={'default'}
                     type="submit"
                     disabled={code.length !== 6}
-                    className="w-1/2">
+                    className="w-full">
                     Verify
                 </Button>
                 <Button
                     variant={'secondary'}
                     type="button"
                     disabled={code.length !== 6}
-                    className="w-1/2">
+                    className="w-full">
                     Resend Code
                 </Button>
             </form>

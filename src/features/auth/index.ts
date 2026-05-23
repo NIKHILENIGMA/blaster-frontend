@@ -1,5 +1,4 @@
 // Components
-export { default as ChooseOptions } from './components/choose-options'
 export { default as EmailLogin } from './components/email-login'
 export { default as EmailSignup } from './components/email-signup'
 export { default as LoginForm } from './components/login-form'

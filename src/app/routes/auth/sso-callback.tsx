@@ -1,16 +1,18 @@
 import { useSignIn, useSignUp } from '@clerk/clerk-react'
 import { useEffect, type FC } from 'react'
-import { useErrorBoundary } from 'react-error-boundary'
-import { useNavigate } from 'react-router'
+import { useNavigate, useSearchParams } from 'react-router'
 
 const SSOCallback: FC = () => {
     const { isLoaded: signUpLoaded, signUp, setActive: setSignUpActive } = useSignUp()
     const { isLoaded: signInLoaded, signIn, setActive: setSignInActive } = useSignIn()
     const navigate = useNavigate()
-    const { showBoundary } = useErrorBoundary()
+    const [searchParams] = useSearchParams()
 
     useEffect(() => {
         if (!signUpLoaded || !signInLoaded) return
+
+        const flow = searchParams.get('flow')
+        const authPath = flow === 'signup' ? '/auth/signup' : '/auth/login'
 
         const complete = async () => {
             try {
@@ -26,15 +28,14 @@ const SSOCallback: FC = () => {
                     return
                 }
 
-                navigate('/auth/login')
-            } catch (err) {
-                showBoundary(err as Error)
-                navigate('/auth/login')
+                navigate(`${authPath}?auth_error=oauth_incomplete`, { replace: true })
+            } catch {
+                navigate(`${authPath}?auth_error=oauth_failed`, { replace: true })
             }
         }
 
         complete()
-    }, [signUpLoaded, signInLoaded, signUp, signIn, setSignUpActive, setSignInActive, navigate, showBoundary])
+    }, [signUpLoaded, signInLoaded, signUp, signIn, setSignUpActive, setSignInActive, navigate, searchParams])
     return (
         <div className="flex flex-col items-center justify-center min-h-screen bg-neutral-background text-foreground font-body">
             <h2 className="mb-4 text-2xl font-semibold text-muted-foreground">Signing you in with SSO...</h2>

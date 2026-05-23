@@ -39,7 +39,7 @@ export default function Home() {
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}>
                             <img
-                                src="https://res.cloudinary.com/djblasters/image/upload/v1775299513/logo-fortune_qda5xe.png"
+                                src="https://res.cloudinary.com/djblasters/image/upload/v1778250313/fpl_simple_t9rjey.png"
                                 alt="logo"
                                 className={'h-20 w-20 object-cover'}
                             />
@@ -63,9 +63,9 @@ export default function Home() {
                             <motion.button
                                 whileHover={{ scale: 1.05 }}
                                 whileTap={{ scale: 0.95 }}
-                                onClick={() => navigate('/auth/signup')}
+                                onClick={() => navigate('/auth/login')}
                                 className="hidden sm:block px-4 sm:px-6 py-2 bg-gradient-to-r from-green-400 to-blue-500 text-slate-950 font-bold rounded-lg hover:shadow-lg hover:shadow-green-400/50 transition-shadow">
-                                Sign Up
+                                Login
                             </motion.button>
 
                             {/* Mobile Menu Toggle */}
@@ -108,9 +108,9 @@ export default function Home() {
                                     ))}
                                     <motion.button
                                         whileTap={{ scale: 0.95 }}
-                                        onClick={() => navigate('/auth/signup')}
+                                        onClick={() => navigate('/auth/login')}
                                         className="w-full px-4 py-2 bg-gradient-to-r from-green-400 to-blue-500 text-slate-950 font-bold rounded-lg">
-                                        Sign Up
+                                        Login
                                     </motion.button>
                                 </div>
                             </motion.div>

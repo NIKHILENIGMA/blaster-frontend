@@ -1,9 +1,46 @@
 import { useSignUp } from '@clerk/clerk-react'
 import { useEffect } from 'react'
 import { useErrorBoundary } from 'react-error-boundary'
+import type { UseFormSetError } from 'react-hook-form'
 import { useNavigate, useSearchParams } from 'react-router'
 
 import type { SignupFormRequest } from '../types/auth'
+
+type ClerkError = {
+    message?: string
+    longMessage?: string
+    code?: string
+    meta?: {
+        paramName?: string
+    }
+}
+
+type ClerkErrorResponse = {
+    errors?: ClerkError[]
+    message?: string
+}
+
+const SIGNUP_FIELD_BY_CLERK_PARAM: Record<string, keyof SignupFormRequest> = {
+    email: 'email',
+    email_address: 'email',
+    emailAddress: 'email',
+    password: 'password',
+    first_name: 'firstName',
+    firstName: 'firstName',
+    last_name: 'lastName',
+    lastName: 'lastName'
+}
+
+const getClerkErrors = (error: unknown): ClerkError[] => {
+    if (typeof error !== 'object' || error === null) return []
+
+    const response = error as ClerkErrorResponse
+    return Array.isArray(response.errors) ? response.errors : []
+}
+
+const getClerkErrorMessage = (error: ClerkError) => {
+    return error.longMessage || error.message || 'Signup failed. Please check your details and try again.'
+}
 
 export const useSignup = () => {
     const { isLoaded, signUp, setActive } = useSignUp()
@@ -38,9 +75,12 @@ export const useSignup = () => {
         data: SignupFormRequest,
         clearErrors: () => void,
         reset: () => void,
-        setStep: (step: 'initial' | 'email' | 'code') => void
+        setError: UseFormSetError<SignupFormRequest>,
+        setFormError: (error: string | null) => void,
+        setStep: (step: 'email' | 'code') => void
     ) => {
         clearErrors()
+        setFormError(null)
         try {
             if (!isLoaded) return
             await signUp.create({
@@ -57,7 +97,35 @@ export const useSignup = () => {
             setStep('code')
             reset() // Clear form fields after successful submission
         } catch (error) {
-            showBoundary(error)
+            const clerkErrors = getClerkErrors(error)
+
+            if (!clerkErrors.length) {
+                const message = error instanceof Error ? error.message : 'Signup failed. Please check your details and try again.'
+                setFormError(message)
+                return
+            }
+
+            const formErrors: string[] = []
+
+            clerkErrors.forEach((clerkError) => {
+                const paramName = clerkError.meta?.paramName
+                const fieldName = paramName ? SIGNUP_FIELD_BY_CLERK_PARAM[paramName] : undefined
+                const message = getClerkErrorMessage(clerkError)
+
+                if (fieldName) {
+                    setError(fieldName, {
+                        type: 'server',
+                        message
+                    })
+                    return
+                }
+
+                formErrors.push(message)
+            })
+
+            if (formErrors.length) {
+                setFormError(formErrors.join(' '))
+            }
         }
     }
 
@@ -75,7 +143,7 @@ export const useSignup = () => {
 
     const handleCodeVerification = async (
         code: string,
-        onStepChange: (step: 'initial' | 'email' | 'code') => void,
+        onStepChange: (step: 'email' | 'code') => void,
         onError: (error: string) => void
     ) => {
         if (!isLoaded) return
@@ -94,10 +162,15 @@ export const useSignup = () => {
             if (completeSignup.status === 'complete') {
                 await setActive({ session: completeSignup.createdSessionId })
                 navigate('/dashboard')
-                onStepChange('initial')
+                onStepChange('email')
             }
         } catch (error) {
-            const message = error instanceof Error ? error.message : 'Something went wrong during code verification.'
+            const clerkErrors = getClerkErrors(error)
+            const message = clerkErrors.length
+                ? clerkErrors.map(getClerkErrorMessage).join(' ')
+                : error instanceof Error
+                  ? error.message
+                  : 'Something went wrong during code verification.'
             onError(message)
         }
     }

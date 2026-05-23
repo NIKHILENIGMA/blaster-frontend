@@ -3,14 +3,16 @@ import { ErrorBoundary } from 'react-error-boundary'
 import { Toaster } from 'sonner'
 
 import { LoginFallback } from '@/components'
-import AuthLayout from '@/components/layout/auth-layout'
 import PublicRoute from '@/components/shared/public-route'
-import SignupForm from '@/features/auth/components/signup-form'
+import AuthDialog from '@/features/auth/components/auth-dialog'
+
+import Home from '../home'
 
 const Signup: FC = () => {
     return (
         <PublicRoute>
-            <AuthLayout>
+            <Home />
+            <div className="relative z-50">
                 <ErrorBoundary
                     FallbackComponent={({ error, resetErrorBoundary }) => (
                         <LoginFallback
@@ -18,10 +20,10 @@ const Signup: FC = () => {
                             resetError={resetErrorBoundary}
                         />
                     )}>
-                    <SignupForm />
+                    <AuthDialog defaultTab="signup" />
                 </ErrorBoundary>
                 <Toaster />
-            </AuthLayout>
+            </div>
         </PublicRoute>
     )
 }
