@@ -2,7 +2,7 @@ import { useEffect, useState, type FC } from 'react'
 import { FaWallet } from 'react-icons/fa'
 import { IoStar } from 'react-icons/io5'
 import { MdStadium } from 'react-icons/md'
-import { PiMedalFill } from 'react-icons/pi'
+// import { PiMedalFill } from 'react-icons/pi'
 
 import type { DashboardStats, LeaderboardEntry, StatCard } from '../types/dashboard'
 
