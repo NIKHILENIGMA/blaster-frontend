@@ -30,13 +30,14 @@ const StatsSection: FC<StatsSectionProps> = ({ stats, isPending, leaderboardEntr
                     cover: '#2962FF22',
                     color: '#2962FF'
                 },
-                {
-                    label: 'Current Rank',
-                    value: stats.rank,
-                    icon: <PiMedalFill className="fill-[#FF6D00]" />,
-                    color: '#FF6D00',
-                    cover: '#FF6D0022'
-                },
+                // Temporarily hiding rank until we have the leaderboard ready
+                // {
+                //     label: 'Current Rank',
+                //     value: stats.rank,
+                //     icon: <PiMedalFill className="fill-[#FF6D00]" />,
+                //     color: '#FF6D00',
+                //     cover: '#FF6D0022'
+                // },
                 {
                     label: 'Matches Played',
                     value: stats.matchPlayed,
